@@ -1,0 +1,7 @@
+.DS_Store
+/bower_components
+/config/app.php
+/logs
+/tmp
+/vendor
+/webroot/files

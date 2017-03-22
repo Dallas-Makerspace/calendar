@@ -1,0 +1,207 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <?= $this->Html->link('Dallas Makerspace Calendar', '/', ['class' => 'navbar-brand']); ?>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <?php $authUser = $this->request->session()->read('Auth.User'); ?>
+            <ul class="nav navbar-nav">
+                <?php if (!($this->request->params['controller'] == 'Events' && $this->request->params['action'] == 'add')): ?>
+                    <?php if ($canAddEvents): ?>
+                        <li>
+                            <?= $this->Html->link('Submit Event', [
+                                'controller' => 'Events',
+                                'action' => 'add'
+                            ]) ?>
+                        </li>
+                    <?php else: ?>
+                        <li>
+                            <?= $this->Html->link('Submit Event', [
+                                'controller' => 'Users',
+                                'action' => 'login',
+                                '?' => ['redirect' => '/events/add']
+                            ]) ?>
+                        </li>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($canManageHonoraria): ?>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Honoraria <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <?= $this->Html->link('Pending', [
+                                    'controller' => 'Events',
+                                    'action' => 'pendingHonoraria'
+                                ]) ?>
+                            </li>
+                            <li>
+                                <?= $this->Html->link('Accepted', [
+                                    'controller' => 'Events',
+                                    'action' => 'acceptedHonoraria'
+                                ]) ?>
+                            </li>
+                            <li>
+                                <?= $this->Html->link('Rejected', [
+                                    'controller' => 'Events',
+                                    'action' => 'rejectedHonoraria'
+                                ]) ?>
+                            </li>
+                        </ul>
+                    </li>
+                <?php endif; ?>
+                <?php if ($hasFinancialMenu): ?>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Financials <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <?php if ($canManageW9s): ?>
+                                <!--<li>
+                                    <?= $this->Html->link('Unprocessed W9s', [
+                                        'controller' => 'W9s',
+                                        'action' => 'index'
+                                    ]) ?>
+                                </li>-->
+                            <?php endif; ?>
+                            <?php if ($canManageFinanceReports): ?>
+                                <!--<li>
+                                    <?= $this->Html->link('Reports', [
+                                        'controller' => 'reports',
+                                        'action' => 'index'
+                                    ]) ?>
+                                </li>-->
+                            <?php endif; ?>
+                            <?php if ($canExportHonoraria): ?>
+                              <li>
+                                  <?= $this->Html->link('Export Honoraria', [
+                                      'controller' => 'Events',
+                                      'action' => 'exportHonoraria'
+                                  ]) ?>
+                              </li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                <?php endif; ?>
+                <?php if ($hasAdminMenu): ?>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <?php if ($canManageEvents): ?>
+                                <li>
+                                    <?= $this->Html->link('Pending Events', [
+                                        'controller' => 'events',
+                                        'action' => 'pending'
+                                    ]) ?>
+                                </li>
+                                <li>
+                                    <?= $this->Html->link('Events Archive', [
+                                        'controller' => 'events',
+                                        'action' => 'all'
+                                    ]) ?>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                            <?php endif; ?>
+                            <?php if ($canManageCategories): ?>
+                                <li>
+                                    <?= $this->Html->link('Categories', [
+                                        'controller' => 'categories',
+                                        'action' => 'index'
+                                    ]) ?>
+                                </li>
+                            <?php endif; ?>
+                            <?php if ($canManageCommittees): ?>
+                                <li>
+                                    <?= $this->Html->link('Committees', [
+                                        'controller' => 'committees',
+                                        'action' => 'index'
+                                    ]) ?>
+                                </li>
+                            <?php endif; ?>
+                            <?php if ($canManageContacts): ?>
+                                <li>
+                                    <?= $this->Html->link('Contacts', [
+                                        'controller' => 'contacts',
+                                        'action' => 'index'
+                                    ]) ?>
+                                </li>
+                            <?php endif; ?>
+                            <?php if ($canManagePreqequisites): ?>
+                                <li>
+                                    <?= $this->Html->link('Prerequisites', [
+                                        'controller' => 'prerequisites',
+                                        'action' => 'index'
+                                    ]) ?>
+                                </li>
+                            <?php endif; ?>
+                            <?php if ($canManageRooms): ?>
+                                <li>
+                                    <?= $this->Html->link('Rooms', [
+                                        'controller' => 'rooms',
+                                        'action' => 'index'
+                                    ]) ?>
+                                </li>
+                            <?php endif; ?>
+                            <?php if ($canManageTools): ?>
+                                <li>
+                                    <?= $this->Html->link('Tools', [
+                                        'controller' => 'tools',
+                                        'action' => 'index'
+                                    ]) ?>
+                                </li>
+                            <?php endif; ?>
+                            <?php if ($canManageConfigs): ?>
+                                <li>
+                                    <?= $this->Html->link('Configuration', [
+                                        'controller' => 'configurations',
+                                        'action' => 'index'
+                                    ]) ?>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+                <?php endif; ?>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <?php if ($authUser): ?>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <?= $this->Html->link('Hosting Events', [
+                                        'controller' => 'Events',
+                                        'action' => 'submitted'
+                                    ]) ?>
+                                </li>
+                                <li>
+                                    <?= $this->Html->link('Attending Events', [
+                                        'controller' => 'Events',
+                                        'action' => 'attending'
+                                    ]) ?>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <?= $this->Html->link('Logout', [
+                                        'controller' => 'Users',
+                                        'action' => 'logout'
+                                    ]) ?>
+                                </li>
+                            </ul>
+                        </li>
+
+                    <?php else: ?>
+                        <?= $this->Html->link('DMS Login', [
+                            'controller' => 'Users',
+                            'action' => 'login',
+                            '?' => ['redirect' => $this->request->here]
+                        ]) ?>
+                    <?php endif; ?>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
