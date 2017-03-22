@@ -1,4 +1,5 @@
 .DS_Store
+/.htaccess
 /bower_components
 /config/app.php
 /logs

@@ -1,7 +1,7 @@
 {
     "name": "cakephp/app",
-    "description": "CakePHP skeleton app",
-    "homepage": "http://cakephp.org",
+    "description": "CakePHP DMS calendar app",
+    "homepage": "https://calendar.dallasmakerspace.org",
     "type": "project",
     "license": "MIT",
     "require": {

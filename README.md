@@ -1,26 +1,22 @@
-# CakePHP Application Skeleton
+# DMS Calendar
 
-[![Build Status](https://img.shields.io/travis/cakephp/app/master.svg?style=flat-square)](https://travis-ci.org/cakephp/app)
-[![License](https://img.shields.io/packagist/l/cakephp/app.svg?style=flat-square)](https://packagist.org/packages/cakephp/app)
+## Prerequisites
 
-A skeleton for creating applications with [CakePHP](http://cakephp.org) 3.x.
-
-The framework source code can be found here: [cakephp/cakephp](https://github.com/cakephp/cakephp).
+* PHP >=5.5.9
+* MySQL (version compatible with your environment)
+* Composer
 
 ## Installation
 
 1. Download [Composer](http://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist cakephp/app [app_name]`.
+2. Run `php composer.phar install`.
 
-If Composer is installed globally, run
-```bash
-composer create-project --prefer-dist cakephp/app [app_name]
-```
-
-You should now be able to visit the path to where you installed the app and see
-the setup traffic lights.
+You should now have all of the components needed to run a local version of the calendar application. Check this by ensuring that the `vendor` directory in the root folder contains several folders with imported packages.
 
 ## Configuration
 
-Read and edit `config/app.php` and setup the 'Datasources' and any other
-configuration relevant for your application.
+Create a MySQL database and seed the database using the sql file at `config/schema/schema.sql`. There are also several database seeders which can add some initial data to your database for event categories, committees, configurations, prerequisites, rooms and tools. More information on how to run those seeders is available in the [CakePHP Cookbook](https://book.cakephp.org/3.0/en/migrations.html#seed-seeding-your-database)
+
+Copy the `config/app.default.php` file to `config/app.php`. This file is a mirror of the config file on the production server with accounts and other sensitive information removed.
+
+The `.htaccess-sample` file in the root directory can, in most cases, be renamed to `.htaccess` and provide everything needed for CakePHP to route necessary traffic to the `webroot` directory.
