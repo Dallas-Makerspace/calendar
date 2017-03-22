@@ -46,9 +46,9 @@ class AppController extends Controller
             'authenticate' => [
                 'ActiveDirectoryAuthenticate.Adldap' => [
                     'config' => [
-                        'account_suffix' => '@dms.local',
-                        'base_dn' => 'OU=members,DC=dms,DC=local',
-                        'domain_controllers' => ['ad.dallasmakerspace.org']
+                        'account_suffix' => Configure::read('ActiveDirectory.account_suffix'),
+                        'base_dn' => Configure::read('ActiveDirectory.base_dn'),
+                        'domain_controllers' => Configure::read('ActiveDirectory.domain_controllers')
                     ],
                     'select' => ['displayName', 'samaccountname', 'telephonenumber', 'mail']
                 ]
@@ -190,11 +190,6 @@ class AppController extends Controller
      */
     public function isAuthorized($user = null)
     {
-        // TODO: Remove before launch - hard access grant for development
-        if ($user['samaccountname'] == 'elorentz') {
-            return true;
-        }
-
         return $this->inAdminstrativeGroup($user, 'Calendar Admins');
     }
 
@@ -207,11 +202,6 @@ class AppController extends Controller
      */
     public function inAdminstrativeGroup($user, $group)
     {
-        // TODO: Remove before launch - hard access grant for development
-        if ($user['samaccountname'] == 'elorentz') {
-            return true;
-        }
-
         if ($user && in_array($group, $user['groups'])) {
             return true;
         }
