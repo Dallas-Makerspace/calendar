@@ -84,27 +84,27 @@ class EventsController extends AppController
 
     public function all()
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
-			if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
-	            $start_date = new \DateTime($_GET['start_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
-	            $start_date->setTimezone(new \DateTimeZone('UTC'));
-	            $end_date = new \DateTime($_GET['end_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
-	            $end_date->setTimezone(new \DateTimeZone('UTC'));
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
+            if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
+                $start_date = new \DateTime($_GET['start_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
+                $start_date->setTimezone(new \DateTimeZone('UTC'));
+                $end_date = new \DateTime($_GET['end_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
+                $end_date->setTimezone(new \DateTimeZone('UTC'));
 
-	            $event->subject()->query
-	                ->where([
-	                    'Events.part_of_id IS NULL',
-	                    'Events.event_start >=' => $start_date->format('Y-m-d H:i:s'),
-	                    'Events.event_start <=' => $end_date->format('Y-m-d H:i:s'),
-	                ])
-	                ->order(['Events.created' => 'DESC']);
-			} else {
-	            $event->subject()->query
-	                ->where([
-	                    'Events.part_of_id IS NULL'
-	                ])
-	                ->order(['Events.created' => 'DESC']);
-			}
+                $event->subject()->query
+                    ->where([
+                        'Events.part_of_id IS NULL',
+                        'Events.event_start >=' => $start_date->format('Y-m-d H:i:s'),
+                        'Events.event_start <=' => $end_date->format('Y-m-d H:i:s'),
+                    ])
+                    ->order(['Events.created' => 'DESC']);
+            } else {
+                $event->subject()->query
+                    ->where([
+                        'Events.part_of_id IS NULL'
+                    ])
+                    ->order(['Events.created' => 'DESC']);
+            }
             $this->paginate['limit'] = 50;
         });
 
@@ -114,46 +114,46 @@ class EventsController extends AppController
         return $this->Crud->execute();
     }
 
-	public function attendance($id = null)
-	{
-        $this->Crud->on('beforeFind', function(\Cake\Event\Event $event) {
+    public function attendance($id = null)
+    {
+        $this->Crud->on('beforeFind', function (\Cake\Event\Event $event) {
             $event->subject()->query->contain(['Registrations']);
         });
 
-        $this->Crud->on('beforeRedirect', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {
             $event->subject()->url = $this->referer();
         });
 
         return $this->Crud->execute();
-	}
+    }
 
-	public function assignments($id = null)
-	{
-        $this->Crud->on('beforeFind', function(\Cake\Event\Event $event) {
+    public function assignments($id = null)
+    {
+        $this->Crud->on('beforeFind', function (\Cake\Event\Event $event) {
             $event->subject()->query->contain(['FulfillsPrerequisites', 'Registrations']);
         });
 
-        $this->Crud->on('beforeRedirect', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {
             $event->subject()->url = $this->referer();
         });
 
-        $this->Crud->on('beforeSave', function(\Cake\Event\Event $event) {
-			$adldap = new \Adldap\Adldap();
-			$provider = new \Adldap\Connections\Provider(Configure::read('ActiveDirectory'));
-			$adldap->addProvider('default', $provider);
-			$adldap->connect('default');
+        $this->Crud->on('beforeSave', function (\Cake\Event\Event $event) {
+            $adldap = new \Adldap\Adldap();
+            $provider = new \Adldap\Connections\Provider(Configure::read('ActiveDirectory'));
+            $adldap->addProvider('default', $provider);
+            $adldap->connect('default');
 
-			foreach ($event->subject()->entity->registrations as $registration) {
-				if ($registration->ad_assigned && $registration->ad_username) {
-					$group = $provider->search()->groups()->find($event->subject()->entity->fulfills_prerequisite->ad_group);
-					$user = $provider->search()->find($registration->ad_username);
-					$result = $group->addMember($user);
-				}
-			}
+            foreach ($event->subject()->entity->registrations as $registration) {
+                if ($registration->ad_assigned && $registration->ad_username) {
+                    $group = $provider->search()->groups()->find($event->subject()->entity->fulfills_prerequisite->ad_group);
+                    $user = $provider->search()->find($registration->ad_username);
+                    $result = $group->addMember($user);
+                }
+            }
         });
 
         return $this->Crud->execute();
-	}
+    }
 
     public function feed()
     {
@@ -200,7 +200,7 @@ class EventsController extends AppController
 
     public function index()
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
             $today = new Time('America/Chicago');
             $today->startOfDay()->timezone('UTC');
 
@@ -235,7 +235,7 @@ class EventsController extends AppController
 
     public function embed()
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
             $today = new Time('America/Chicago');
             $today->startOfDay()->timezone('UTC');
 
@@ -270,7 +270,7 @@ class EventsController extends AppController
 
     public function calendar($year = null, $month = null, $day = null)
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
             $year = empty($this->passedArgs[0]) ? null : $this->passedArgs[0];
             $month = empty($this->passedArgs[1]) ? null : $this->passedArgs[1];
             $day = empty($this->passedArgs[2]) ? null : $this->passedArgs[2];
@@ -356,7 +356,7 @@ class EventsController extends AppController
 
     public function submitted()
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
             $today = new Time('America/Chicago');
             $today->startOfDay()->timezone('UTC');
 
@@ -389,7 +389,7 @@ class EventsController extends AppController
 
     public function attending()
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
             $today = new Time('America/Chicago');
             $today->startOfDay()->timezone('UTC');
 
@@ -408,7 +408,7 @@ class EventsController extends AppController
                     'Events.status IN' => ['approved', 'completed', 'pending']
                 ])
                 ->innerJoinWith(
-                    'Registrations', function($q) {
+                    'Registrations', function ($q) {
                         return $q->where(['Registrations.ad_username' => $this->Auth->user('samaccountname')]);
                     }
                 )
@@ -425,7 +425,7 @@ class EventsController extends AppController
 
     public function pending()
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
             $event->subject()->query
                 ->where([
                     'Events.part_of_id IS NULL',
@@ -475,7 +475,7 @@ class EventsController extends AppController
                     'Events.status' => 'completed',
                     'Events.event_start >=' => $start_date->format('Y-m-d H:i:s'),
                     'Events.event_start <=' => $end_date->format('Y-m-d H:i:s'),
-                    'Honoraria.id IS NOT' => NULL
+                    'Honoraria.id IS NOT' => null
                 ])
                 ->order([
                     'Events.event_start' => 'ASC'
@@ -490,7 +490,7 @@ class EventsController extends AppController
     {
         $export = array();
         $export[] = [
-			'Event ID',
+            'Event ID',
             'Event Time',
             'Event Name',
             'Committee',
@@ -525,25 +525,25 @@ class EventsController extends AppController
                 'Events.status' => 'completed',
                 'Events.event_start >=' => $start_date->format('Y-m-d H:i:s'),
                 'Events.event_start <=' => $end_date->format('Y-m-d H:i:s'),
-                'Honoraria.id IS NOT' => NULL
+                'Honoraria.id IS NOT' => null
             ])
             ->order([
                 'Events.event_start' => 'ASC'
             ]);
 
-		$payTypes = [
-			'Not Paid',
-			'Paid',
-			'Pending',
-			'Missing Info',
-			'Denied',
-			'Paid by Script'
-		];
+        $payTypes = [
+            'Not Paid',
+            'Paid',
+            'Pending',
+            'Missing Info',
+            'Denied',
+            'Paid by Script'
+        ];
 
         foreach ($data as $row) {
             if (count($row->registrations) > 2) {
                 $export[] = [
-					$row->id,
+                    $row->id,
                     $row->event_start->i18nFormat('MM-dd-yyyy h:mma', 'America/Chicago'),
                     $row->name,
                     $row->honorarium->committee->name,
@@ -557,7 +557,7 @@ class EventsController extends AppController
                 ];
             } else {
                 $export[] = [
-					$row->id,
+                    $row->id,
                     $row->event_start->i18nFormat('MM-dd-yyyy h:mma', 'America/Chicago'),
                     $row->name,
                     $row->honorarium->committee->name,
@@ -580,7 +580,7 @@ class EventsController extends AppController
 
     public function pendingHonoraria()
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
             $event->subject()->query->where([
                 'Events.part_of_id IS NULL',
                 'Events.status' => 'pending',
@@ -600,7 +600,7 @@ class EventsController extends AppController
 
     public function acceptedHonoraria()
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
             $event->subject()->query->where([
                 'Events.part_of_id IS NULL',
                 'Events.status IN' => ['approved', 'completed'],
@@ -620,7 +620,7 @@ class EventsController extends AppController
 
     public function rejectedHonoraria()
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
             $event->subject()->query->where([
                 'Events.part_of_id IS NULL',
                 'Events.status' => 'rejected',
@@ -640,12 +640,12 @@ class EventsController extends AppController
 
     public function approve($id = null)
     {
-        $this->Crud->on('beforeSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeSave', function (\Cake\Event\Event $event) {
             $event->subject()->entity->status = 'approved';
         });
 
         // Approve multi-part dates
-        $this->Crud->on('afterSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('afterSave', function (\Cake\Event\Event $event) {
             $this->Events->query()->update()
                 ->set(['status' => 'approved'])
                 ->where(['part_of_id' => $event->subject()->entity->id])
@@ -667,14 +667,14 @@ class EventsController extends AppController
             'apiKey' => Configure::read('SparkPost.Api.key')
         ]);
 
-        $this->Crud->on('beforeSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeSave', function (\Cake\Event\Event $event) {
             $event->subject()->entity->status = 'rejected';
             $event->subject()->entity->rejection_reason = $this->request->data('event.rejection_reason');
             $event->subject()->entity->rejected_by = $this->Auth->user('samaccountname');
         });
 
         // Reject multi-part dates
-        $this->Crud->on('afterSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('afterSave', function (\Cake\Event\Event $event) {
             $this->Events->query()->update()
                 ->set(['status' => 'rejected'])
                 ->where(['part_of_id' => $event->subject()->entity->id])
@@ -695,9 +695,9 @@ class EventsController extends AppController
                 $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
                 $email->to([$contact->email => $contact->name]);
                 //$email->subject('DMS Event Rejection: ' . $event->subject()->entity->name);
-				$email->subject('DMS Event Rejection: ' . (strlen($event->subject()->entity->name) > 45 ? substr($event->subject()->entity->name, 0, 45) . "..." : $event->subject()->entity->name));
+                $email->subject('DMS Event Rejection: ' . (strlen($event->subject()->entity->name) > 45 ? substr($event->subject()->entity->name, 0, 45) . "..." : $event->subject()->entity->name));
                 $email->send($message);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->log($e);
             }
         });
@@ -718,20 +718,20 @@ class EventsController extends AppController
         $config = $this->Configurations->find('list')->toArray();
         $this->set('config', $config);
 
-        $this->Crud->on('beforeFind', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeFind', function (\Cake\Event\Event $event) {
             $event->subject()->query->contain([
                 'Categories',
                 'Contacts',
                 'Files',
                 'FulfillsPrerequisites',
-				'Registrations',
+                'Registrations',
                 'RequiresPrerequisites',
                 'Rooms',
                 'Tools'
             ]);
         });
 
-        $this->Crud->on('beforeRender', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeRender', function (\Cake\Event\Event $event) {
             $continuedDates = $this->Events->find('all')
                 ->select(['class_number', 'event_start', 'event_end'])
                 ->where(['part_of_id' => $event->subject()->entity->id])
@@ -777,7 +777,7 @@ class EventsController extends AppController
         $this->Crud->on('beforeSave', [$this, '_beforeCreate']);
         $this->Crud->on('afterSave', [$this, '_afterCreate']);
         $this->Crud->on('beforeRender', [$this, '_formContent']);
-        $this->Crud->on('beforeRender', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeRender', function (\Cake\Event\Event $event) {
             if (isset($this->request->query['copy'])) {
                 if ($this->Events->isOwnedBy($this->request->query['copy'], $this->Auth->user('samaccountname')) || parent::isAuthorized($user)) {
                     if (!$this->request->is(array('post', 'put'))) {
@@ -850,13 +850,13 @@ class EventsController extends AppController
 
         $this->__constructPostForMarshal('edit');
 
-        $this->Crud->on('beforeFind', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeFind', function (\Cake\Event\Event $event) {
             $event->subject()->query->contain(['Categories', 'Contacts', 'Files', 'FulfillsPrerequisites', 'Honoraria', 'Honoraria.Committees', 'RequiresPrerequisites', 'Tools']);
         });
         $this->Crud->on('beforeSave', [$this, '_beforeUpdate']);
         $this->Crud->on('afterSave', [$this, '_afterUpdate']);
         $this->Crud->on('beforeRender', [$this, '_formContent']);
-        $this->Crud->on('beforeRender', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeRender', function (\Cake\Event\Event $event) {
             $categories = $event->subject()->entity->categories;
 
             if (parent::isAuthorized($this->Auth->user())) {
@@ -901,12 +901,12 @@ class EventsController extends AppController
 
     public function cancel($id = null)
     {
-        $this->Crud->on('beforeSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeSave', function (\Cake\Event\Event $event) {
             $event->subject()->entity->status = 'cancelled';
         });
 
         // Cancel multi-part dates
-        $this->Crud->on('afterSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('afterSave', function (\Cake\Event\Event $event) {
             $this->Registrations = TableRegistry::get('Registrations');
             $registrations = $this->Registrations->find('all')
                 ->where(['event_id' => $this->passedArgs[0], 'status IN' => ['confirmed', 'pending']]);
@@ -926,7 +926,7 @@ class EventsController extends AppController
                     $email->to([$registration->email => $registration->name]);
                     $email->subject('Update: ' . $event->subject()->entity->name . ' has been Cancelled');
                     $email->send($message);
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $this->log($e);
                 }
 
@@ -948,7 +948,8 @@ class EventsController extends AppController
         return $this->Crud->execute();
     }
 
-    public function cron() {
+    public function cron()
+    {
         Email::configTransport('sparkpost', [
             'className' => 'SparkPost.SparkPost',
             'apiKey' => Configure::read('SparkPost.Api.key')
@@ -977,7 +978,7 @@ class EventsController extends AppController
                         $email->to([$registration->email => $registration->name]);
                         $email->subject($event->name . ' Registration Cancelled');
                         $email->send($message);
-                    } catch(\Exception $e) {
+                    } catch (\Exception $e) {
                         $this->log($e);
                     }
 
@@ -1050,7 +1051,7 @@ class EventsController extends AppController
                     $email->to([$registration->email => $registration->name]);
                     $email->subject('Reminder: ' . $event->name . ' Cancellation Cutoff is Soon');
                     $email->send($message);
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $this->log($e);
                 }
 
@@ -1088,7 +1089,7 @@ class EventsController extends AppController
                     $email->to([$registration->email => $registration->name]);
                     $email->subject('Reminder: ' . $event->name . ' Starts Soon');
                     $email->send($message);
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $this->log($e);
                 }
 
@@ -1171,7 +1172,7 @@ class EventsController extends AppController
                     $copied->dir = $copying->dir;
                     $copied->type = $copying->type;
                     $copied->event_id = $event->subject()->entity->id;
-					$copied->private = $copying->private;
+                    $copied->private = $copying->private;
                     $this->Events->Files->save($copied);
                 }
             }
@@ -1258,13 +1259,13 @@ class EventsController extends AppController
     private function __applyQueryFilters(&$event)
     {
         if (!empty($this->request->query['tool'])) {
-            $event->subject()->query->matching('Tools', function($q) {
+            $event->subject()->query->matching('Tools', function ($q) {
                 return $q->where(['Tools.id' => $this->request->query['tool']]);
             });
         }
 
         if (!empty($this->request->query['type']) || !empty($this->request->query['category'])) {
-            $event->subject()->query->matching('Categories', function($q) {
+            $event->subject()->query->matching('Categories', function ($q) {
                 $categories = [];
                 $set = 0;
 
@@ -1292,7 +1293,6 @@ class EventsController extends AppController
     private function __constructPostForMarshal($mode = 'add')
     {
         if ($this->request->is(['patch', 'post', 'put'])) {
-
             if ($mode == 'add') {
                 $this->request->data['created_by'] = $this->Auth->user('samaccountname');
 
@@ -1414,7 +1414,7 @@ class EventsController extends AppController
                     $continuedEvent = $this->Events->newEntity();
                     $continuedEvents[] = $this->Events->patchEntity($continuedEvent, $copyData);
                 } else {
-                  break;
+                    break;
                 }
             }
         }
@@ -1464,7 +1464,7 @@ class EventsController extends AppController
 
     private function __icsEscapeString($string)
     {
-        return preg_replace('/([\,;])/','\\\$1', $string);
+        return preg_replace('/([\,;])/', '\\\$1', $string);
     }
 
     private function __resetCategorySplits()
@@ -1473,7 +1473,7 @@ class EventsController extends AppController
          * Separate radio category data for redisplay.
          */
         if (!empty($this->request->data['optional_categories']['_ids'])) {
-          $this->request->data['categories']['_ids'] = current($this->request->data['categories']['_ids']);
+            $this->request->data['categories']['_ids'] = current($this->request->data['categories']['_ids']);
         }
     }
 

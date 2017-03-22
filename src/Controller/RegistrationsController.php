@@ -43,7 +43,7 @@ class RegistrationsController extends AppController
                 if ($user['samaccountname'] == $registration->event->created_by) {
                     return true;
                 }
-            }            
+            }
         }
 
         return $this->Registrations->isOwnedBy($regId, [
@@ -77,17 +77,17 @@ class RegistrationsController extends AppController
         ])) {
             return $this->redirect($this->referer());
         }
-		
-		$event = $this->Events->get($eventId);
-		$now = new Time();
-		$cutoff = new Time($event->attendee_cancellation);
-		$cutoff->addMinutes($event->extend_registration);
-		
-		if ($now > $cutoff) {
-			return $this->redirect($this->referer());
-		}
 
-        $this->Crud->on('beforeRender', function(\Cake\Event\Event $event) {
+        $event = $this->Events->get($eventId);
+        $now = new Time();
+        $cutoff = new Time($event->attendee_cancellation);
+        $cutoff->addMinutes($event->extend_registration);
+
+        if ($now > $cutoff) {
+            return $this->redirect($this->referer());
+        }
+
+        $this->Crud->on('beforeRender', function (\Cake\Event\Event $event) {
             $eventInfo = $this->Events->get($this->passedArgs[0], [
                 'contain' => 'RequiresPrerequisites'
             ]);
@@ -117,7 +117,7 @@ class RegistrationsController extends AppController
             $this->set('editKey', bin2hex(Security::randomBytes(16)));
         });
 
-        $this->Crud->on('beforeSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeSave', function (\Cake\Event\Event $event) {
             $this->Events = TableRegistry::get('Events');
 
             if ($event->subject()->entity->type == 'paid') {
@@ -132,8 +132,8 @@ class RegistrationsController extends AppController
                     for ($i = 1; $i < count($nameParts); $i++) {
                         $lastName .= $nameParts[$i] . ' ';
                     }
-					
-					$eventData = $this->Events->get($event->subject()->entity->event_id);
+
+                    $eventData = $this->Events->get($event->subject()->entity->event_id);
 
                     $this->__configureBraintree();
                     $result = \Braintree_Transaction::sale([
@@ -146,10 +146,10 @@ class RegistrationsController extends AppController
                             'firstName' => $firstName,
                             'lastName' => $lastName
                         ],
-						'customFields' => [
-							'event_id' => $event->subject()->entity->event_id,
-							'event_name' => $eventData->name
-						]
+                        'customFields' => [
+                            'event_id' => $event->subject()->entity->event_id,
+                            'event_name' => $eventData->name
+                        ]
                     ]);
 
                     if (isset($result->success) && $result->success) {
@@ -169,7 +169,7 @@ class RegistrationsController extends AppController
             }
         });
 
-        $this->Crud->on('afterSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('afterSave', function (\Cake\Event\Event $event) {
             $this->Events = TableRegistry::get('Events');
             $eventReference = $this->Events->get($event->subject()->entity->event_id, [
                 'contain' => 'Contacts'
@@ -197,7 +197,7 @@ class RegistrationsController extends AppController
                 $email->to([$event->subject()->entity->email => $event->subject()->entity->name]);
                 $email->subject($subject);
                 $email->send($message);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->log($e);
             }
 
@@ -212,13 +212,13 @@ class RegistrationsController extends AppController
                     $email->to([$eventReference->contact->email => $eventReference->contact->name]);
                     $email->subject('Attendance Request: ' . $eventReference->name);
                     $email->send($message);
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $this->log($e);
                 }
             }
         });
 
-        $this->Crud->on('beforeRedirect', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {
             $event->subject()->url = [
                 'action' => 'view',
                 $event->subject()->entity->id
@@ -239,7 +239,7 @@ class RegistrationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $this->Crud->on('beforeFind', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeFind', function (\Cake\Event\Event $event) {
             $event->subject()->query->contain(['Events']);
         });
 
@@ -253,11 +253,11 @@ class RegistrationsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $this->Crud->on('beforeFind', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeFind', function (\Cake\Event\Event $event) {
             $event->subject()->query->contain(['Events']);
         });
 
-        $this->Crud->on('beforeSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeSave', function (\Cake\Event\Event $event) {
             $now = new Time();
             if ($now > $event->subject()->entity->event->attendee_cancellation) {
                 $this->Flash->error('Your RSVP to this event could not be cancelled. The cutoff time for cancellations has already passed.');
@@ -269,7 +269,7 @@ class RegistrationsController extends AppController
             }
         });
 
-        $this->Crud->on('afterSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('afterSave', function (\Cake\Event\Event $event) {
             $this->Events = TableRegistry::get('Events');
             $eventReference = $this->Events->get($event->subject()->entity->event_id);
 
@@ -287,12 +287,12 @@ class RegistrationsController extends AppController
                 $email->to([$event->subject()->entity->email => $event->subject()->entity->name]);
                 $email->subject('Event Cancellation: ' . $eventReference->name);
                 $email->send($message);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->log($e);
             }
         });
 
-        $this->Crud->on('beforeRedirect', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {
             $event->subject()->url = [
                 'action' => 'view',
                 $event->subject()->entity->id
@@ -310,14 +310,14 @@ class RegistrationsController extends AppController
     {
         $this->request->allowMethod(['POST']);
 
-        $this->Crud->on('beforeFind', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeFind', function (\Cake\Event\Event $event) {
             $event->subject()->query->contain(['Events']);
         });
 
-        $this->Crud->on('beforeSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeSave', function (\Cake\Event\Event $event) {
             $now = new Time();
-			$cutoff = new Time($event->subject()->entity->event->attendee_cancellation);
-			$cutoff->addMinutes($event->subject()->entity->event->extend_registration);
+            $cutoff = new Time($event->subject()->entity->event->attendee_cancellation);
+            $cutoff->addMinutes($event->subject()->entity->event->extend_registration);
             if ($now > $cutoff) {
                 $this->Flash->error('RSVPs for this event can no longer be approved. The cutoff time for cancellations has already passed.');
                 $event->stopPropagation();
@@ -326,7 +326,7 @@ class RegistrationsController extends AppController
             }
         });
 
-        $this->Crud->on('afterSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('afterSave', function (\Cake\Event\Event $event) {
             $this->Events = TableRegistry::get('Events');
             $eventReference = $this->Events->get($event->subject()->entity->event_id);
             $time = new Time($eventReference->event_start);
@@ -346,12 +346,12 @@ class RegistrationsController extends AppController
                 $email->to([$event->subject()->entity->email => $event->subject()->entity->name]);
                 $email->subject('Update: You have been approved to attend ' . $eventReference->name);
                 $email->send($message);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->log($e);
             }
         });
 
-        $this->Crud->on('beforeRedirect', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {
             $event->subject()->url = $this->referer();
         });
 
@@ -362,11 +362,11 @@ class RegistrationsController extends AppController
     {
         $this->request->allowMethod(['POST']);
 
-        $this->Crud->on('beforeFind', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeFind', function (\Cake\Event\Event $event) {
             $event->subject()->query->contain(['Events']);
         });
 
-        $this->Crud->on('beforeSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeSave', function (\Cake\Event\Event $event) {
             $now = new Time();
             if ($now > $event->subject()->entity->event->attendee_cancellation) {
                 $this->Flash->error('RSVPs for this event can no longer be rejected. The cutoff time for cancellations has already passed.');
@@ -377,7 +377,7 @@ class RegistrationsController extends AppController
             }
         });
 
-        $this->Crud->on('afterSave', function(\Cake\Event\Event $event) {
+        $this->Crud->on('afterSave', function (\Cake\Event\Event $event) {
             $this->Events = TableRegistry::get('Events');
             $eventReference = $this->Events->get($event->subject()->entity->event_id);
 
@@ -395,12 +395,12 @@ class RegistrationsController extends AppController
                 $email->to([$event->subject()->entity->email => $event->subject()->entity->name]);
                 $email->subject('Update: Your request to attend ' . $eventReference->name . ' has been rejected');
                 $email->send($message);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->log($e);
             }
         });
 
-        $this->Crud->on('beforeRedirect', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {
             $event->subject()->url = $this->referer();
         });
 

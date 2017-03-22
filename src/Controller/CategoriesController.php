@@ -25,7 +25,7 @@ class CategoriesController extends AppController
 
     public function index()
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
             $event->subject()->query
                 ->where(['id >' => 2])
                 ->order(['name' => 'ASC']);

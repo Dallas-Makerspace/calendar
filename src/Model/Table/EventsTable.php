@@ -161,7 +161,7 @@ class EventsTable extends Table
             ->decimal('cost')
             ->requirePresence('cost', 'create')
             ->notEmpty('cost');
-		
+
         $validator
             ->allowEmpty('eventbrite_link');
 
@@ -197,12 +197,12 @@ class EventsTable extends Table
             ->dateTime('attendee_cancellation')
             ->requirePresence('attendee_cancellation', 'create')
             ->notEmpty('attendee_cancellation');
-		
+
         $validator
             ->allowEmpty('extend_registration')
-        	->add('extend_registration', 'inList', [
-            	'rule' => ['inList', [0, 15, 20, 25, 30]]
-        	]);
+            ->add('extend_registration', 'inList', [
+                'rule' => ['inList', [0, 15, 20, 25, 30]]
+            ]);
 
         $validator
             ->allowEmpty('contact_id');

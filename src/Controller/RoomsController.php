@@ -25,7 +25,7 @@ class RoomsController extends AppController
 
     public function index()
     {
-        $this->Crud->on('beforePaginate', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
             $event->subject()->query->order(['name' => 'ASC']);
 
             $this->paginate['limit'] = 2147483647;

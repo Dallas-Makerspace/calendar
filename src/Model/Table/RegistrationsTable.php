@@ -97,16 +97,16 @@ class RegistrationsTable extends Table
             ->add('status', 'inList', [
                 'rule' => ['inList', ['confirmed', 'cancelled', 'pending']]
             ]);
-				
-		$validator
-			->allowEmpty('attended');
-
-		$validator
-			->boolean('attended')
-			->allowEmpty('attended');
 
         $validator
-			->boolean('ad_assigned')
+            ->allowEmpty('attended');
+
+        $validator
+            ->boolean('attended')
+            ->allowEmpty('attended');
+
+        $validator
+            ->boolean('ad_assigned')
             ->allowEmpty('ad_assigned');
 
         return $validator;

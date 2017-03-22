@@ -30,7 +30,7 @@ class FilesController extends AppController
     public function delete($id = null, $eventId = null)
     {
         // Remove file relation from related events (multi-part events)
-        $this->Crud->on('beforeDelete', function(\Cake\Event\Event $event) {
+        $this->Crud->on('beforeDelete', function (\Cake\Event\Event $event) {
             $this->Events = TableRegistry::get('Events');
             $relatedEvents = $this->Events->find('all')
                 ->select(['id'])
@@ -50,7 +50,7 @@ class FilesController extends AppController
             }
         });
 
-        $this->Crud->on('afterDelete', function(\Cake\Event\Event $event) {
+        $this->Crud->on('afterDelete', function (\Cake\Event\Event $event) {
             // Delete the file if there are no remaining references to it
             $remainingReferences = $this->Files->find('all')
                 ->where(['file' => $event->subject()->entity->file])

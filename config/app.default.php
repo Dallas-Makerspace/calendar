@@ -369,14 +369,14 @@ return [
         'phone' => 'FROM_PHONE_NUMBER'
     ],
 
-	/**
-	 * AD configuration
-	 */
-	'ActiveDirectory' => [
+    /**
+     * AD configuration
+     */
+    'ActiveDirectory' => [
         'account_suffix' => '@dev.com',
-		'admin_username' => 'AD_ADMIN',
-		'admin_password' => 'AD_ADMIN_PW',
+        'admin_username' => 'AD_ADMIN',
+        'admin_password' => 'AD_ADMIN_PW',
         'base_dn' => 'DC=dev,DC=com',
         'domain_controllers' => ['dc1.dev.com']
-	],
+    ],
 ];

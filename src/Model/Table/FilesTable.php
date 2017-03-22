@@ -48,9 +48,9 @@ class FilesTable extends Table
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
-		
-		$validator
-			->boolean('private');
+
+        $validator
+            ->boolean('private');
 
         $validator->add('file', 'fileUnderFormSizeLimit', [
             'rule' => 'isUnderFormSizeLimit',
