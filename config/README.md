@@ -9,4 +9,8 @@ Copy the `config/app.default.php` file to `config/app.php`. This file is a mirro
 ## Adding to or updating the configuration
 
 * Application configuration values can be added to `config/app.php`. When adding new values also mirror those additions in `config/app.default.php` using placeholder values for sensitive information.
-* When amending the database schema a database migration should be created to reflect that change. *NOTE THAT THE CURRENT MIGRATIONS ARE NOT UP TO DATE.* Up to date migrations will be generated from the current schema and this section will be updated to reflect when they are available. More information on [migrations in CakePHP](https://book.cakephp.org/3.0/en/migrations.html)
+* When amending the database schema a database migration should be created to reflect that change. *NOTE THAT THE CURRENT MIGRATIONS ARE NOT UP TO DATE.* Up to date migrations will be generated from the current schema and this section will be updated to reflect when they are available. More information on [migrations in CakePHP](https://book.cakephp.org/3.0/en/migrations.html).
+
+## Customizing/Overriding Routes
+
+Custom routes can be added in `config/routes.php`. These are most useful when making complex routes easier to read or more descriptive of their purpose. More information on [routing in CakePHP](https://book.cakephp.org/3.0/en/development/routing.html).
