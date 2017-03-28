@@ -45,6 +45,8 @@ class RegistrationsController extends AppController
                 }
             }
         }
+        
+        $this->set('isAdmin', parent::inAdminstrativeGroup($user, 'Calendar Admins'));
 
         return $this->Registrations->isOwnedBy($regId, [
             'ad_username' => (isset($user['samaccountname']) ? $user['samaccountname'] : null),
@@ -259,7 +261,7 @@ class RegistrationsController extends AppController
 
         $this->Crud->on('beforeSave', function (\Cake\Event\Event $event) {
             $now = new Time();
-            if ($now > $event->subject()->entity->event->attendee_cancellation) {
+            if ($now > $event->subject()->entity->event->attendee_cancellation && !parent::inAdminstrativeGroup($this->Auth->user(), 'Calendar Admins')) {
                 $this->Flash->error('Your RSVP to this event could not be cancelled. The cutoff time for cancellations has already passed.');
                 $event->stopPropagation();
             } else {

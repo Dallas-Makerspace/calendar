@@ -80,7 +80,7 @@
             </table>
 
             <?php $now = new Time(); ?>
-            <?php if (!in_array($registration->status, ['cancelled', 'rejected']) && $now < $registration->event->attendee_cancellation): ?>
+            <?php if (!in_array($registration->status, ['cancelled', 'rejected']) && ($now < $registration->event->attendee_cancellation || $isAdmin)): ?>
                 <p>You may cancel your RSVP with the button below. Cancelling is final and cannot be reversed. If you paid to attend this event your payment will be processed for a refund.</p>
                 <?= $this->Form->postLink('Cancel RSVP',
                     [
