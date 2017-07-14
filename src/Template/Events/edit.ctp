@@ -265,7 +265,7 @@
 						<?php endif; ?>
                     <?php else: ?>
                         <h5>Cost</h5>
-                        <p class="fixed-data"><?= $event->cost > 0 ? '$' . $event->cost . '00' : 'Free' ?></p>
+                        <p class="fixed-data"><?= $event->cost > 0 ? '$' . number_format($event->cost, 2, '.', '') : 'Free' ?></p>
                     <?php endif; ?>
 
                     <?php if ($unlockedEdits): ?>
