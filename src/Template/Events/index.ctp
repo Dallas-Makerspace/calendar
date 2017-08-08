@@ -131,6 +131,7 @@
                                         )
                                     )?>
                                 </span>
+                                <?= \Cake\ORM\TableRegistry::get('Events')->hasOpenSpaces($event->id) ? '' : 'FULL: ' ?>
                                 <?= $event->name ?>
                             </h4>
                         </a>
