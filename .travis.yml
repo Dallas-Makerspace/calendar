@@ -1,9 +1,12 @@
 language: php
 
-sudo: false
+sudo: true
 
 php:
   - 7.0
+  
+before_install:
+  - sudo apt-get install php5-ldap
 
 before_script:
   - sh -c "composer require 'cakephp/cakephp-codesniffer:dev-master'"
