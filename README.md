@@ -1,4 +1,4 @@
-# DMS Calendar
+# DMS Calendar [![Build Status](https://travis-ci.org/Dallas-Makerspace/calendar.svg?branch=master)](https://travis-ci.org/Dallas-Makerspace/calendar)
 
 ## Prerequisites
 
