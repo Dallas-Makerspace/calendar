@@ -178,6 +178,10 @@
                                     <td><?= $event->short_description ?></td>
                                 </tr>
                                 <tr>
+                                    <td><strong>Cost</strong></td>
+                                    <td>$<?= number_format($event->cost, 2) ?></td>
+                                </tr>
+                                <tr>
                                     <td></td>
                                     <td>
                                         <?= str_replace('"', "'", $this->Html->link('More Info and RSVP »', [
