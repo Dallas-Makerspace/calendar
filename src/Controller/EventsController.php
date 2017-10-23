@@ -1069,7 +1069,7 @@ class EventsController extends AppController
             ->where([
                 'Events.status' => 'approved',
                 'Events.event_start <' => $tomorrow,
-                'Events.reminder_notification' => 1
+                'Events.reminder_notification' => 0
             ]);
 
         foreach ($startNotices as $event) {
