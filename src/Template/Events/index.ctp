@@ -95,6 +95,32 @@
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
+        <div class="row">
+            <div class="col-md-offset-8 col-md-4">
+                <div class="text-right">
+
+                    Sort By:
+                    &nbsp;
+                    <?= $this->Paginator->sort(
+                        'Events.event_start',
+                        array(
+                            'asc' => 'Soonest Events <i class="glyphicon glyphicon-chevron-down"></i>',
+                            'desc' => 'Latest Events <i class="glyphicon glyphicon-chevron-up"></i>',
+                        ),
+                        ['escape' => false, 'model' => 'Events']
+                    ); ?>
+                    &nbsp;
+                    <?= $this->Paginator->sort(
+                        'Events.created',
+                        array(
+                            'asc' => 'Created Recently <i class="glyphicon glyphicon-chevron-down"></i>',
+                            'desc' => 'Created Long Ago <i class="glyphicon glyphicon-chevron-up"></i>',
+                        ),
+                        ['escape' => false]
+                    ); ?>
+                </div>
+            </div>
+        </div>
     </div>
 
     <?php if ($events->count()): ?>
@@ -133,6 +159,8 @@
                                 </span>
                                 <?= \Cake\ORM\TableRegistry::get('Events')->hasOpenSpaces($event->id) ? '' : 'FULL: ' ?>
                                 <?= $event->name ?>
+                                <?php $cost = $event->cost > 0 ? '$' . $event->cost . '.00' : 'Free'; ?>
+                                <?= $cost ?>
                             </h4>
                         </a>
                     </div>

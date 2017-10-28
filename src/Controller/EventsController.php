@@ -17,6 +17,9 @@ use Cake\ORM\TableRegistry;
  */
 class EventsController extends AppController
 {
+
+    public $paginate = ['sortWhitelist' => ['Events.event_start','Events.created']];
+
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
@@ -211,6 +214,7 @@ class EventsController extends AppController
                     'Events.event_end',
                     'Events.name',
                     'Events.short_description',
+                    'Events.created',
                     'Rooms.id',
                     'Rooms.name'
                 ])
@@ -218,8 +222,7 @@ class EventsController extends AppController
                     'Events.event_start >=' => $today,
                     'Events.status' => 'approved'
                 ])
-                ->contain(['Rooms'])
-                ->order(['event_start' => 'ASC']);
+                ->contain(['Rooms']);
 
             $this->__applyQueryFilters($event);
 
