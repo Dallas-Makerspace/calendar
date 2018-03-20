@@ -7,12 +7,9 @@ services:
         environment:
           MYSQL_ROOT_PASSWORD: 'cakephp'
           MYSQL_DATABASE: 'cakephp'
-    php:
-        build: ./php-fpm
-        expose:
-            - "9000"
+    app:
+        build: .
         volumes:
-            - ./cakephp:/www
             - ./logs/cakephp:/www/app/logs
         links:
             - db
@@ -32,13 +29,3 @@ services:
           EMAIL_TLS: 'false'
           REPO: 'https://github.com/Dallas-Makerspace/calendar.git'
           REPO_HOST: 'github.com'
-    nginx:
-        build: ./nginx
-        ports:
-            - "80:80"
-        links:
-            - php
-        volumes_from:
-            - php
-        volumes:
-            - ./logs/nginx/:/var/log/nginx
