@@ -18,7 +18,8 @@
         "josegonzalez/cakephp-upload": "^3.4",
         "braintree/braintree_php": "~3.0",
         "adldap2/adldap2": "~6.0",
-        "twilio/sdk": "^4.10"
+        "twilio/sdk": "^4.10",
+        "php-coveralls/php-coveralls": "^2.0"
     },
     "require-dev": {
         "psy/psysh": "@stable",
