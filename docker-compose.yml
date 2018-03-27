@@ -1,6 +1,11 @@
+---
 version: '3.2'
 
 services:
+    ipam:
+        image: osixia/openldap:1.2.0
+        command: ["--copy-service", "--loglevel", "debug"]
+        volumes: ["/srv/ldap/schema:/etc/ldap/schema:rw"]
 
     db:
         image: mariadb:5.5
