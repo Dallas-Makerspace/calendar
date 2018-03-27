@@ -11,6 +11,7 @@ services:
           MYSQL_DATABASE: 'cakephp'
 
     app:
+        image: dms_calendar:latest
         build:
           context: .
           args:
