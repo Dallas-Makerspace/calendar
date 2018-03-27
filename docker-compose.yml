@@ -1,5 +1,7 @@
-version: '2'
+version: '3.2'
+
 services:
+
     db:
         image: mariadb:5.5
         ports:
@@ -7,8 +9,12 @@ services:
         environment:
           MYSQL_ROOT_PASSWORD: 'cakephp'
           MYSQL_DATABASE: 'cakephp'
+
     app:
-        build: .
+        build:
+          context: .
+          args:
+            FWATCHDOG_VERSION: "0.7.1"
         volumes:
             - ./logs/cakephp:/www/app/logs
         links:
