@@ -1,7 +1,6 @@
 FROM php:7-apache
 
 LABEL maintainer="infrastructure@dallasmakerspace.org"
-label
 
 ENV affinity:org.dallasmakerspace.application= infrastructure
 ENV affinity:org.dallasmakerspace.architecture!= armhf
