@@ -1,5 +1,25 @@
-LABEL maintainer="infrastructure@dallasmakerspace.org"
 FROM php:7-apache
+
+LABEL maintainer="infrastructure@dallasmakerspace.org"
+label
+
+ENV affinity:org.dallasmakerspace.application= infrastructure
+ENV affinity:org.dallasmakerspace.architecture!= armhf
+
+LABEL org.dallasmakerspace.orgunit "Infrastructure Committee"
+LABEL org.dallasmakerspace.organization "Dallas Makerspace"
+LABEL org.dallasmakerspace.commonname "calendar.dallasmakerspace.org"
+LABEL org.dallasmakerspace.locality "Dallas"
+LABEL org.dallasmakerspace.state "Texas"
+LABEL org.dallasmakerspace.country "USA"
+LABEL org.dallasmakerspace.environment "production"
+LABEL org.dallasmakerspace.application "infrastructure"
+LABEL org.dallasmakerspace.role "web application"
+LABEL org.dallasmakerspace.owner "infrastructure@dallasmakerspace.org"
+LABEL org.dallasmakerspace.customer "COMMITTEES:Infrastructure"
+LABEL org.dallasmakerspace.costcenter "FUNDS_MONTHLY:Web Hosting"
+LABEL org.dallasmakerspace.oid "iso.org.dod.internet.50391"
+LABEL org.dallasmakerspace.duns "iso.org.duns.053332191"
 
 ARG FWATCHDOG_VERSION="0.7.1"
 
