@@ -31,6 +31,15 @@ HEALTHCHECK --interval=5s CMD 'curl -sSlk http://localhost/'
 
 COPY . /var/www/html/
 
+RUN apt-get update && apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libpng12-dev \
+    && docker-php-ext-install iconv mcrypt \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install gd
+
 RUN a2enmod rewrite && \
     apt-get update && apt-get install -y \
         libfreetype6-dev \
@@ -43,8 +52,9 @@ RUN a2enmod rewrite && \
     && curl -sL https://github.com/openfaas/faas/releases/download/${FWATCHDOG_VERSION}/fwatchdog > /usr/bin/fwatchdog \
     && chmod +x /usr/bin/fwatchdog \
     && docker-php-ext-configure intl \
-    && pecl install redis \
-    && pecl install mcrypt-1.0.1 \
+    && pecl install redis  && docker-php-ext-install -j$(nproc) redis \
+    && pecl install mcrypt-1.0.1 && docker-php-ext-install -j$(nproc) mcrypt \
+    && docker-php-ext-install -j$(nproc) pdo pdo_mysql mbstring \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd iconv mcrypt intl pdo pdo_mysql mbstring \
+    && docker-php-ext-install -j$(nproc) gd \
     && chmod -R 777 /var/www/html/{tmp,logs}
