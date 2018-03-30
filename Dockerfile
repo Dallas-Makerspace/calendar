@@ -53,7 +53,7 @@ RUN a2enmod rewrite && \
         php5-suhosin \
         php5-mcrypt \
         php5-snmp \
-        php5-xsl
+        php5-xsl \
     && curl -sL https://github.com/openfaas/faas/releases/download/${FWATCHDOG_VERSION}/fwatchdog > /usr/bin/fwatchdog \
     && chmod +x /usr/bin/fwatchdog \
     && docker-php-ext-configure intl \
