@@ -40,10 +40,24 @@ RUN a2enmod rewrite && \
         zlib1g-dev \
         libicu-dev \
         g++ \
+        libapache2-mod-php5 \
+        php5 \
+        php5-cgi \
+        php5-cli \
+        php5-common \
+        php5-curl \
+        php5-gd \
+        php5-imap \
+        php5-mysql \
+        php5-sqlite \
+        php5-suhosin \
+        php5-mcrypt \
+        php5-snmp \
+        php5-xsl
     && curl -sL https://github.com/openfaas/faas/releases/download/${FWATCHDOG_VERSION}/fwatchdog > /usr/bin/fwatchdog \
     && chmod +x /usr/bin/fwatchdog \
     && docker-php-ext-configure intl \
-    && docker-php-ext-install -j$(nproc) iconv mcrypt intl pdo pdo_mysql mbstring \
+    && docker-php-ext-install -j$(nproc) iconv mcrypt intl pdo pdo_mysql mbstring snmp \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     && chmod -R 777 /var/www/html/{tmp,logs}
