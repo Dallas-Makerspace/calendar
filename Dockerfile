@@ -2,8 +2,8 @@ FROM php:7-apache
 
 LABEL maintainer="infrastructure@dallasmakerspace.org"
 
-ENV affinity:org.dallasmakerspace.application= infrastructure
-ENV affinity:org.dallasmakerspace.architecture!= armhf
+LABEL affinity:org.dallasmakerspace.application=infrastructure
+LABEL affinity:org.dallasmakerspace.architecture!=armhf
 
 LABEL org.dallasmakerspace.orgunit "Infrastructure Committee"
 LABEL org.dallasmakerspace.organization "Dallas Makerspace"
