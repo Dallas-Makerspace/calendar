@@ -40,7 +40,7 @@ RUN a2enmod rewrite && \
         zlib1g-dev \
         libicu-dev \
         g++ \
-        libapache2-mod-php5 
+        libapache2-mod-php5 \
     && curl -sL https://github.com/openfaas/faas/releases/download/${FWATCHDOG_VERSION}/fwatchdog > /usr/bin/fwatchdog \
     && chmod +x /usr/bin/fwatchdog \
     && docker-php-ext-configure intl \
