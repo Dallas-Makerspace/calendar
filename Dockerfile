@@ -48,6 +48,7 @@ RUN a2enmod rewrite && \
         libpng-dev \
         zlib1g-dev \
         libicu-dev \
+        mcrypt \
         g++ \
     && curl -sL https://github.com/openfaas/faas/releases/download/${FWATCHDOG_VERSION}/fwatchdog > /usr/bin/fwatchdog \
     && chmod +x /usr/bin/fwatchdog \
