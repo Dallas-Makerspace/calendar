@@ -10,7 +10,7 @@
         "mobiledetect/mobiledetectlib": "2.*",
         "cakephp/migrations": "~1.0",
         "cakephp/plugin-installer": "*",
-        "friendsofcake/bootstrap-ui": "^0.5.0",
+        "friendsofcake/bootstrap-ui": "~0.6.1",
         "friendsofcake/cakephp-csvview": "~3.0",
         "syntaxera/cakephp-sparkpost-plugin": "^0.4.5",
         "unholyknight/active-directory-authenticate": "master",
