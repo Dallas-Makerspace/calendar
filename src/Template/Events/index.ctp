@@ -1,8 +1,42 @@
+<?php
+
+$this->Html->meta(
+    'Events',
+    $this->Url->build([
+    	"controller" => "Events",
+    	"action" => "feed",
+    	"rss"
+	], true),
+    ['type' => 'rss', 'block' => 'meta']
+);
+
+$this->Html->meta(
+    'Events',
+    $this->Url->build([
+    	"controller" => "Events",
+    	"action" => "feed",
+    	"atom"
+	], true),
+    ['type' => 'atom', 'block' => 'meta']
+);
+
+?>
 <div class="events index">
     <?= $this->Flash->render() ?>
     <div class="text-right">
         <?= $this->Html->link('<i class="fa fa-calendar" aria-hidden="true"></i> Calendar View', [
             'action' => 'calendar'
+        ], [
+            'escape' => false
+        ]) ?>
+        <br>
+        <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> RSS', [
+            'action' => 'feed', "rss"
+        ], [
+            'escape' => false
+        ]) ?>
+        <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> ATOM', [
+            'action' => 'feed', "atom"
         ], [
             'escape' => false
         ]) ?>
