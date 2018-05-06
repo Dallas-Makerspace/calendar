@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "18c0f33a1050ca4d0bf665325c137605",
-    "content-hash": "68bd9a2789836e5bac788e2397abe5cb",
+    "hash": "6dd6c65a0fb733465f2b3f2236acdd5c",
+    "content-hash": "5ef85d10a96edd872a698ec7d2c27167",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -385,6 +385,66 @@
             ],
             "description": "A composer installer for CakePHP 3.0+ plugins.",
             "time": "2017-03-21 13:48:47"
+        },
+        {
+            "name": "debril/feed-io",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alexdebril/feed-io.git",
+                "reference": "2e02120893435b45c1ccab46a42192d52baaa8e6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alexdebril/feed-io/zipball/2e02120893435b45c1ccab46a42192d52baaa8e6",
+                "reference": "2e02120893435b45c1ccab46a42192d52baaa8e6",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~6.2",
+                "php": ">=5.6.0",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.4",
+                "monolog/monolog": "1.*",
+                "phpunit/phpunit": "~5.6.0"
+            },
+            "suggest": {
+                "monolog/monolog": "Allows to handle logs",
+                "symfony/console": "Allows to use the command line interface"
+            },
+            "bin": [
+                "bin/feedio"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FeedIo\\": "src/FeedIo"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexandre Debril",
+                    "email": "alex.debril@gmail.com"
+                }
+            ],
+            "description": "PHP library built to consume and serve JSONFeed / RSS / Atom feeds",
+            "homepage": "https://feed-io.net",
+            "keywords": [
+                "atom",
+                "cli",
+                "client",
+                "feed",
+                "jsonfeed",
+                "news",
+                "rss"
+            ],
+            "time": "2018-03-30 15:07:14"
         },
         {
             "name": "doctrine/inflector",

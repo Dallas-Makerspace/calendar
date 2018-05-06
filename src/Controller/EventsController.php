@@ -9,6 +9,11 @@ use Cake\I18n\Time;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
+use \FeedIo\Factory;
+use \FeedIo\Feed;
+use FeedIo\Feed\Node;
+use Cake\View\View;
 
 /**
  * Events Controller
@@ -158,7 +163,7 @@ class EventsController extends AppController
         return $this->Crud->execute();
     }
 
-    public function feed()
+    public function feed($type="vcal")
     {
         // TODO: Accept arguments like calendar view and include location
         $this->autoRender = false;
@@ -174,33 +179,89 @@ class EventsController extends AppController
                 'Events.name',
                 'Events.room_id',
                 'Events.short_description',
-                'Rooms.name'
+            	'Events.long_description',
+                'Rooms.name',
+            	'Contacts.name',
+            	'Events.modified'
             ])
             ->where([
                 'Events.event_start >=' => $today,
                 'Events.status' => 'approved'
             ])
-            ->contain(['Rooms'])
+            ->contain(['Rooms','Contacts', 'Categories'])
             ->order(['event_start' => 'ASC']);
 
-        echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\nCALSCALE:GREGORIAN\r\n";
-
-        foreach ($events as $event) {
-            echo "BEGIN:VEVENT\r\n";
-            echo 'DTSTART:' . $this->__icsDate($event->event_start) . "\r\n";
-            echo 'DTEND:' . $this->__icsDate($event->event_end) . "\r\n";
-            echo 'DTSTAMP:' . $this->__icsDate($now) . "\r\n";
-            echo 'UID:dmsevtv3' . $event->id . "@calendar.dallasmakerspace.org\r\n";
-            echo 'SUMMARY:' . $this->__icsEscapeString($event->name) . "\r\n";
-            echo 'DESCRIPTION:' . $this->__icsEscapeString($event->short_description . ' Event details at https://calendar.dallasmakerspace.org/events/view/' . $event->id) . "\r\n";
-            echo 'LOCATION:' . $event->room->name . "\r\n";
-            echo 'URL;VALUE=URI:' . $this->__icsEscapeString('https://calendar.dallasmakerspace.org/events/view/' . $event->id) . "\r\n";
-            echo "END:VEVENT\r\n";
-        }
-
-        echo 'END:VCALENDAR';
+		if ($type === "vcal") {
+	        echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\nCALSCALE:GREGORIAN\r\n";
+	
+	        foreach ($events as $event) {
+	        	$event_url = Router::url(['controller' => 'Events', 'action' => 'view',	'id' => $event->id], true);
+	        	
+	            echo "BEGIN:VEVENT\r\n";
+	            echo 'DTSTART:' . $this->__icsDate($event->event_start) . "\r\n";
+	            echo 'DTEND:' . $this->__icsDate($event->event_end) . "\r\n";
+	            echo 'DTSTAMP:' . $this->__icsDate($now) . "\r\n";
+	            echo 'UID:dmsevtv3' . $event->id . "@calendar.dallasmakerspace.org\r\n";
+	            echo 'SUMMARY:' . $this->__icsEscapeString($event->name) . "\r\n";
+	            echo 'DESCRIPTION:' . $this->__icsEscapeString($event->short_description . ' Event details at '.$event_url) . "\r\n";
+	            echo 'LOCATION:' . $event->room->name . "\r\n";
+	            echo 'URL;VALUE=URI:' . $this->__icsEscapeString($event_url) . "\r\n";
+	            echo "END:VEVENT\r\n";
+	        }
+	
+	        echo 'END:VCALENDAR';
+		}
+		else {
+			$feed = new Feed();
+			
+			//Setting the channel elements
+			$feed->setTitle('Dallas Makerspace Events & Classes');
+			$feed->setLink(Router::url('/', true));
+			$feed->setDescription('Events and Classes avaliable at the Dallas Makerspace');
+			
+			foreach($events as $event) {
+				$view = new View($this->request);
+				$view->set('event', $event);
+				$desc_html = $view->render('Events/feed_contents', false);
+				
+				$url = Router::url(['controller' => 'Events', 'action' => 'view', 'id' => $event->id], true);
+				
+				$feed_event = $feed->newItem();
+				$feed_event->setTitle($event->name);
+				$feed_event->setLink($url);
+				//$feed_event->setLastModified(new \DateTime($event->modified));
+				$feed_event->setLastModified(new \DateTime($event->event_start));
+				$feed_event->setDescription($desc_html);
+				$feed_event->setPublicId($url, false);
+				
+				$feed_author = $feed_event->newAuthor();
+				$feed_author->getName($event->contact->name);
+				$feed_author->setUri("");
+				$feed_author->setEmail("");
+				$feed_event->setAuthor($feed_author);
+		
+				foreach($event->categories as $category) {
+					$feed_category = $feed_event->newCategory();
+					$feed_category->setLabel($category->name);
+					$feed_event->addCategory($feed_category);
+				}				
+				
+				$feed->add($feed_event);
+			}
+			
+			$feedIo = Factory::create()->getFeedIo();
+			
+			if ($type === "atom")
+				echo $feedIo->format($feed, 'atom');
+			else if ($type === "json")
+				echo $feedIo->format($feed, 'json');
+			else if ($type === "rss")
+				echo $feedIo->format($feed, 'rss');
+			else 
+				echo $feedIo->format($feed, 'rss');
+		}
     }
-
+    
     public function index()
     {
         $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {

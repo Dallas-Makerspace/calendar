@@ -50,6 +50,11 @@ Router::scope('/', function (RouteBuilder $routes) {
      */
     $routes->connect('/', ['controller' => 'Events', 'action' => 'index']);
 
+    // Events View
+    $routes->connect("/events/view/:id", 
+    		['controller' => 'Events', 'action' => 'view'],
+    		['id' => '\d+', 'pass' => ['id']]);
+    
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
      */
