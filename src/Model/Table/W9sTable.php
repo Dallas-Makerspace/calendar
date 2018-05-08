@@ -78,6 +78,7 @@ class W9sTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['contact_id'], 'Contacts'));
+        
         return $rules;
     }
 }
