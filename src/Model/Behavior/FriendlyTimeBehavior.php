@@ -40,6 +40,7 @@ class FriendlyTimeBehavior extends Behavior
         );
         $dateTime->setTimeZone(new \DateTimeZone($config['from_timezone']));
         $date = $dateTime->format($config['format']);
+        
         return $date;
     }
 
