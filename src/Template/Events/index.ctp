@@ -1,21 +1,29 @@
 <?php
 
+// set link tag in head
 $this->Html->meta(
     'Events',
     $this->Url->build([
     	"controller" => "Events",
     	"action" => "feed",
-    	"rss"
+    	"feedtype" => "rss",
+   		"category" => $this->request->query("category"),
+   		"type" => $this->request->query("type"),
+   		"tool" => $this->request->query("tool"),
 	], true),
     ['type' => 'rss', 'block' => 'meta']
 );
 
+// set link tag in head
 $this->Html->meta(
     'Events',
     $this->Url->build([
     	"controller" => "Events",
     	"action" => "feed",
-    	"atom"
+    	"feedtype" => "atom",
+    	"category" => $this->request->query("category"),
+    	"type" => $this->request->query("type"),
+    	"tool" => $this->request->query("tool"),
 	], true),
     ['type' => 'atom', 'block' => 'meta']
 );
@@ -31,12 +39,18 @@ $this->Html->meta(
         ]) ?>
         <br>
         <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> RSS', [
-            'action' => 'feed', "rss"
+            'action' => 'feed', 'feedtype' => "rss",
+    		"category" => $this->request->query("category"),
+    		"type" => $this->request->query("type"),
+    		"tool" => $this->request->query("tool"),
         ], [
             'escape' => false
         ]) ?>
         <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> ATOM', [
-            'action' => 'feed', "atom"
+            'action' => 'feed', 'feedtype' => "atom",
+    		"category" => $this->request->query("category"),
+    		"type" => $this->request->query("type"),
+    		"tool" => $this->request->query("tool"),
         ], [
             'escape' => false
         ]) ?>

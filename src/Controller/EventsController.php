@@ -163,7 +163,7 @@ class EventsController extends AppController
         return $this->Crud->execute();
     }
 
-    public function feed($type="vcal")
+    public function feed($feedtype="vcal")
     {
         // TODO: Accept arguments like calendar view and include location
         $this->autoRender = false;
@@ -171,7 +171,7 @@ class EventsController extends AppController
         $today = new Time('America/Chicago');
         $today->startOfDay()->timezone('UTC');
         $now = Time::now();
-        $events = $this->Events->find('all')
+		$event_query = $this->Events->find('all')
             ->select([
                 'Events.id',
                 'Events.event_start',
@@ -191,7 +191,17 @@ class EventsController extends AppController
             ->contain(['Rooms','Contacts', 'Categories'])
             ->order(['event_start' => 'ASC']);
 
-		if ($type === "vcal") {
+		// This allows us to use the applyQueryFilters method for the feed
+		// It creates an event object so that applyQueryFilters is happy
+		$feed_event_subject = new \stdClass();
+		$feed_event_subject->query = $event_query;
+		$feed_event = new \Cake\Event\Event("feed_event", $feed_event_subject);
+        
+        $this->__applyQueryFilters($feed_event);
+
+        $events = $feed_event->getSubject()->query;
+            
+		if ($feedtype=== "vcal") {
 	        echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\nCALSCALE:GREGORIAN\r\n";
 	
 	        foreach ($events as $event) {
@@ -212,13 +222,47 @@ class EventsController extends AppController
 	        echo 'END:VCALENDAR';
 		}
 		else {
+			
+			// get id's for categories and tools
+			$type = $this->request->query("type");
+			$category = $this->request->query("category");
+			$tool = $this->request->query("tool");
+			
+			// get names for categories and tools
+			
+			$title_addon = "";
+			$description_addon = "";
+
+			$subjects = [];	
+			
+			if (ctype_digit($type)) 
+				$subjects[] = $this->Events->Categories->find('list')->where(['id' => $type])->first();
+			
+			if (ctype_digit($category))
+				$subjects[] = $this->Events->Categories->find('list')->where(['id' => $category])->first();
+					
+			if (ctype_digit($tool))
+				$subjects[] = $this->Events->Tools->find('list')->where(['id' => $tool])->first();
+			
+			if (!empty($subjects)) {
+				$title_addon = " - ".implode(", ", $subjects);
+				$description_addon = " - Subjects: ".implode(", ", $subjects);
+			}
+			else {
+				$title_addon = " - All";
+				$description_addon = " - Subjects: All Included";
+			}
+				
+			// create new feed	
 			$feed = new Feed();
 			
-			//Setting the channel elements
-			$feed->setTitle('Dallas Makerspace Events & Classes');
-			$feed->setLink(Router::url('/', true));
-			$feed->setDescription('Events and Classes avaliable at the Dallas Makerspace');
+			// Set the feed channel elements
 			
+			$feed->setTitle('Dallas Makerspace Calendar'.$title_addon);
+			$feed->setLink(Router::url('/', true));
+			$feed->setDescription('Events and Classes avaliable at the Dallas Makerspace'.$description_addon);
+			
+			// add each event/class in feed
 			foreach($events as $event) {
 				$view = new View($this->request);
 				$view->set('event', $event);
@@ -249,13 +293,15 @@ class EventsController extends AppController
 				$feed->add($feed_event);
 			}
 			
+			// output feed in format specified
+			
 			$feedIo = Factory::create()->getFeedIo();
 			
-			if ($type === "atom")
+			if ($feedtype === "atom")
 				echo $feedIo->format($feed, 'atom');
-			else if ($type === "json")
+			else if ($feedtype === "json")
 				echo $feedIo->format($feed, 'json');
-			else if ($type === "rss")
+			else if ($feedtype === "rss")
 				echo $feedIo->format($feed, 'rss');
 			else 
 				echo $feedIo->format($feed, 'rss');
@@ -285,7 +331,7 @@ class EventsController extends AppController
                     'Events.status' => 'approved'
                 ])
                 ->contain(['Rooms']);
-
+                
             $this->__applyQueryFilters($event);
 
             $this->paginate['limit'] = 2147483647;
