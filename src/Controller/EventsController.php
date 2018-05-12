@@ -488,7 +488,7 @@ class EventsController extends AppController
                     'Events.created_by' => $this->Auth->user('samaccountname')
                 ])
                 ->contain(['Rooms'])
-                ->order(['event_start' => 'ASC']);
+                ->order(['event_start' => 'DESC']);
 
             $this->paginate['limit'] = 2147483647;
         });

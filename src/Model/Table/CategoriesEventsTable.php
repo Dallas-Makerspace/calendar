@@ -34,6 +34,7 @@ class CategoriesEventsTable extends Table
             'foreignKey' => 'category_id',
             'joinType' => 'INNER'
         ]);
+
         $this->belongsTo('Events', [
             'foreignKey' => 'event_id',
             'joinType' => 'INNER'
@@ -66,6 +67,7 @@ class CategoriesEventsTable extends Table
     {
         $rules->add($rules->existsIn(['category_id'], 'Categories'));
         $rules->add($rules->existsIn(['event_id'], 'Events'));
+
         return $rules;
     }
 }
