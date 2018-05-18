@@ -20,7 +20,7 @@ class FriendlyTimeBehavior extends Behavior
     /**
     * convertFrom Format.
     *
-    * @param \Cake\ArrayObject data Data to convert.
+    * @param \Cake\ArrayObject $data Data to convert.
     * @return void
     */
     public function convertFromFormat(\ArrayObject $data)
@@ -42,7 +42,7 @@ class FriendlyTimeBehavior extends Behavior
     /**
     * convertToFrom Format.
     *
-    * @param \DateTime date Date object to convert.
+    * @param \DateTime $date Date object to convert.
     * @return \Time
     */
     public function convertToFormat($date)
