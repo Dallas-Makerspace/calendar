@@ -5,6 +5,9 @@ use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\ORM\Behavior;
 
+/**
+ * FriendlyTimeBehavior Utility class
+ */
 class FriendlyTimeBehavior extends Behavior
 {
     protected $_defaultConfig = [
@@ -14,6 +17,12 @@ class FriendlyTimeBehavior extends Behavior
         'to_timezone' => 'UTC'
     ];
 
+    /**
+     * convertFrom Format.
+     *
+     * @param \Cake\ArrayObject $data Data to convert.
+     * @return void
+     */
     public function convertFromFormat(\ArrayObject $data)
     {
         $config = $this->config();
@@ -30,6 +39,12 @@ class FriendlyTimeBehavior extends Behavior
         }
     }
 
+    /**
+     * convertToFrom Format.
+     *
+     * @param \DateTime $date Date object to convert.
+     * @return \Time
+     */
     public function convertToFormat($date)
     {
         $config = $this->config();
@@ -40,9 +55,18 @@ class FriendlyTimeBehavior extends Behavior
         );
         $dateTime->setTimeZone(new \DateTimeZone($config['from_timezone']));
         $date = $dateTime->format($config['format']);
+
         return $date;
     }
 
+    /**
+     * beforeMarshal
+     *
+     * @param \Event $event event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
+     */
     public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
     {
         $this->convertFromFormat($data);

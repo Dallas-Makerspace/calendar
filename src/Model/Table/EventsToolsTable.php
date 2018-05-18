@@ -66,6 +66,7 @@ class EventsToolsTable extends Table
     {
         $rules->add($rules->existsIn(['tool_id'], 'Tools'));
         $rules->add($rules->existsIn(['event_id'], 'Events'));
+        
         return $rules;
     }
 }

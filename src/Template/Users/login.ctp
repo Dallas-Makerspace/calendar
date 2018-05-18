@@ -9,7 +9,7 @@
       <?= $this->Flash->render() ?>
       <?= $this->Form->create() ?>
         <fieldset>
-          <?= $this->Form->input('username', ['required' => true]) ?>
+          <?= $this->Form->input('username', ['required' => true, 'autofocus' => 'autofocus']) ?>
           <?= $this->Form->input('password', ['required' => true]) ?>
         </fieldset>
         <?= $this->Form->button(__('Login')); ?>
