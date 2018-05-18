@@ -62,9 +62,10 @@ class FriendlyTimeBehavior extends Behavior
     /**
      * beforeMarshal
      *
-     * @param \Event $event
-     * @param \ArrayObject $data
-     * @param \ArrayObject $options
+     * @param \Event $event event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
      */
     public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
     {
