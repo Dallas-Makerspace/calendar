@@ -4,10 +4,6 @@ sudo: true
 
 php:
   - 7.0
-  
-before_install:
-  - echo "extension = ldap.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - sudo apt-get install php5-ldap
 
 before_script:
   - sh -c "composer require 'cakephp/cakephp-codesniffer:dev-master'"
