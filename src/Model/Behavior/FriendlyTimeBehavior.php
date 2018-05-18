@@ -55,10 +55,17 @@ class FriendlyTimeBehavior extends Behavior
         );
         $dateTime->setTimeZone(new \DateTimeZone($config['from_timezone']));
         $date = $dateTime->format($config['format']);
-        
+
         return $date;
     }
 
+    /**
+     * beforeMarshal
+     *
+     * @param \Event $event
+     * @param \ArrayObject $data
+     * @param \ArrayObject $options
+     */
     public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
     {
         $this->convertFromFormat($data);
