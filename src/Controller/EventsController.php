@@ -9,6 +9,11 @@ use Cake\I18n\Time;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
+use \FeedIo\Factory;
+use \FeedIo\Feed;
+use FeedIo\Feed\Node;
+use Cake\View\View;
 
 /**
  * Events Controller
@@ -158,7 +163,7 @@ class EventsController extends AppController
         return $this->Crud->execute();
     }
 
-    public function feed()
+    public function feed($feedtype="vcal")
     {
         // TODO: Accept arguments like calendar view and include location
         $this->autoRender = false;
@@ -166,7 +171,7 @@ class EventsController extends AppController
         $today = new Time('America/Chicago');
         $today->startOfDay()->timezone('UTC');
         $now = Time::now();
-        $events = $this->Events->find('all')
+		$event_query = $this->Events->find('all')
             ->select([
                 'Events.id',
                 'Events.event_start',
@@ -174,33 +179,135 @@ class EventsController extends AppController
                 'Events.name',
                 'Events.room_id',
                 'Events.short_description',
-                'Rooms.name'
+            	'Events.long_description',
+                'Rooms.name',
+            	'Contacts.name',
+            	'Events.modified'
             ])
             ->where([
                 'Events.event_start >=' => $today,
                 'Events.status' => 'approved'
             ])
-            ->contain(['Rooms'])
+            ->contain(['Rooms','Contacts', 'Categories'])
             ->order(['event_start' => 'ASC']);
 
-        echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\nCALSCALE:GREGORIAN\r\n";
+		// This allows us to use the applyQueryFilters method for the feed
+		// It creates an event object so that applyQueryFilters is happy
+		$feed_event_subject = new \stdClass();
+		$feed_event_subject->query = $event_query;
+		$feed_event = new \Cake\Event\Event("feed_event", $feed_event_subject);
+        
+        $this->__applyQueryFilters($feed_event);
 
-        foreach ($events as $event) {
-            echo "BEGIN:VEVENT\r\n";
-            echo 'DTSTART:' . $this->__icsDate($event->event_start) . "\r\n";
-            echo 'DTEND:' . $this->__icsDate($event->event_end) . "\r\n";
-            echo 'DTSTAMP:' . $this->__icsDate($now) . "\r\n";
-            echo 'UID:dmsevtv3' . $event->id . "@calendar.dallasmakerspace.org\r\n";
-            echo 'SUMMARY:' . $this->__icsEscapeString($event->name) . "\r\n";
-            echo 'DESCRIPTION:' . $this->__icsEscapeString($event->short_description . ' Event details at https://calendar.dallasmakerspace.org/events/view/' . $event->id) . "\r\n";
-            echo 'LOCATION:' . $event->room->name . "\r\n";
-            echo 'URL;VALUE=URI:' . $this->__icsEscapeString('https://calendar.dallasmakerspace.org/events/view/' . $event->id) . "\r\n";
-            echo "END:VEVENT\r\n";
-        }
+        $events = $feed_event->getSubject()->query;
+            
+		if ($feedtype=== "vcal") {
+	        echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\nCALSCALE:GREGORIAN\r\n";
+	
+	        foreach ($events as $event) {
+	        	$event_url = Router::url(['controller' => 'Events', 'action' => 'view',	'id' => $event->id], true);
+	        	
+	            echo "BEGIN:VEVENT\r\n";
+	            echo 'DTSTART:' . $this->__icsDate($event->event_start) . "\r\n";
+	            echo 'DTEND:' . $this->__icsDate($event->event_end) . "\r\n";
+	            echo 'DTSTAMP:' . $this->__icsDate($now) . "\r\n";
+	            echo 'UID:dmsevtv3' . $event->id . "@calendar.dallasmakerspace.org\r\n";
+	            echo 'SUMMARY:' . $this->__icsEscapeString($event->name) . "\r\n";
+	            echo 'DESCRIPTION:' . $this->__icsEscapeString($event->short_description . ' Event details at '.$event_url) . "\r\n";
+	            echo 'LOCATION:' . $event->room->name . "\r\n";
+	            echo 'URL;VALUE=URI:' . $this->__icsEscapeString($event_url) . "\r\n";
+	            echo "END:VEVENT\r\n";
+	        }
+	
+	        echo 'END:VCALENDAR';
+		}
+		else {
+			
+			// get id's for categories and tools
+			$type = $this->request->query("type");
+			$category = $this->request->query("category");
+			$tool = $this->request->query("tool");
+			
+			// get names for categories and tools
+			
+			$title_addon = "";
+			$description_addon = "";
 
-        echo 'END:VCALENDAR';
+			$subjects = [];	
+			
+			if (ctype_digit($type)) 
+				$subjects[] = $this->Events->Categories->find('list')->where(['id' => $type])->first();
+			
+			if (ctype_digit($category))
+				$subjects[] = $this->Events->Categories->find('list')->where(['id' => $category])->first();
+					
+			if (ctype_digit($tool))
+				$subjects[] = $this->Events->Tools->find('list')->where(['id' => $tool])->first();
+			
+			if (!empty($subjects)) {
+				$title_addon = " - ".implode(", ", $subjects);
+				$description_addon = " - Subjects: ".implode(", ", $subjects);
+			}
+			else {
+				$title_addon = " - All";
+				$description_addon = " - Subjects: All Included";
+			}
+				
+			// create new feed	
+			$feed = new Feed();
+			
+			// Set the feed channel elements
+			
+			$feed->setTitle('Dallas Makerspace Calendar'.$title_addon);
+			$feed->setLink(Router::url('/', true));
+			$feed->setDescription('Events and Classes avaliable at the Dallas Makerspace'.$description_addon);
+			
+			// add each event/class in feed
+			foreach($events as $event) {
+				$view = new View($this->request);
+				$view->set('event', $event);
+				$desc_html = $view->render('Events/feed_contents', false);
+				
+				$url = Router::url(['controller' => 'Events', 'action' => 'view', 'id' => $event->id], true);
+				
+				$feed_event = $feed->newItem();
+				$feed_event->setTitle($event->name);
+				$feed_event->setLink($url);
+				//$feed_event->setLastModified(new \DateTime($event->modified));
+				$feed_event->setLastModified(new \DateTime($event->event_start));
+				$feed_event->setDescription($desc_html);
+				$feed_event->setPublicId($url, false);
+				
+				$feed_author = $feed_event->newAuthor();
+				$feed_author->getName($event->contact->name);
+				$feed_author->setUri("");
+				$feed_author->setEmail("");
+				$feed_event->setAuthor($feed_author);
+		
+				foreach($event->categories as $category) {
+					$feed_category = $feed_event->newCategory();
+					$feed_category->setLabel($category->name);
+					$feed_event->addCategory($feed_category);
+				}				
+				
+				$feed->add($feed_event);
+			}
+			
+			// output feed in format specified
+			
+			$feedIo = Factory::create()->getFeedIo();
+			
+			if ($feedtype === "atom")
+				echo $feedIo->format($feed, 'atom');
+			else if ($feedtype === "json")
+				echo $feedIo->format($feed, 'json');
+			else if ($feedtype === "rss")
+				echo $feedIo->format($feed, 'rss');
+			else 
+				echo $feedIo->format($feed, 'rss');
+		}
     }
-
+    
     public function index()
     {
         $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
@@ -224,7 +331,7 @@ class EventsController extends AppController
                     'Events.status' => 'approved'
                 ])
                 ->contain(['Rooms']);
-
+                
             $this->__applyQueryFilters($event);
 
             $this->paginate['limit'] = 2147483647;

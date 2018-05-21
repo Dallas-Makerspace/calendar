@@ -248,7 +248,7 @@
 		
 		<div>
 			<ul class="nav nav-tabs" role="tablist">
-			    <li role="presentation" class="active"><a href="#registrations" aria-controls="registrations" role="tab" data-toggle="tab">Registrations <span class="badge"><?= (isset($event->registrations) && !empty($event->registration)) : count($event->registrations) ? "0"; ?></span></a></li>
+			    <li role="presentation" class="active"><a href="#registrations" aria-controls="registrations" role="tab" data-toggle="tab">Registrations <span class="badge"><?= (isset($event->registrations) && !empty($event->registration)) ? count($event->registrations) : "0"; ?></span></a></li>
 			    <li role="presentation"><a href="#attendance" aria-controls="attendance" role="tab" data-toggle="tab">Attendance</a></li>
 			    <?php if ($event->fulfills_prerequisite_id): ?>
 					<li role="presentation"><a href="#assignments" aria-controls="assignments" role="tab" data-toggle="tab">AD Assignment</a></li>

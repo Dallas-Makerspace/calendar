@@ -1,8 +1,56 @@
+<?php
+
+// set link tag in head
+$this->Html->meta(
+    'Events',
+    $this->Url->build([
+    	"controller" => "Events",
+    	"action" => "feed",
+    	"feedtype" => "rss",
+   		"category" => $this->request->query("category"),
+   		"type" => $this->request->query("type"),
+   		"tool" => $this->request->query("tool"),
+	], true),
+    ['type' => 'rss', 'block' => 'meta']
+);
+
+// set link tag in head
+$this->Html->meta(
+    'Events',
+    $this->Url->build([
+    	"controller" => "Events",
+    	"action" => "feed",
+    	"feedtype" => "atom",
+    	"category" => $this->request->query("category"),
+    	"type" => $this->request->query("type"),
+    	"tool" => $this->request->query("tool"),
+	], true),
+    ['type' => 'atom', 'block' => 'meta']
+);
+
+?>
 <div class="events index">
     <?= $this->Flash->render() ?>
     <div class="text-right">
         <?= $this->Html->link('<i class="fa fa-calendar" aria-hidden="true"></i> Calendar View', [
             'action' => 'calendar'
+        ], [
+            'escape' => false
+        ]) ?>
+        <br>
+        <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> RSS', [
+            'action' => 'feed', 'feedtype' => "rss",
+    		"category" => $this->request->query("category"),
+    		"type" => $this->request->query("type"),
+    		"tool" => $this->request->query("tool"),
+        ], [
+            'escape' => false
+        ]) ?>
+        <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> ATOM', [
+            'action' => 'feed', 'feedtype' => "atom",
+    		"category" => $this->request->query("category"),
+    		"type" => $this->request->query("type"),
+    		"tool" => $this->request->query("tool"),
         ], [
             'escape' => false
         ]) ?>
