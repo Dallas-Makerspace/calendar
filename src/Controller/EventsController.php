@@ -207,31 +207,37 @@ class EventsController extends AppController
         $events = $feed_event->getSubject()->query;
             
 		if ($feedtype=== "vcal") {
-	        echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\nCALSCALE:GREGORIAN\r\n";
+			$vcalendar = "";
+			
+			$vcalendar .= "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\nCALSCALE:GREGORIAN\r\n";
 	
 	        foreach ($events as $event) {
 	        	$event_url = Router::url(['controller' => 'Events', 'action' => 'view',	'id' => $event->id], true);
 	        	
-	            echo "BEGIN:VEVENT\r\n";
-	            echo 'DTSTART:' . $this->__icsDate($event->event_start) . "\r\n";
-	            echo 'DTEND:' . $this->__icsDate($event->event_end) . "\r\n";
-	            echo 'DTSTAMP:' . $this->__icsDate($now) . "\r\n";
-	            echo 'UID:dmsevtv3' . $event->id . "@calendar.dallasmakerspace.org\r\n";
-	            echo 'SUMMARY:' . $this->__icsEscapeString($event->name) . "\r\n";
-	            echo 'DESCRIPTION:' . $this->__icsEscapeString($event->short_description . ' Event details at '.$event_url) . "\r\n";
-	            echo 'LOCATION:' . $event->room->name . "\r\n";
-	            echo 'URL;VALUE=URI:' . $this->__icsEscapeString($event_url) . "\r\n";
-	            echo "END:VEVENT\r\n";
+	        	$vcalendar .= "BEGIN:VEVENT\r\n";
+	        	$vcalendar .= 'DTSTART:' . $this->__icsDate($event->event_start) . "\r\n";
+	        	$vcalendar .= 'DTEND:' . $this->__icsDate($event->event_end) . "\r\n";
+	        	$vcalendar .= 'DTSTAMP:' . $this->__icsDate($now) . "\r\n";
+	        	$vcalendar .= 'UID:dmsevtv3' . $event->id . "@calendar.dallasmakerspace.org\r\n";
+	        	$vcalendar .= 'SUMMARY:' . $this->__icsEscapeString($event->name) . "\r\n";
+	        	$vcalendar .= 'DESCRIPTION:' . $this->__icsEscapeString($event->short_description . ' Event details at '.$event_url) . "\r\n";
+	        	$vcalendar .= 'LOCATION:' . $event->room->name . "\r\n";
+	        	$vcalendar .= 'URL;VALUE=URI:' . $this->__icsEscapeString($event_url) . "\r\n";
+	        	$vcalendar .= "END:VEVENT\r\n";
 	        }
 	
-	        echo 'END:VCALENDAR';
+	        $vcalendar .= 'END:VCALENDAR';
+	        
+	        $this->response = $this->response
+	        	->withStringBody($vcalendar)
+	        	->withType('text/calendar');
 		}
 		else {
 			
 			// get id's for categories and tools
-			$type = $this->request->query("type");
-			$category = $this->request->query("category");
-			$tool = $this->request->query("tool");
+			$type = $this->request->getQuery("type");
+			$category = $this->request->getQuery("category");
+			$tool = $this->request->getQuery("tool");
 			
 			// get names for categories and tools
 			
@@ -302,15 +308,29 @@ class EventsController extends AppController
 			
 			$feedIo = Factory::create()->getFeedIo();
 			
-			if ($feedtype === "atom")
-				echo $feedIo->format($feed, 'atom');
-			else if ($feedtype === "json")
-				echo $feedIo->format($feed, 'json');
-			else if ($feedtype === "rss")
-				echo $feedIo->format($feed, 'rss');
-			else 
-				echo $feedIo->format($feed, 'rss');
+			if ($feedtype === "atom") {
+				$this->response = $this->response
+					->withStringBody($feedIo->format($feed, 'atom'))
+					->withType('application/atom+xml');
+			}
+			else if ($feedtype === "json") {
+				$this->response = $this->response
+					->withStringBody($feedIo->format($feed, 'json'))
+					->withType('application/json');
+			}
+			else if ($feedtype === "rss") {
+				$this->response = $this->response
+					->withStringBody($feedIo->format($feed, 'rss'))
+					->withType('application/rss+xml');
+			}
+			else { // Default to RSS
+				$this->response = $this->response
+					->withStringBody($feedIo->format($feed, 'rss'))
+					->withType('application/rss+xml');
+			}
 		}
+		
+		return $this->response;
     }
     
     public function index()
