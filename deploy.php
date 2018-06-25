@@ -17,13 +17,16 @@ set('allow_anonymous_stats', false);
 
 // Hosts
 
-host('calendar.dallasmakerspace.org')
+host('10.255.0.129')
     ->stage('prod')
     ->set('deploy_path', '/srv/http/calendar.dallasmakerspace.org');
 
 
 // Tasks
 task('deploy:executable', 'chmod +x bin/cake');
+task('deploy:run_migrations', function() {
+	return false;
+});
 
 before('deploy:init', 'deploy:executable');
 

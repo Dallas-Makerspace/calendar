@@ -23,7 +23,12 @@ use Cake\View\View;
 class EventsController extends AppController
 {
 
-    public $paginate = ['sortWhitelist' => ['Events.event_start','Events.created']];
+     public $paginate = [
+       'sortWhitelist' => ['Events.event_start','Events.created'],
+       'order' => [
+             'Events.event_start' => 'asc'
+         ]
+     ];
 
     public function beforeFilter(Event $event)
     {
