@@ -34,6 +34,9 @@ class Contact extends Entity
         'id' => true,
     ];
 
+    /**
+     * @return array
+     */
     protected function _getContactListLabel()
     {
         return $this->_properties['name'] . ' (' . $this->_properties['email'] . ')';
