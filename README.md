@@ -1,7 +1,8 @@
-# DMS Calendar [![Build Status](https://travis-ci.org/Dallas-Makerspace/calendar.svg?branch=master)](https://travis-ci.org/Dallas-Makerspace/calendar) [![License](https://img.shields.io/github/license/Dallas-Makerspace/calendar.svg?style=flat-square)](https://github.com/Dallas-Makerspace/calendar/blob/master/LICENCE) [![Coverage Status](https://coveralls.io/repos/github/Dallas-Makerspace/calendar/badge.svg?branch=master)](https://coveralls.io/github/Dallas-Makerspace/calendar?branch=master)
-[![Release](https://img.shields.io/github/tag/Dallas-Makerspace/calendar.svg?style=flat-square)](https://github.com/Dallas-Makerspace/calendar/tags)
+# DMS Calendar [![Build Status](https://travis-ci.org/Dallas-Makerspace/calendar.svg?branch=master)](https://travis-ci.org/Dallas-Makerspace/calendar) [![Docker Build Status](https://img.shields.io/docker/build/dallasmakerspace/calendar.svg)](https://hub.docker.com/r/dallasmakerspace/calendar) [![License](https://img.shields.io/github/license/Dallas-Makerspace/calendar.svg?style=flat-square)](https://github.com/Dallas-Makerspace/calendar/blob/master/LICENCE) [![Coverage Status](https://coveralls.io/repos/github/Dallas-Makerspace/calendar/badge.svg?branch=master)](https://coveralls.io/github/Dallas-Makerspace/calendar?branch=master)
+[![Release](https://img.shields.io/github/tag/Dallas-Makerspace/calendar.svg?style=flat-square)](https://github.com/Dallas-Makerspace/calendar/tags) 
 
-Find a copy of the latest build at [Docker Hub](https://hub.docker.com/r/dallasmakerspace/calendar/).
+
+Find a copy of the latest build at [Docker Hub](https://hub.docker.com/r/dallasmakerspace/calendar/). Join us <a href="https://discord.gg/rDVJgbe"><img src="https://img.shields.io/discord/300062029559889931.svg?logo=discord" alt="on Discord"></a>.
 
 ## Prerequisites
 
