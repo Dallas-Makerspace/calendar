@@ -37,4 +37,9 @@
             <directory suffix=".php">./plugins/*/src/</directory>
         </whitelist>
     </filter>
+
+    <logging>
+        <log type="coverage-php" target="build/cov/coverage.cov"/>
+    </logging>
+
 </phpunit>
