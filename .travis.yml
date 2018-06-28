@@ -12,8 +12,8 @@ before_script:
 script:
   - sh -c "composer test"
 
-
 after_success:
+  - travis_retry php vendor/bin/php-coveralls -v
   # Push successful builds of the master branch to Docker Hub
   # You need to define $DOCKER_REPO_PREFIX, $DOCKER_REPO_NAME, $DOCKER_USERNAME and $DOCKER_PASSWORD in your Travis settings.
   # $DOCKER_REPO_PREFIX - Organisation of username who owns the repo on Docker Hub
