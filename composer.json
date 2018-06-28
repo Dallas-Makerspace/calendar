@@ -26,9 +26,9 @@
 		"psy/psysh" : "@stable",
 		"cakephp/debug_kit" : "~3.2",
 		"cakephp/bake" : "~1.1",
-        "php-coveralls/php-coveralls": "^2.1",
-        "phpunit/phpcov": "^2.0",
-        "phpunit/phpunit": "^7"
+        "php-coveralls/php-coveralls": "~2.0",
+        "phpunit/phpcov": "~2.0",
+        "phpunit/phpunit": "~7.1"
     },
 	"suggest" : {
 		"phpunit/phpunit" : "Allows automated tests to be run without system-wide install.",
