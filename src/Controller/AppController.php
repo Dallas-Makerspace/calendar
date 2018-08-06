@@ -43,17 +43,26 @@ class AppController extends Controller
     {
         parent::initialize();
 
+        $auth = [ 
+            'ActiveDirectoryAuthenticate.Adldap' => [
+                'config' => [
+                    'account_suffix' => Configure::read('ActiveDirectory.account_suffix'),
+                    'base_dn' => Configure::read('ActiveDirectory.base_dn'),
+                    'domain_controllers' => Configure::read('ActiveDirectory.domain_controllers')
+                ],
+                'select' => ['displayName', 'samaccountname', 'telephonenumber', 'mail']
+            ]
+        ];
+
+        // If Mock exists in config file then use that instead of real AD auth
+        if (Configure::check("MockActiveDirectory")) {
+            $auth = [ 
+                'ActiveDirectoryAuthenticateMock.AdldapMock' => Configure::read("MockActiveDirectory")
+            ];
+        }
+
         $this->loadComponent('Auth', [
-            'authenticate' => [
-                'ActiveDirectoryAuthenticate.Adldap' => [
-                    'config' => [
-                        'account_suffix' => Configure::read('ActiveDirectory.account_suffix'),
-                        'base_dn' => Configure::read('ActiveDirectory.base_dn'),
-                        'domain_controllers' => Configure::read('ActiveDirectory.domain_controllers')
-                    ],
-                    'select' => ['displayName', 'samaccountname', 'telephonenumber', 'mail']
-                ]
-            ],
+            'authenticate' => $auth,
             'authorize' => ['Controller'],
             'loginAction' => [
                 'controller' => 'Users',
