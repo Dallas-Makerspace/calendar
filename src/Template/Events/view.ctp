@@ -194,7 +194,11 @@
                     ], [
                         'class' => 'btn btn-lg btn-success',
                         'style' => 'margin-top: 30px'
-                    ]) ?>
+                    ]) ?><?php 
+                    if (is_int($openSpaces)): 
+                        ?><p class="spaces_avaliable"><?= $openSpaces ?> spaces of <?= $totalSpaces ?> avaliable</p><?php 
+                    endif; 
+                    ?>
                 <?php else: ?>
                     <?php if ($hasRegistration): ?>
                         <?= $this->Html->link('View Your Registration', [

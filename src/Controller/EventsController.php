@@ -889,7 +889,18 @@ class EventsController extends AppController
                 ->order(['name' => 'ASC'])
             );*/
 
+            $totalSpaces = $this->Events->getTotalSpaces($this->passedArgs[0]);
+            $filledSpaces = $this->Events->getFilledSpaces($this->passedArgs[0]);
+            if (is_int($totalSpaces) && is_int($filledSpaces)) {
+                $openSpaces = $totalSpaces - $filledSpaces;
+            }
+            else {
+                $openSpaces = true;
+            }
+
             $this->set('hasOpenSpaces', $this->Events->hasOpenSpaces($this->passedArgs[0]));
+            $this->set('openSpaces', $openSpaces);
+            $this->set('totalSpaces', $totalSpaces);
         });
 
         $this->Crud->on('beforeRender', [$this, '_applyAddress']);

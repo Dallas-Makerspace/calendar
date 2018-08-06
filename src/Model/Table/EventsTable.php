@@ -378,6 +378,50 @@ class EventsTable extends Table
             ->count();
     }
 
+    /**
+     * Returns the total number of spaces avalible or true if unlimited
+     * 
+     * @param $id Event Id
+     * @return int|true
+     */
+    public function getTotalSpaces($id) {
+        $event = $this->get($id, ['fields' => ['free_spaces', 'paid_spaces']]);
+
+        if ($event->free_spaces == 0 && $event->paid_spaces == 0) {
+            return true;
+        }
+
+        return $event->free_spaces + $event->paid_spaces;
+    }
+
+    /**
+     * Returns the number of filled spaces or true if unlimited
+     * 
+     * @param $id Event Id
+     * @return int|true
+     */
+    public function getFilledSpaces($id)
+    {
+        $event = $this->get($id, ['fields' => ['free_spaces', 'paid_spaces']]);
+
+        if ($event->free_spaces == 0 && $event->paid_spaces == 0) {
+            return true;
+        }
+
+        $regs = $this->find('all')
+            ->where(['Events.id' => $id])
+            ->innerJoinWith(
+                'Registrations', function ($q) {
+                    return $q->where([
+                        'Registrations.status !=' => 'cancelled'
+                    ]);
+                }
+            )
+            ->count();
+
+        return $regs;
+    }
+
     public function hasFreeSpaces($id)
     {
         $event = $this->get($id, ['fields' => ['free_spaces', 'paid_spaces']]);
