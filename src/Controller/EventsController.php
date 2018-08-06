@@ -27,7 +27,8 @@ class EventsController extends AppController
        'sortWhitelist' => ['Events.event_start','Events.created'],
        'order' => [
              'Events.event_start' => 'asc'
-         ]
+       ],
+       'maxLimit' => PHP_INT_MAX
      ];
 
     public function beforeFilter(Event $event)
