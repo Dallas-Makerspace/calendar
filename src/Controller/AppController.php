@@ -171,6 +171,7 @@ class AppController extends Controller
 
         $this->set($isAuthorized);
         $this->set($hasMenu);
+        $this->set('isDevelopment', Configure::read("isDevelopment"));
 
         if (!array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->type(), ['application/json', 'application/xml'])
