@@ -206,7 +206,7 @@ $this->Html->meta(
                                     )?>
                                 </span>
                                 <?= \Cake\ORM\TableRegistry::get('Events')->hasOpenSpaces($event->id) ? '' : '<strong>FULL: </strong>' ?>
-                                <?= $event->name ?>
+                                <?= h($event->name) ?>
                                 <?php $cost = $event->cost > 0 ? '$' . $event->cost . '.00' : 'Free'; ?>
                                 - <?= $cost ?>
                             </h4>
@@ -252,7 +252,7 @@ $this->Html->meta(
                                 </tr>
                                 <tr>
                                     <td><strong>Details</strong></td>
-                                    <td><?= $event->short_description ?></td>
+                                    <td><?= h($event->short_description) ?></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Cost</strong></td>

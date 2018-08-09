@@ -91,7 +91,7 @@
                 </tr>
                 <tr>
                     <td><strong>What</strong></td>
-                    <td><?= $event->short_description ?></td>
+                    <td><?= h($event->short_description) ?></td>
                 </tr>
                 <tr>
                     <td><strong>Host</strong></td>

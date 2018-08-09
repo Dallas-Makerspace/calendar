@@ -16,7 +16,7 @@
         <tbody>
             <?php foreach ($events as $event): ?>
                 <tr>
-                    <td><?= $this->Html->link(h($event->name), ['action' => 'view', $event->id]) ?></td>
+                    <td><?= $this->Html->link($event->name, ['action' => 'view', $event->id]) ?></td>
                     <td><?= h($event->short_description) ?></td>
                     <td>
                         <?= $this->Time->format(

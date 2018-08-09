@@ -8,7 +8,7 @@
 
             <?= $this->Flash->render() ?>
 
-            <h2><?= $this->Html->link(h($event->name), [
+            <h2><?= $this->Html->link($event->name, [
                 'controller' => 'Events',
                 'action' => 'view',
                 $event->id
