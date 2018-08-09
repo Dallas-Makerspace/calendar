@@ -14,7 +14,7 @@
 		"friendsofcake/cakephp-csvview" : "~3.0",
 		"syntaxera/cakephp-sparkpost-plugin" : "^0.4.5",
 		"unholyknight/active-directory-authenticate" : "master",
-		"friendsofcake/crud" : "^4.3",
+		"friendsofcake/crud" : "^5.0",
 		"josegonzalez/cakephp-upload" : "^3.4",
 		"braintree/braintree_php" : "~3.0",
 		"adldap2/adldap2" : "~6.0",
