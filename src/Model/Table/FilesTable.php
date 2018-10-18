@@ -25,9 +25,9 @@ class FilesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('files');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('files');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Josegonzalez/Upload.Upload', ['file']);
         $this->addBehavior('Timestamp');

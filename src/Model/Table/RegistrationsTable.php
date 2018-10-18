@@ -26,9 +26,9 @@ class RegistrationsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('registrations');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('registrations');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 

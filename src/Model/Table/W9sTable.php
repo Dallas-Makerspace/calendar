@@ -25,9 +25,9 @@ class W9sTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('w9s');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('w9s');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Josegonzalez/Upload.Upload', [
             'file' => [

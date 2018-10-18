@@ -7,9 +7,9 @@ $this->Html->meta(
     	"controller" => "Events",
     	"action" => "feed",
     	"feedtype" => "rss",
-   		"category" => $this->request->query("category"),
-   		"type" => $this->request->query("type"),
-   		"tool" => $this->request->query("tool"),
+   		"category" => $this->request->getParam("category"),
+   		"type" => $this->request->getParam("type"),
+   		"tool" => $this->request->getParam("tool"),
 	], true),
     ['type' => 'rss', 'block' => 'meta']
 );
@@ -21,9 +21,9 @@ $this->Html->meta(
     	"controller" => "Events",
     	"action" => "feed",
     	"feedtype" => "atom",
-    	"category" => $this->request->query("category"),
-    	"type" => $this->request->query("type"),
-    	"tool" => $this->request->query("tool"),
+    	"category" => $this->request->getParam("category"),
+    	"type" => $this->request->getParam("type"),
+    	"tool" => $this->request->getParam("tool"),
 	], true),
     ['type' => 'atom', 'block' => 'meta']
 );
@@ -40,17 +40,17 @@ $this->Html->meta(
         <br>
         <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> RSS', [
             'action' => 'feed', 'feedtype' => "rss",
-    		"category" => $this->request->query("category"),
-    		"type" => $this->request->query("type"),
-    		"tool" => $this->request->query("tool"),
+    		"category" => $this->request->getParam("category"),
+    		"type" => $this->request->getParam("type"),
+    		"tool" => $this->request->getParam("tool"),
         ], [
             'escape' => false
         ]) ?>
         <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> ATOM', [
             'action' => 'feed', 'feedtype' => "atom",
-    		"category" => $this->request->query("category"),
-    		"type" => $this->request->query("type"),
-    		"tool" => $this->request->query("tool"),
+    		"category" => $this->request->getParam("category"),
+    		"type" => $this->request->getParam("type"),
+    		"tool" => $this->request->getParam("tool"),
         ], [
             'escape' => false
         ]) ?>

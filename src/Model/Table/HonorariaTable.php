@@ -26,9 +26,9 @@ class HonorariaTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('honoraria');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('honoraria');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 

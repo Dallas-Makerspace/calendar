@@ -10,9 +10,9 @@
             <?= $this->Html->link('Dallas Makerspace Calendar', '/', ['class' => 'navbar-brand']); ?>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-            <?php $authUser = $this->request->session()->read('Auth.User'); ?>
+            <?php $authUser = $this->request->getSession()->read('Auth.User'); ?>
             <ul class="nav navbar-nav">
-                <?php if (!($this->request->params['controller'] == 'Events' && $this->request->params['action'] == 'add')): ?>
+                <?php if (!($this->request->getParam('controller') == 'Events' && $this->request->getParam('action') == 'add')): ?>
                     <?php if ($canAddEvents): ?>
                         <li>
                             <?= $this->Html->link('Submit Event', [
@@ -197,7 +197,7 @@
                         <?= $this->Html->link('DMS Login', [
                             'controller' => 'Users',
                             'action' => 'login',
-                            '?' => ['redirect' => $this->request->here]
+                            '?' => ['redirect' => $this->request->getAttribute("here")]
                         ]) ?>
                     <?php endif; ?>
                 </li>

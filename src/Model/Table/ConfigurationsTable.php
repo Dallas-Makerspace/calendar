@@ -25,9 +25,9 @@ class ConfigurationsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('configurations');
-        $this->displayField('value');
-        $this->primaryKey('id');
+        $this->setTable('configurations');
+        $this->setDisplayField('value');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
     }

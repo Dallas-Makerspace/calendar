@@ -38,9 +38,9 @@ class EventsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('events');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('events');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('FriendlyTime');
         $this->addBehavior('RelationalTime');

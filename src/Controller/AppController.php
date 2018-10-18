@@ -91,7 +91,7 @@ class AppController extends Controller
         $this->loadComponent('Security');
 
         // Disables CRUD's default setFlash helper
-        $this->eventManager()->on('Crud.setFlash', function (Event $event) {
+        $this->getEventManager()->on('Crud.setFlash', function (Event $event) {
             $event->stopPropagation();
         });
 
@@ -174,7 +174,7 @@ class AppController extends Controller
         $this->set('isDevelopment', Configure::read("isDevelopment"));
 
         if (!array_key_exists('_serialize', $this->viewVars) &&
-            in_array($this->response->type(), ['application/json', 'application/xml'])
+            in_array($this->response->getType(), ['application/json', 'application/xml'])
         ) {
             $this->set('_serialize', true);
         }
