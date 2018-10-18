@@ -43,7 +43,7 @@ class FilesTable extends Table
      */
     public function validationDefault(Validator $validator)
     {
-        $validator->provider('upload', \Josegonzalez\Upload\Validation\UploadValidation::class);
+        $validator->setProvider('upload', \Josegonzalez\Upload\Validation\UploadValidation::class);
 
         $validator
             ->integer('id')

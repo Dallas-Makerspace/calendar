@@ -44,7 +44,7 @@ class FilesController extends AppController
 
             if (!empty($events)) {
                 $this->Files->deleteAll([
-                    'file' => $event->subject()->entity->file,
+                    'file' => $event->getSubject()->entity->file,
                     'event_id IN' => $events
                 ]);
             }
@@ -53,11 +53,11 @@ class FilesController extends AppController
         $this->Crud->on('afterDelete', function (\Cake\Event\Event $event) {
             // Delete the file if there are no remaining references to it
             $remainingReferences = $this->Files->find('all')
-                ->where(['file' => $event->subject()->entity->file])
+                ->where(['file' => $event->getSubject()->entity->file])
                 ->count();
 
             if (!$remainingReferences) {
-                $file = new File(str_replace('webroot/', '', $event->subject()->entity->dir) . $event->subject()->entity->file);
+                $file = new File(str_replace('webroot/', '', $event->getSubject()->entity->dir) . $event->getSubject()->entity->file);
                 $file->delete();
             }
         });

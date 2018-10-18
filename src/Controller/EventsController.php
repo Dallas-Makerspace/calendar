@@ -60,31 +60,31 @@ class EventsController extends AppController
 
     public function isAuthorized($user = null)
     {
-        if (in_array($this->request->action, ['add', 'attending', 'submitted'])) {
+        if (in_array($this->request->getParam('action'), ['add', 'attending', 'submitted'])) {
             return !is_null($user);
         }
 
-        if (in_array($this->request->action, ['attendance', 'assignments', 'cancel', 'edit'])) {
+        if (in_array($this->request->getParam('action'), ['attendance', 'assignments', 'cancel', 'edit'])) {
             $eventId = (int) $this->request->params['pass'][0];
             return ($this->Events->isOwnedBy($eventId, $user['samaccountname']) || parent::isAuthorized($user));
         }
 
         // Calendar Admins only
-        if ($this->request->action === 'pending' || $this->request->action === 'all') {
+        if ($this->request->getParam('action') === 'pending' || $this->request->getParam('action') === 'all') {
             return parent::isAuthorized($user);
         }
 
         // Honorarium Admins only
-        if (in_array($this->request->action, ['acceptedHonoraria', 'pendingHonoraria', 'rejectedHonoraria'])) {
+        if (in_array($this->request->getParam('action'), ['acceptedHonoraria', 'pendingHonoraria', 'rejectedHonoraria'])) {
             return parent::inAdminstrativeGroup($user, 'Honorarium Admins');
         }
 
         // Finance Reporting only
-        if (in_array($this->request->action, ['exportHonoraria', 'exportHonorariaCsv'])) {
+        if (in_array($this->request->getParam('action'), ['exportHonoraria', 'exportHonorariaCsv'])) {
             return parent::inAdminstrativeGroup($user, 'Financial Reporting');
         }
 
-        if (in_array($this->request->action, ['approve', 'reject', 'processRejection'])) {
+        if (in_array($this->request->getParam('action'), ['approve', 'reject', 'processRejection'])) {
             $eventId = (int) $this->request->params['pass'][0];
             if ($this->Events->hasHonorarium($eventId)) {
                 return parent::inAdminstrativeGroup($user, 'Honorarium Admins');
