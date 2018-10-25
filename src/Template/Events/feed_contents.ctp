@@ -53,6 +53,6 @@
                                 </tr>
                             </table>
                             <p>
-								<?= nb2br(h($event->long_description)) ?>
+								<?= nl2br(h($event->long_description)) ?>
 							</p>
 							
