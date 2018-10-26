@@ -1515,7 +1515,7 @@ class EventsController extends AppController
 
         if ($event->getSubject()->entity->request_honorarium && $event->getSubject()->entity->honorarium->pay_contact && !$event->getSubject()->entity->contact->w9_on_file) {
             $event->getSubject()->entity->honorarium->errors('pay_contact', ['A W-9 is required to be on file for honorarium.']);
-            $event->stopPropagation();
+            //$event->stopPropagation();
         }
 
         $continuedEvents = $this->__constructContinuedEventsForCreate();
