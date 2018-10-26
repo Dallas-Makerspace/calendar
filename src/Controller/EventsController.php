@@ -793,7 +793,7 @@ class EventsController extends AppController
                 )
                     ->contain(['Honoraria']);
 
-                if (!$_GET['sort']) {
+                if (!isset($_GET['sort'])) {
                     $event->getSubject()->query->order(['event_start' => 'DESC']);
                 }
 
@@ -1477,8 +1477,8 @@ class EventsController extends AppController
 
             $x = $event->getSubject()->entity->errors();
             if ($x) {
-                debug($event);
-                debug($x);
+                //debug($event);
+                //debug($x);
                 return false;
             }
         }
