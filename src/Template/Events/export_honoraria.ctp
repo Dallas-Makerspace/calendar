@@ -21,8 +21,9 @@
         </fieldset>
     </form>
     
-    <?php if ($honoraria): ?>
+    <?php if (isset($honoraria)): ?>
         <form method="post">
+        <input type="hidden" name="_csrfToken" value="<?= $this->request->getParam('_csrfToken') ?>">
         <table class="table table-hover" style="margin-top: 30px;">
             <thead>
                 <tr>
