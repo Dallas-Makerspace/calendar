@@ -71,7 +71,7 @@ class HonorariaTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['committee_id'], 'Committees'));
-        
+
         return $rules;
     }
 }

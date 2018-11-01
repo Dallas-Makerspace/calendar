@@ -32,7 +32,7 @@ class RegistrationsController extends AppController
 
     public function isAuthorized($user = null)
     {
-        $regId = (int) $this->request->params['pass'][0];
+        $regId = (int)$this->request->params['pass'][0];
 
         if (in_array($this->request->getParam('action'), ['accept', 'cancel', 'reject', 'view'])) {
             if (isset($user['samaccountname'])) {
@@ -45,7 +45,7 @@ class RegistrationsController extends AppController
                 }
             }
         }
-        
+
         $this->set('isAdmin', parent::inAdminstrativeGroup($user, 'Calendar Admins'));
 
         return $this->Registrations->isOwnedBy($regId, [
@@ -94,7 +94,8 @@ class RegistrationsController extends AppController
                 'contain' => 'RequiresPrerequisites'
             ]);
             $this->set('event', $eventInfo);
-            $this->set('continuedDates',
+            $this->set(
+                'continuedDates',
                 $this->Events->find('all')
                     ->select(['class_number', 'event_start', 'event_end'])
                     ->where(['part_of_id' => $this->passedArgs[0]])
@@ -131,7 +132,8 @@ class RegistrationsController extends AppController
                     $nameParts = explode(' ', $event->getSubject()->entity->name);
                     $firstName = $nameParts[0];
                     $lastName = '';
-                    for ($i = 1; $i < count($nameParts); $i++) {
+                    $partCount = count($nameParts);
+                    for ($i = 1; $i < $partCount; $i++) {
                         $lastName .= $nameParts[$i] . ' ';
                     }
 

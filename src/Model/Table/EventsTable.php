@@ -142,7 +142,7 @@ class EventsTable extends Table
                     if ($context['data']['event_start'] >= $value) {
                         return false;
                     }
-                    
+
                     return true;
                 },
                 'message' => 'The event can not end before it starts.'
@@ -247,7 +247,7 @@ class EventsTable extends Table
 
                     if ($context['data']['class_number'] > 1) {
                         $words = ['', 'first', 'second', 'third', 'fourth', 'fifth'];
-                        
+
                         return "The room selected for this event's " . $words[$context['data']['class_number']] . ' date is not available at the requested time. Conflicts with ' . $conflict . '.';
                     }
 
@@ -305,7 +305,7 @@ class EventsTable extends Table
                     if (count($unavailableTools) > 0) {
                         if ($context['data']['class_number'] > 1) {
                             $words = ['', 'first', 'second', 'third', 'fourth', 'fifth'];
-                            
+
                             return "Some of the tools selected for this event's " . $words[$context['data']['class_number']] . " date are not available at the requested time. Tools in use: " . implode(', ', $unavailableTools);
                         }
 
@@ -366,7 +366,7 @@ class EventsTable extends Table
         $rules->add($rules->existsIn(['requires_prerequisite_id'], 'RequiresPrerequisites'));
         $rules->add($rules->existsIn(['part_of_id'], 'PartOfs'));
         $rules->add($rules->existsIn(['copy_of_id'], 'CopyOfs'));
-        
+
         return $rules;
     }
 
@@ -380,11 +380,12 @@ class EventsTable extends Table
 
     /**
      * Returns the total number of spaces avalible or true if unlimited
-     * 
-     * @param $id Event Id
+     *
+     * @param int $id Event Id
      * @return int|true
      */
-    public function getTotalSpaces($id) {
+    public function getTotalSpaces($id)
+    {
         $event = $this->get($id, ['fields' => ['free_spaces', 'paid_spaces']]);
 
         if ($event->free_spaces == 0 && $event->paid_spaces == 0) {
@@ -396,8 +397,8 @@ class EventsTable extends Table
 
     /**
      * Returns the number of filled spaces or true if unlimited
-     * 
-     * @param $id Event Id
+     *
+     * @param int $id Event Id
      * @return int|true
      */
     public function getFilledSpaces($id)
@@ -411,7 +412,8 @@ class EventsTable extends Table
         $regs = $this->find('all')
             ->where(['Events.id' => $id])
             ->innerJoinWith(
-                'Registrations', function ($q) {
+                'Registrations',
+                function ($q) {
                     return $q->where([
                         'Registrations.status !=' => 'cancelled'
                     ]);
@@ -427,7 +429,6 @@ class EventsTable extends Table
         $event = $this->get($id, ['fields' => ['free_spaces', 'paid_spaces']]);
 
         if ($event->free_spaces == 0 && $event->paid_spaces == 0) {
-            
             return true;
         }
 
@@ -435,7 +436,8 @@ class EventsTable extends Table
             $freeRegs = $this->find('all')
                 ->where(['Events.id' => $id])
                 ->innerJoinWith(
-                    'Registrations', function ($q) {
+                    'Registrations',
+                    function ($q) {
                         return $q->where([
                             'Registrations.type' => 'free',
                             'Registrations.status !=' => 'cancelled'
@@ -445,7 +447,6 @@ class EventsTable extends Table
                 ->count();
 
             if ($freeRegs < $event->free_spaces) {
-                
                 return true;
             }
         }
@@ -458,9 +459,7 @@ class EventsTable extends Table
         $event = $this->get($id, ['fields' => ['cost', 'free_spaces', 'paid_spaces']]);
 
         if ($event->cost) {
-            
             if ($event->paid_spaces == 0) {
-                
                 return true;
             }
 
@@ -468,7 +467,8 @@ class EventsTable extends Table
                 $paidRegs = $this->find('all')
                     ->where(['Events.id' => $id])
                     ->innerJoinWith(
-                        'Registrations', function ($q) {
+                        'Registrations',
+                        function ($q) {
                             return $q->where([
                                 'Registrations.type' => 'paid',
                                 'Registrations.status !=' => 'cancelled'
@@ -478,7 +478,6 @@ class EventsTable extends Table
                     ->count();
 
                 if ($paidRegs < $event->paid_spaces) {
-                    
                     return true;
                 }
             }
@@ -496,9 +495,9 @@ class EventsTable extends Table
      * Returns a boolean indictating whether or not a given event is owned
      * by a user with a given AD Username.
      *
-     * @param integer $id The id of the event to check.
+     * @param int $id The id of the event to check.
      * @param string $user The username to check against.
-     * @return boolean
+     * @return bool
      */
     public function isOwnedBy($id, $user)
     {

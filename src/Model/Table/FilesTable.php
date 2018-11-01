@@ -77,6 +77,7 @@ class FilesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['event_id'], 'Events'));
+
         return $rules;
     }
 }

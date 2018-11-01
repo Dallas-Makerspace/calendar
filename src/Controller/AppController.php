@@ -43,7 +43,7 @@ class AppController extends Controller
     {
         parent::initialize();
 
-        $auth = [ 
+        $auth = [
             'ActiveDirectoryAuthenticate.Adldap' => [
                 'config' => [
                     'account_suffix' => Configure::read('ActiveDirectory.account_suffix'),
@@ -56,7 +56,7 @@ class AppController extends Controller
 
         // If Mock exists in config file then use that instead of real AD auth
         if (Configure::check("MockActiveDirectory")) {
-            $auth = [ 
+            $auth = [
                 'ActiveDirectoryAuthenticateMock.AdldapMock' => Configure::read("MockActiveDirectory")
             ];
         }

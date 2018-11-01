@@ -14,7 +14,7 @@ class HonorariaController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Network\Response|null
+     * @return void
      */
     public function index()
     {
@@ -31,7 +31,7 @@ class HonorariaController extends AppController
      * View method
      *
      * @param string|null $id Honorarium id.
-     * @return \Cake\Network\Response|null
+     * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
@@ -56,6 +56,7 @@ class HonorariaController extends AppController
             $honorarium = $this->Honoraria->patchEntity($honorarium, $this->request->data);
             if ($this->Honoraria->save($honorarium)) {
                 $this->Flash->success(__('The honorarium has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The honorarium could not be saved. Please, try again.'));
@@ -83,6 +84,7 @@ class HonorariaController extends AppController
             $honorarium = $this->Honoraria->patchEntity($honorarium, $this->request->data);
             if ($this->Honoraria->save($honorarium)) {
                 $this->Flash->success(__('The honorarium has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The honorarium could not be saved. Please, try again.'));
@@ -110,6 +112,7 @@ class HonorariaController extends AppController
         } else {
             $this->Flash->error(__('The honorarium could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

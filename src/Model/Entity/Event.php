@@ -77,8 +77,10 @@ class Event extends Entity
                 $this->attendee_cancellation,
                 'UTC'
             );
+
             return $startTime->diffInDays($cancellationTime);
         }
+
         return null;
     }
 
@@ -95,8 +97,10 @@ class Event extends Entity
                 $this->booking_start,
                 'UTC'
             );
+
             return $startTime->diffInMinutes($setupTime);
         }
+
         return null;
     }
 
@@ -113,8 +117,10 @@ class Event extends Entity
                 $this->booking_end,
                 'UTC'
             );
+
             return $startTime->diffInMinutes($teardownTime);
         }
+
         return null;
     }
 }

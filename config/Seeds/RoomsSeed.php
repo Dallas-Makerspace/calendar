@@ -154,10 +154,10 @@ class RoomsSeed extends AbstractSeed
         ];
 
         // convert boolean to integer
-        foreach($data as $index => $item) {
-        	$data[$index]['exclusive'] = $data[$index]['exclusive'] ? 1 : 0;
+        foreach ($data as $index => $item) {
+            $data[$index]['exclusive'] = $data[$index]['exclusive'] ? 1 : 0;
         }
-        
+
         $table = $this->table('rooms');
         $table->insert($data)->save();
     }

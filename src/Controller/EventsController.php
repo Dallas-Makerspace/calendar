@@ -10,10 +10,10 @@ use Cake\Log\Log;
 use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
-use \FeedIo\Factory;
-use \FeedIo\Feed;
-use FeedIo\Feed\Node;
 use Cake\View\View;
+use FeedIo\Factory;
+use FeedIo\Feed;
+use FeedIo\Feed\Node;
 
 /**
  * Events Controller
@@ -23,7 +23,7 @@ use Cake\View\View;
 class EventsController extends AppController
 {
     public $paginate = [
-       'sortWhitelist' => ['Events.event_start','Events.created'],
+       'sortWhitelist' => ['Events.event_start', 'Events.created'],
        'order' => [
              'Events.event_start' => 'asc'
        ],
@@ -64,7 +64,8 @@ class EventsController extends AppController
         }
 
         if (in_array($this->request->getParam('action'), ['attendance', 'assignments', 'cancel', 'edit'])) {
-            $eventId = (int) $this->request->params['pass'][0];
+            $eventId = (int)$this->request->params['pass'][0];
+
             return ($this->Events->isOwnedBy($eventId, $user['samaccountname']) || parent::isAuthorized($user));
         }
 
@@ -84,7 +85,7 @@ class EventsController extends AppController
         }
 
         if (in_array($this->request->getParam('action'), ['approve', 'reject', 'processRejection'])) {
-            $eventId = (int) $this->request->params['pass'][0];
+            $eventId = (int)$this->request->params['pass'][0];
             if ($this->Events->hasHonorarium($eventId)) {
                 return parent::inAdminstrativeGroup($user, 'Honorarium Admins');
             }
@@ -98,7 +99,7 @@ class EventsController extends AppController
     public function all()
     {
         $this->Crud->on(
-            'beforePaginate', 
+            'beforePaginate',
             function (\Cake\Event\Event $event) {
                 if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
                     $start_date = new \DateTime($_GET['start_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
@@ -106,7 +107,7 @@ class EventsController extends AppController
                     $end_date = new \DateTime($_GET['end_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
                     $end_date->setTimezone(new \DateTimeZone('UTC'));
 
-                    $event->getSubjec()->query 
+                    $event->getSubjec()->query
                         ->where(
                             [
                             'Events.part_of_id IS NULL',
@@ -128,22 +129,21 @@ class EventsController extends AppController
             }
         );
 
-
-
-
         return $this->Crud->execute();
     }
 
     public function attendance($id = null)
     {
         $this->Crud->on(
-            'beforeFind', function (\Cake\Event\Event $event) {
+            'beforeFind',
+            function (\Cake\Event\Event $event) {
                 $event->getSubject()->query->contain(['Registrations']);
             }
         );
 
         $this->Crud->on(
-            'beforeRedirect', function (\Cake\Event\Event $event) {
+            'beforeRedirect',
+            function (\Cake\Event\Event $event) {
                 $event->getSubject()->url = $this->referer();
             }
         );
@@ -154,19 +154,22 @@ class EventsController extends AppController
     public function assignments($id = null)
     {
         $this->Crud->on(
-            'beforeFind', function (\Cake\Event\Event $event) {
+            'beforeFind',
+            function (\Cake\Event\Event $event) {
                 $event->getSubject()->query->contain(['FulfillsPrerequisites', 'Registrations']);
             }
         );
 
         $this->Crud->on(
-            'beforeRedirect', function (\Cake\Event\Event $event) {
+            'beforeRedirect',
+            function (\Cake\Event\Event $event) {
                 $event->getSubject()->url = $this->referer();
             }
         );
 
         $this->Crud->on(
-            'beforeSave', function (\Cake\Event\Event $event) {
+            'beforeSave',
+            function (\Cake\Event\Event $event) {
                 $adldap = new \Adldap\Adldap();
                 $provider = new \Adldap\Connections\Provider(Configure::read('ActiveDirectory'));
                 $adldap->addProvider('default', $provider);
@@ -185,7 +188,7 @@ class EventsController extends AppController
         return $this->Crud->execute();
     }
 
-    public function feed($feedtype="vcal")
+    public function feed($feedtype = "vcal")
     {
         // TODO: Accept arguments like calendar view and include location
         $this->autoRender = false;
@@ -214,7 +217,7 @@ class EventsController extends AppController
                 'Events.status' => 'approved'
                 ]
             )
-            ->contain(['Rooms','Contacts', 'Categories'])
+            ->contain(['Rooms', 'Contacts', 'Categories'])
             ->order(['event_start' => 'ASC']);
 
         // This allows us to use the applyQueryFilters method for the feed
@@ -222,87 +225,86 @@ class EventsController extends AppController
         $feed_event_subject = new \stdClass();
         $feed_event_subject->query = $event_query;
         $feed_event = new \Cake\Event\Event("feed_event", $feed_event_subject);
-        
+
         $this->__applyQueryFilters($feed_event);
 
         $events = $feed_event->getSubject()->query;
-            
-        if ($feedtype=== "vcal") {
+
+        if ($feedtype === "vcal") {
             $vcalendar = "";
-            
+
             $vcalendar .= "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\nCALSCALE:GREGORIAN\r\n";
-    
+
             foreach ($events as $event) {
-                $event_url = Router::url(['controller' => 'Events', 'action' => 'view',    'id' => $event->id], true);
-                
+                $event_url = Router::url(['controller' => 'Events', 'action' => 'view', 'id' => $event->id], true);
+
                 $vcalendar .= "BEGIN:VEVENT\r\n";
                 $vcalendar .= 'DTSTART:' . $this->__icsDate($event->event_start) . "\r\n";
                 $vcalendar .= 'DTEND:' . $this->__icsDate($event->event_end) . "\r\n";
                 $vcalendar .= 'DTSTAMP:' . $this->__icsDate($now) . "\r\n";
                 $vcalendar .= 'UID:dmsevtv3' . $event->id . "@calendar.dallasmakerspace.org\r\n";
                 $vcalendar .= 'SUMMARY:' . $this->__icsEscapeString($event->name) . "\r\n";
-                $vcalendar .= 'DESCRIPTION:' . $this->__icsEscapeString($event->short_description . ' Event details at '.$event_url) . "\r\n";
+                $vcalendar .= 'DESCRIPTION:' . $this->__icsEscapeString($event->short_description . ' Event details at ' . $event_url) . "\r\n";
                 $vcalendar .= 'LOCATION:' . $event->room->name . "\r\n";
                 $vcalendar .= 'URL;VALUE=URI:' . $this->__icsEscapeString($event_url) . "\r\n";
                 $vcalendar .= "END:VEVENT\r\n";
             }
-    
+
             $vcalendar .= 'END:VCALENDAR';
-            
+
             $this->response = $this->response
                 ->withStringBody($vcalendar)
                 ->withType('text/calendar');
         } else {
-            
             // get id's for categories and tools
             $type = $this->request->getQuery("type");
             $category = $this->request->getQuery("category");
             $tool = $this->request->getQuery("tool");
-            
+
             // get names for categories and tools
-            
+
             $title_addon = "";
             $description_addon = "";
 
             $subjects = [];
-            
+
             if (ctype_digit($type)) {
                 $subjects[] = $this->Events->Categories->find('list')->where(['id' => $type])->first();
             }
-            
+
             if (ctype_digit($category)) {
                 $subjects[] = $this->Events->Categories->find('list')->where(['id' => $category])->first();
             }
-                    
+
             if (ctype_digit($tool)) {
                 $subjects[] = $this->Events->Tools->find('list')->where(['id' => $tool])->first();
             }
-            
+
             if (!empty($subjects)) {
-                $title_addon = " - ".implode(", ", $subjects);
-                $description_addon = " - Subjects: ".implode(", ", $subjects);
+                $title_addon = " - " . implode(", ", $subjects);
+                $description_addon = " - Subjects: " . implode(", ", $subjects);
             } else {
                 $title_addon = " - All";
                 $description_addon = " - Subjects: All Included";
             }
-                
+
             // create new feed
             $feed = new Feed();
-            
+
             // Set the feed channel elements
-            
-            $feed->setTitle('Dallas Makerspace Calendar'.$title_addon);
+
+            $feed->setTitle('Dallas Makerspace Calendar' . $title_addon);
             $feed->setLink(Router::url('/', true));
-            $feed->setDescription('Events and Classes avaliable at the Dallas Makerspace'.$description_addon);
-            
+            $feed->setDescription('Events and Classes avaliable at the Dallas Makerspace' . $description_addon);
+
             // add each event/class in feed
             foreach ($events as $event) {
                 $view = new View($this->request);
                 $view->set('event', $event);
                 $desc_html = $view->render('Events/feed_contents', false);
-                
+
                 $url = Router::url(['controller' => 'Events', 'action' => 'view', 'id' => $event->id], true);
-                
+
                 $feed_event = $feed->newItem();
                 $feed_event->setTitle($event->name);
                 $feed_event->setLink($url);
@@ -310,26 +312,26 @@ class EventsController extends AppController
                 $feed_event->setLastModified(new \DateTime($event->event_start));
                 $feed_event->setDescription($desc_html);
                 $feed_event->setPublicId($url, false);
-                
+
                 $feed_author = $feed_event->newAuthor();
                 $feed_author->getName($event->contact->name);
                 $feed_author->setUri("");
                 $feed_author->setEmail("");
                 $feed_event->setAuthor($feed_author);
-        
+
                 foreach ($event->categories as $category) {
                     $feed_category = $feed_event->newCategory();
                     $feed_category->setLabel($category->name);
                     $feed_event->addCategory($feed_category);
                 }
-                
+
                 $feed->add($feed_event);
             }
-            
+
             // output feed in format specified
-            
+
             $feedIo = Factory::create()->getFeedIo();
-            
+
             if ($feedtype === "atom") {
                 $this->response = $this->response
                     ->withStringBody($feedIo->format($feed, 'atom'))
@@ -348,14 +350,15 @@ class EventsController extends AppController
                     ->withType('application/rss+xml');
             }
         }
-        
+
         return $this->response;
     }
-    
+
     public function index()
     {
         $this->Crud->on(
-            'beforePaginate', function (\Cake\Event\Event $event) {
+            'beforePaginate',
+            function (\Cake\Event\Event $event) {
                 $today = new Time('America/Chicago');
                 $today->startOfDay()->timezone('UTC');
 
@@ -380,7 +383,7 @@ class EventsController extends AppController
                         ]
                     )
                     ->contain(['Rooms']);
-                
+
                 $this->__applyQueryFilters($event);
 
                 $this->paginate['limit'] = 2147483647;
@@ -397,7 +400,8 @@ class EventsController extends AppController
     public function embed()
     {
         $this->Crud->on(
-            'beforePaginate', function (\Cake\Event\Event $event) {
+            'beforePaginate',
+            function (\Cake\Event\Event $event) {
                 $today = new Time('America/Chicago');
                 $today->startOfDay()->timezone('UTC');
 
@@ -438,7 +442,8 @@ class EventsController extends AppController
     public function calendar($year = null, $month = null, $day = null)
     {
         $this->Crud->on(
-            'beforePaginate', function (\Cake\Event\Event $event) {
+            'beforePaginate',
+            function (\Cake\Event\Event $event) {
                 $year = empty($this->passedArgs[0]) ? null : $this->passedArgs[0];
                 $month = empty($this->passedArgs[1]) ? null : $this->passedArgs[1];
                 $day = empty($this->passedArgs[2]) ? null : $this->passedArgs[2];
@@ -530,7 +535,8 @@ class EventsController extends AppController
     public function submitted()
     {
         $this->Crud->on(
-            'beforePaginate', function (\Cake\Event\Event $event) {
+            'beforePaginate',
+            function (\Cake\Event\Event $event) {
                 $today = new Time('America/Chicago');
                 $today->startOfDay()->timezone('UTC');
 
@@ -569,7 +575,8 @@ class EventsController extends AppController
     public function attending()
     {
         $this->Crud->on(
-            'beforePaginate', function (\Cake\Event\Event $event) {
+            'beforePaginate',
+            function (\Cake\Event\Event $event) {
                 $today = new Time('America/Chicago');
                 $today->startOfDay()->timezone('UTC');
 
@@ -612,7 +619,8 @@ class EventsController extends AppController
     public function pending()
     {
         $this->Crud->on(
-            'beforePaginate', function (\Cake\Event\Event $event) {
+            'beforePaginate',
+            function (\Cake\Event\Event $event) {
                 $event->getSubject()->query
                     ->where(
                         [
@@ -684,7 +692,7 @@ class EventsController extends AppController
 
     public function exportHonorariaCsv()
     {
-        $export = array();
+        $export = [];
         $export[] = [
             'Event ID',
             'Event Time',
@@ -783,7 +791,8 @@ class EventsController extends AppController
     public function pendingHonoraria()
     {
         $this->Crud->on(
-            'beforePaginate', function (\Cake\Event\Event $event) {
+            'beforePaginate',
+            function (\Cake\Event\Event $event) {
                 $event->getSubject()->query->where(
                     [
                     'Events.part_of_id IS NULL',
@@ -1034,7 +1043,7 @@ class EventsController extends AppController
             function (\Cake\Event\Event $event) {
                 if ($this->request->getParam('copy') !== false) {
                     if ($this->Events->isOwnedBy($this->request->getParam('copy'), $this->Auth->user('samaccountname')) || parent::isAuthorized($user)) {
-                        if (!$this->request->is(array('post', 'put'))) {
+                        if (!$this->request->is(['post', 'put'])) {
                             $event->getSubject()->entity = $this->Events->get(
                                 $this->request->getParam('copy'),
                                 [
@@ -1117,7 +1126,8 @@ class EventsController extends AppController
         $this->__constructPostForMarshal('edit');
 
         $this->Crud->on(
-            'beforeFind', function (\Cake\Event\Event $event) {
+            'beforeFind',
+            function (\Cake\Event\Event $event) {
                 $event->getSubject()->query->contain(['Categories', 'Contacts', 'Files', 'FulfillsPrerequisites', 'Honoraria', 'Honoraria.Committees', 'RequiresPrerequisites', 'Tools']);
             }
         );
@@ -1125,7 +1135,8 @@ class EventsController extends AppController
         $this->Crud->on('afterSave', [$this, '_afterUpdate']);
         $this->Crud->on('beforeRender', [$this, '_formContent']);
         $this->Crud->on(
-            'beforeRender', function (\Cake\Event\Event $event) {
+            'beforeRender',
+            function (\Cake\Event\Event $event) {
                 $categories = $event->getSubject()->entity->categories;
 
                 if (parent::isAuthorized($this->Auth->user())) {
@@ -1172,20 +1183,23 @@ class EventsController extends AppController
     public function cancel($id = null)
     {
         $this->Crud->on(
-            'beforeSave', function (\Cake\Event\Event $event) {
+            'beforeSave',
+            function (\Cake\Event\Event $event) {
                 $event->getSubject()->entity->status = 'cancelled';
             }
         );
 
         // Cancel multi-part dates
         $this->Crud->on(
-            'afterSave', function (\Cake\Event\Event $event) {
+            'afterSave',
+            function (\Cake\Event\Event $event) {
                 $this->Registrations = TableRegistry::get('Registrations');
                 $registrations = $this->Registrations->find('all')
                     ->where(['event_id' => $this->passedArgs[0], 'status IN' => ['confirmed', 'pending']]);
 
                 Email::configTransport(
-                    'sparkpost', [
+                    'sparkpost',
+                    [
                     'className' => 'SparkPost.SparkPost',
                     'apiKey' => Configure::read('SparkPost.Api.key')
                     ]
@@ -1227,7 +1241,8 @@ class EventsController extends AppController
     public function cron()
     {
         Email::configTransport(
-            'sparkpost', [
+            'sparkpost',
+            [
             'className' => 'SparkPost.SparkPost',
             'apiKey' => Configure::read('SparkPost.Api.key')
             ]
@@ -1421,7 +1436,8 @@ class EventsController extends AppController
     {
         $rooms = $this->Events->Rooms->find('list')->order('name ASC');
         $contacts = $this->Events->Contacts->find(
-            'list', [
+            'list',
+            [
             'keyField' => 'id',
             'valueField' => 'contact_list_label'
             ]
@@ -1552,7 +1568,8 @@ class EventsController extends AppController
     {
         if (!empty($this->request->getParam('tool'))) {
             $event->getSubject()->query->matching(
-                'Tools', function ($q) {
+                'Tools',
+                function ($q) {
                     return $q->where(['Tools.id' => $this->request->getParam('tool')]);
                 }
             );
@@ -1560,7 +1577,8 @@ class EventsController extends AppController
 
         if (!empty($this->request->getParam('type')) || !empty($this->request->getParam('category'))) {
             $event->getSubject()->query->matching(
-                'Categories', function ($q) {
+                'Categories',
+                function ($q) {
                     $categories = [];
                     $set = 0;
 
@@ -1694,7 +1712,7 @@ class EventsController extends AppController
          * errors can be returned before saving the primary event and so the continued events
          * can be properly linked to the first event in the series.
          */
-        $continuedEvents = array();
+        $continuedEvents = [];
         if (isset($this->request->data['multipart_event']) && $this->request->data['multipart_event']) {
             for ($i = 2; $i < 6; $i++) {
                 if (!empty($this->request->data['event_start_' . $i])) {
@@ -1716,6 +1734,7 @@ class EventsController extends AppController
                 }
             }
         }
+
         return $continuedEvents;
     }
 
@@ -1726,7 +1745,7 @@ class EventsController extends AppController
          * errors can be returned before saving the primary event and so the continued events
          * can be properly linked to the first event in the series.
          */
-        $continuedEvents = array();
+        $continuedEvents = [];
 
         $events = $this->Events->find('all')
             ->where(['part_of_id' => $id]);

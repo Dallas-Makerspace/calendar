@@ -69,7 +69,7 @@ class ContactsTable extends Table
             ->boolean('w9_on_file')
             ->requirePresence('w9_on_file', 'create')
             ->notEmpty('w9_on_file');
-            
+
         $validator
             ->boolean('blacklisted');
 
@@ -86,6 +86,7 @@ class ContactsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['email']));
+
         return $rules;
     }
 }
