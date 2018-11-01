@@ -12,6 +12,7 @@ before_script:
   - phpenv rehash
 
 script:
+  - sh -c "composer install"
   - sh -c "composer test"
 
 after_success:
