@@ -23,14 +23,14 @@
 		"debril/feed-io": "^3.1",
 		"dragonsguild/active-directory-authenticate-mock": "dev-master",
 		"cakephp/cakephp-codesniffer": "^3.0",
-		"squizlabs/php_codesniffer": "*"
+		"squizlabs/php_codesniffer": "*",
+		"phpunit/phpunit": "~6"
 	},
 	"require-dev" : {
 		"psy/psysh" : "@stable",
 		"cakephp/debug_kit" : "~3.2",
 		"cakephp/bake" : "~1.1",
-        "php-coveralls/php-coveralls": "~2.0",
-        "phpunit/phpunit": ">=7.0.3"
+        "php-coveralls/php-coveralls": "~2.0"
     },
 	"suggest" : {
 		"phpunit/phpunit" : "Allows automated tests to be run without system-wide install.",
