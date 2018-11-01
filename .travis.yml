@@ -5,13 +5,18 @@ sudo: true
 php:
   - 7.2
 
+
 addons:
-  - mariadb: '10.0.24'
+  - mariadb: '10.0'
+
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
 
 before_script:
   - phpenv rehash
 
 script:
+  - cp ./config/app.testing.php ./config/app.php
   - sh -c "composer install"
   - sh -c "composer test"
 
