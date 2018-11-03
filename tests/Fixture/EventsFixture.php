@@ -16,7 +16,7 @@ class EventsFixture extends TestFixture
      * @var array
      */
     // @codingStandardsIgnoreStart
-    public $fields = [
+/*     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'name' => ['type' => 'string', 'length' => 80, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         'short_description' => ['type' => 'string', 'length' => 250, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
@@ -55,7 +55,11 @@ class EventsFixture extends TestFixture
             'collation' => 'utf8_general_ci'
         ],
     ];
+ */    
     // @codingStandardsIgnoreEnd
+
+    public $import = ['table' => 'events', 'connection' => 'default'];
+
 
     /**
      * Records

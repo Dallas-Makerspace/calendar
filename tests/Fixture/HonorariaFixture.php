@@ -23,7 +23,7 @@ class HonorariaFixture extends TestFixture
      * @var array
      */
     // @codingStandardsIgnoreStart
-    public $fields = [
+/*     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'event_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'contact_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
@@ -39,8 +39,10 @@ class HonorariaFixture extends TestFixture
             'engine' => 'InnoDB',
             'collation' => 'utf8_general_ci'
         ],
-    ];
+    ]; */
     // @codingStandardsIgnoreEnd
+
+    public $import = ['table' => 'honoraria', 'connection' => 'default'];
 
     /**
      * Records

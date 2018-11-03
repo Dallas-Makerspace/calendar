@@ -243,9 +243,9 @@ return [
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => '',
+            'username' => 'root',
             'password' => '',
-            'database' => '',
+            'database' => 'main',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'flags' => [],
