@@ -30,12 +30,12 @@ class EventsToolsTableTest extends TestCase
         'app.rooms',
         'app.contacts',
         'app.honoraria',
-        'app.fulfills_prerequisites',
-        'app.requires_prerequisites',
-        'app.part_ofs',
-        'app.copy_ofs',
+        // 'app.fulfills_prerequisites',
+        // 'app.requires_prerequisites',
+        // 'app.part_ofs',
+        // 'app.copy_ofs',
         'app.categories',
-        'app.events_categories'
+        'app.categories_events'
     ];
 
     /**

@@ -21,12 +21,12 @@ class RoomsControllerTest extends IntegrationTestCase
         'app.contacts',
         'app.honoraria',
         'app.committees',
-        'app.fulfills_prerequisites',
-        'app.requires_prerequisites',
-        'app.part_ofs',
-        'app.copy_ofs',
+        // 'app.fulfills_prerequisites',
+        // 'app.requires_prerequisites',
+        // 'app.part_ofs',
+        // 'app.copy_ofs',
         'app.categories',
-        'app.events_categories',
+        'app.categories_events',
         'app.tools',
         'app.events_tools'
     ];

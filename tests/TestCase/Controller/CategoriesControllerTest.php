@@ -18,7 +18,7 @@ class CategoriesControllerTest extends IntegrationTestCase
     public $fixtures = [
         'app.categories',
         'app.events',
-        'app.events_categories'
+        'app.categories_events'
     ];
 
     /**

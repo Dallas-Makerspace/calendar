@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\EventsCategoriesTable;
+use App\Model\Table\CategoriesEventsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\EventsCategoriesTable Test Case
+ * App\Model\Table\CategoriesEventsTable Test Case
  */
-class EventsCategoriesTableTest extends TestCase
+class CategoriesEventsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\EventsCategoriesTable
+     * @var \App\Model\Table\CategoriesEventsTable
      */
-    public $EventsCategories;
+    public $CategoriesEvents;
 
     /**
      * Fixtures
@@ -24,16 +24,16 @@ class EventsCategoriesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.events_categories',
+        'app.categories_events',
         'app.categories',
         'app.events',
         'app.rooms',
         'app.contacts',
         'app.honoraria',
-        'app.fulfills_prerequisites',
-        'app.requires_prerequisites',
-        'app.part_ofs',
-        'app.copy_ofs',
+        // 'app.fulfills_prerequisites',
+        // 'app.requires_prerequisites',
+        // 'app.part_ofs',
+        // 'app.copy_ofs',
         'app.tools',
         'app.events_tools'
     ];
@@ -46,8 +46,8 @@ class EventsCategoriesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('EventsCategories') ? [] : ['className' => 'App\Model\Table\EventsCategoriesTable'];
-        $this->EventsCategories = TableRegistry::get('EventsCategories', $config);
+        $config = TableRegistry::exists('CategoriesEvents') ? [] : ['className' => 'App\Model\Table\CategoriesEventsTable'];
+        $this->CategoriesEvents = TableRegistry::get('CategoriesEvents', $config);
     }
 
     /**
@@ -57,7 +57,7 @@ class EventsCategoriesTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->EventsCategories);
+        unset($this->CategoriesEvents);
 
         parent::tearDown();
     }

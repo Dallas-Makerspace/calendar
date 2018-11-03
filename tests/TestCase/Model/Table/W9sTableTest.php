@@ -28,12 +28,12 @@ class W9sTableTest extends TestCase
         'app.contacts',
         'app.events',
         'app.rooms',
-        'app.fulfills_prerequisites',
-        'app.requires_prerequisites',
+        // 'app.fulfills_prerequisites',
+        // 'app.requires_prerequisites',
         'app.honoraria',
         'app.committees',
         'app.categories',
-        'app.events_categories',
+        'app.categories_events',
         'app.tools',
         'app.events_tools'
     ];

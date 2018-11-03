@@ -30,10 +30,10 @@ class FilesTableTest extends TestCase
         'app.contacts',
         'app.honoraria',
         'app.committees',
-        'app.fulfills_prerequisites',
-        'app.requires_prerequisites',
+        // 'app.fulfills_prerequisites',
+        // 'app.requires_prerequisites',
         'app.categories',
-        'app.events_categories',
+        'app.categories_events',
         'app.tools',
         'app.events_tools'
     ];
