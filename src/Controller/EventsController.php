@@ -1041,18 +1041,18 @@ class EventsController extends AppController
         $this->Crud->on(
             'beforeRender',
             function (\Cake\Event\Event $event) {
-                if ($this->request->getParam('copy') !== false) {
-                    if ($this->Events->isOwnedBy($this->request->getParam('copy'), $this->Auth->user('samaccountname')) || parent::isAuthorized($user)) {
+                if ($this->request->getQuery('copy') !== false) {
+                    if ($this->Events->isOwnedBy($this->request->getQuery('copy'), $this->Auth->user('samaccountname')) || parent::isAuthorized($user)) {
                         if (!$this->request->is(['post', 'put'])) {
                             $event->getSubject()->entity = $this->Events->get(
-                                $this->request->getParam('copy'),
+                                $this->request->getQuery('copy'),
                                 [
                                     'contain' => ['Categories', 'Contacts', 'Files', 'FulfillsPrerequisites', 'Honoraria', 'Honoraria.Committees', 'RequiresPrerequisites', 'Tools']
                                 ]
                             );
                         } else {
                             $copy = $this->Events->get(
-                                $this->request->getParam('copy'),
+                                $this->request->getQuery('copy'),
                                 [
                                     'contain' => ['Files']
                                 ]
@@ -1566,28 +1566,28 @@ class EventsController extends AppController
 
     private function __applyQueryFilters(&$event)
     {
-        if (!empty($this->request->getParam('tool'))) {
+        if (!empty($this->request->getQuery('tool'))) {
             $event->getSubject()->query->matching(
                 'Tools',
                 function ($q) {
-                    return $q->where(['Tools.id' => $this->request->getParam('tool')]);
+                    return $q->where(['Tools.id' => $this->request->getQuery('tool')]);
                 }
             );
         }
 
-        if (!empty($this->request->getParam('type')) || !empty($this->request->getParam('category'))) {
+        if (!empty($this->request->getQuery('type')) || !empty($this->request->getQuery('category'))) {
             $event->getSubject()->query->matching(
                 'Categories',
                 function ($q) {
                     $categories = [];
                     $set = 0;
 
-                    if (!empty($this->request->getParam('type'))) {
-                        $categories[] = $this->request->getParam('type');
+                    if (!empty($this->request->getQuery('type'))) {
+                        $categories[] = $this->request->getQuery('type');
                     }
 
-                    if (!empty($this->request->getParam('category'))) {
-                        $categories[] = $this->request->getParam('category');
+                    if (!empty($this->request->getQuery('category'))) {
+                        $categories[] = $this->request->getQuery('category');
                     }
 
                     return $q->where(['Categories.id IN' => $categories]);
@@ -1595,7 +1595,7 @@ class EventsController extends AppController
             );
         }
 
-        if (!empty($this->request->getParam('type')) && !empty($this->request->getParam('category'))) {
+        if (!empty($this->request->getQuery('type')) && !empty($this->request->getQuery('category'))) {
             $event->getSubject()->query
                 ->group('Events.id')
                 ->having(
