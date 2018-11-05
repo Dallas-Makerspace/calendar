@@ -939,7 +939,10 @@ class EventsController extends AppController
                     $email = new Email();
                     $email->transport('sparkpost');
                     $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                    $email->to([$contact->email => $contact->name]);
+                    if ($isDevelopment)
+                        $email->to([$contact->email . ".sink.sparkpostmail.com" => $contact->name]);
+                    else
+                        $email->to([$contact->email => $contact->name]);
                     //$email->subject('DMS Event Rejection: ' . $event->getSubject()->entity->name);
                     $email->subject('DMS Event Rejection: ' . (strlen($event->getSubject()->entity->name) > 45 ? substr($event->getSubject()->entity->name, 0, 45) . "..." : $event->getSubject()->entity->name));
                     $email->send($message);
@@ -1219,7 +1222,10 @@ class EventsController extends AppController
                         $email = new Email();
                         $email->transport('sparkpost');
                         $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                        $email->to([$registration->email => $registration->name]);
+                        if ($isDevelopment)
+                            $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
+                        else
+                            $email->to([$registration->email => $registration->name]);
                         $email->subject('Update: ' . $event->getSubject()->entity->name . ' has been Cancelled');
                         $email->send($message);
                     } catch (\Exception $e) {
@@ -1275,7 +1281,10 @@ class EventsController extends AppController
                         $email = new Email();
                         $email->transport('sparkpost');
                         $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                        $email->to([$registration->email => $registration->name]);
+                        if ($isDevelopment)
+                            $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
+                        else
+                            $email->to([$registration->email => $registration->name]);
                         $email->subject($event->name . ' Registration Cancelled');
                         $email->send($message);
                     } catch (\Exception $e) {
@@ -1354,7 +1363,10 @@ class EventsController extends AppController
                     $email = new Email();
                     $email->transport('sparkpost');
                     $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                    $email->to([$registration->email => $registration->name]);
+                    if ($isDevelopment)
+                        $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
+                    else
+                        $email->to([$registration->email => $registration->name]);
                     $email->subject('Reminder: ' . $event->name . ' Cancellation Cutoff is Soon');
                     $email->send($message);
                 } catch (\Exception $e) {
@@ -1394,7 +1406,10 @@ class EventsController extends AppController
                     $email = new Email();
                     $email->transport('sparkpost');
                     $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                    $email->to([$registration->email => $registration->name]);
+                    if ($isDevelopment)
+                        $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
+                    else
+                        $email->to([$registration->email => $registration->name]);
                     $email->subject('Reminder: ' . $event->name . ' Starts Soon');
                     $email->send($message);
                 } catch (\Exception $e) {
