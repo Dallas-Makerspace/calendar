@@ -372,16 +372,23 @@ class EventsController extends AppController
                         'Events.cost',
                         'Events.short_description',
                         'Events.created',
+                        'Events.free_spaces',
+                        'Events.paid_spaces',
                         'Rooms.id',
-                        'Rooms.name'
+                        'Rooms.name',
+                        'registration_count' => "count(Registrations.id)"
                         ]
                     )
+                    ->leftJoinWith('Registrations', function ($q) {
+                        return $q->where(['Registrations.status !=' => 'cancelled']);
+                    })
                     ->where(
                         [
                         'Events.event_start >=' => $today,
                         'Events.status' => 'approved'
                         ]
                     )
+                    ->group('Events.id')
                     ->contain(['Rooms']);
 
                 $this->__applyQueryFilters($event);

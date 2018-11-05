@@ -182,7 +182,15 @@ $this->Html->meta(
                         'EEEE, MMMM d',
                         null,
                         'America/Chicago'
-                    )
+                    );
+
+                    if ($event->cost) 
+                        $spaces = $event->paid_spaces;
+                    else
+                        $spaces = $event->free_spaces;
+
+                    $isFull = $spaces != 0 && $event->registration_count >= $spaces;
+
                 ?>
                 <?php if ($currentDate != $eventDate): ?>
                     <div class="date-break">
@@ -205,8 +213,7 @@ $this->Html->meta(
                                         )
                                     )?>
                                 </span>
-                                <?php  //\Cake\ORM\TableRegistry::get('Events')->hasOpenSpaces($event->id) ? '' : '<strong>FULL: </strong>' ?>
-                                <?= h($event->name) ?>
+                                <?php  if ($isFull) echo '<strong>FULL: </strong>';?><?= h($event->name) ?>
                                 <?php $cost = $event->cost > 0 ? '$' . $event->cost . '.00' : 'Free'; ?>
                                 - <?= $cost ?>
                             </h4>
