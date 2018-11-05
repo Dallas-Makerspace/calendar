@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\W9sTable;
+use App\Model\Table\RegistrationsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\W9sTable Test Case
+ * App\Model\Table\RegistrationsTable Test Case
  */
-class W9sTableTest extends TestCase
+class RegistrationsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\W9sTable
+     * @var \App\Model\Table\RegistrationsTable
      */
-    public $W9s;
+    public $RegistrationsTable;
 
     /**
      * Fixtures
@@ -24,18 +24,8 @@ class W9sTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.w9s',
-        'app.contacts',
-        'app.events',
-        'app.rooms',
-        // 'app.fulfills_prerequisites',
-        // 'app.requires_prerequisites',
-        'app.honoraria',
-        'app.committees',
-        'app.categories',
-        'app.categories_events',
-        'app.tools',
-        'app.events_tools'
+        'app.registrations',
+        'app.events'
     ];
 
     /**
@@ -46,8 +36,8 @@ class W9sTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('W9s') ? [] : ['className' => 'App\Model\Table\W9sTable'];
-        $this->W9s = TableRegistry::get('W9s', $config);
+        $config = TableRegistry::getTableLocator()->exists('Registrations') ? [] : ['className' => RegistrationsTable::class];
+        $this->RegistrationsTable = TableRegistry::getTableLocator()->get('Registrations', $config);
     }
 
     /**
@@ -57,7 +47,7 @@ class W9sTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->W9s);
+        unset($this->RegistrationsTable);
 
         parent::tearDown();
     }
@@ -88,6 +78,26 @@ class W9sTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test refund method
+     *
+     * @return void
+     */
+    public function testRefund()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test isOwnedBy method
+     *
+     * @return void
+     */
+    public function testIsOwnedBy()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

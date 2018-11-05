@@ -16,7 +16,7 @@ class CategoriesEventsFixture extends TestFixture
      * @var array
      */
     // @codingStandardsIgnoreStart
-/*     public $fields = [
+    public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'category_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'event_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
@@ -28,20 +28,22 @@ class CategoriesEventsFixture extends TestFixture
             'collation' => 'utf8_general_ci'
         ],
     ];
- */    // @codingStandardsIgnoreEnd
+    // @codingStandardsIgnoreEnd
 
-    public $import = ['table' => 'categories_events', 'connection' => 'default'];
- 
     /**
-     * Records
+     * Init method
      *
-     * @var array
+     * @return void
      */
-    public $records = [
-        [
-            'id' => 1,
-            'category_id' => 1,
-            'event_id' => 1
-        ],
-    ];
+    public function init()
+    {
+        $this->records = [
+            [
+                'id' => 1,
+                'category_id' => 1,
+                'event_id' => 1
+            ],
+        ];
+        parent::init();
+    }
 }

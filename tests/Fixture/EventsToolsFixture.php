@@ -16,7 +16,7 @@ class EventsToolsFixture extends TestFixture
      * @var array
      */
     // @codingStandardsIgnoreStart
-/*     public $fields = [
+    public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'tool_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'event_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
@@ -27,21 +27,23 @@ class EventsToolsFixture extends TestFixture
             'engine' => 'InnoDB',
             'collation' => 'utf8_general_ci'
         ],
-    ]; */
+    ];
     // @codingStandardsIgnoreEnd
 
-    public $import = ['table' => 'events_tools', 'connection' => 'default'];
-
     /**
-     * Records
+     * Init method
      *
-     * @var array
+     * @return void
      */
-    public $records = [
-        [
-            'id' => 1,
-            'tool_id' => 1,
-            'event_id' => 1
-        ],
-    ];
+    public function init()
+    {
+        $this->records = [
+            [
+                'id' => 1,
+                'tool_id' => 1,
+                'event_id' => 1
+            ],
+        ];
+        parent::init();
+    }
 }

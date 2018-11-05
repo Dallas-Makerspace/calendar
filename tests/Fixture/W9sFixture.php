@@ -16,12 +16,13 @@ class W9sFixture extends TestFixture
      * @var array
      */
     // @codingStandardsIgnoreStart
-/*     public $fields = [
+    public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
-        'file' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
-        'dir' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
-        'type' => ['type' => 'string', 'length' => 255, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
         'contact_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'vendor_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'file' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'type' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'dir' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
@@ -31,25 +32,28 @@ class W9sFixture extends TestFixture
             'engine' => 'InnoDB',
             'collation' => 'utf8_general_ci'
         ],
-    ]; */
+    ];
     // @codingStandardsIgnoreEnd
 
-    public $import = ['table' => 'w9s', 'connection' => 'default'];
-
     /**
-     * Records
+     * Init method
      *
-     * @var array
+     * @return void
      */
-    public $records = [
-        [
-            'id' => 1,
-            'file' => 'Lorem ipsum dolor sit amet',
-            'dir' => 'Lorem ipsum dolor sit amet',
-            'type' => 'Lorem ipsum dolor sit amet',
-            'contact_id' => 1,
-            'created' => '2016-06-02 21:04:24',
-            'modified' => '2016-06-02 21:04:24'
-        ],
-    ];
+    public function init()
+    {
+        $this->records = [
+            [
+                'id' => 1,
+                'contact_id' => 1,
+                'vendor_id' => 1,
+                'file' => '',
+                'type' => 'Lorem ipsum dolor sit amet',
+                'dir' => 'Lorem ipsum dolor sit amet',
+                'created' => '2018-11-05 02:11:23',
+                'modified' => '2018-11-05 02:11:23'
+            ],
+        ];
+        parent::init();
+    }
 }

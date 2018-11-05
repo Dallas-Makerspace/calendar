@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\ToolsController;
+use App\Controller\FilesController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\ToolsController Test Case
+ * App\Controller\FilesController Test Case
  */
-class ToolsControllerTest extends IntegrationTestCase
+class FilesControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,7 +16,7 @@ class ToolsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.tools',
+        'app.files',
         'app.events'
     ];
 
@@ -41,11 +41,11 @@ class ToolsControllerTest extends IntegrationTestCase
     }
 
     /**
-     * Test index method
+     * Test delete method
      *
      * @return void
      */
-    public function testIndex()
+    public function testDelete()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

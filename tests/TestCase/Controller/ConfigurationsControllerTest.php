@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\ToolsController;
+use App\Controller\ConfigurationsController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\ToolsController Test Case
+ * App\Controller\ConfigurationsController Test Case
  */
-class ToolsControllerTest extends IntegrationTestCase
+class ConfigurationsControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,8 +16,7 @@ class ToolsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.tools',
-        'app.events'
+        'app.configurations'
     ];
 
     /**

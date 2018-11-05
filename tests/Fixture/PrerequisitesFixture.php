@@ -16,10 +16,10 @@ class PrerequisitesFixture extends TestFixture
      * @var array
      */
     // @codingStandardsIgnoreStart
-/*     public $fields = [
+    public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
-        'name' => ['type' => 'string', 'length' => 80, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
-        'ad_group' => ['type' => 'string', 'length' => 100, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'fixed' => null],
+        'name' => ['type' => 'string', 'length' => 80, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'ad_group' => ['type' => 'string', 'length' => 100, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         '_constraints' => [
@@ -29,23 +29,25 @@ class PrerequisitesFixture extends TestFixture
             'engine' => 'InnoDB',
             'collation' => 'utf8_general_ci'
         ],
-    ]; */
+    ];
     // @codingStandardsIgnoreEnd
 
-    public $import = ['table' => 'prerequisites', 'connection' => 'default'];
-
     /**
-     * Records
+     * Init method
      *
-     * @var array
+     * @return void
      */
-    public $records = [
-        [
-            'id' => 1,
-            'name' => 'Lorem ipsum dolor sit amet',
-            'ad_group' => 'Lorem ipsum dolor sit amet',
-            'created' => '2016-05-23 04:36:53',
-            'modified' => '2016-05-23 04:36:53'
-        ],
-    ];
+    public function init()
+    {
+        $this->records = [
+            [
+                'id' => 1,
+                'name' => 'Lorem ipsum dolor sit amet',
+                'ad_group' => 'Lorem ipsum dolor sit amet',
+                'created' => '2018-11-05 02:11:23',
+                'modified' => '2018-11-05 02:11:23'
+            ],
+        ];
+        parent::init();
+    }
 }

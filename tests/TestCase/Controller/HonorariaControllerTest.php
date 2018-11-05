@@ -18,16 +18,6 @@ class HonorariaControllerTest extends IntegrationTestCase
     public $fixtures = [
         'app.honoraria',
         'app.events',
-        'app.rooms',
-        'app.contacts',
-        // 'app.fulfills_prerequisites',
-        // 'app.requires_prerequisites',
-        // 'app.part_ofs',
-        // 'app.copy_ofs',
-        'app.categories',
-        'app.categories_events',
-        'app.tools',
-        'app.events_tools',
         'app.committees'
     ];
 

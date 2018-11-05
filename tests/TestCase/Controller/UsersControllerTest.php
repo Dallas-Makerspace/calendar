@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\ContactsController;
+use App\Controller\UsersController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\ContactsController Test Case
+ * App\Controller\UsersController Test Case
  */
-class ContactsControllerTest extends IntegrationTestCase
+class UsersControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,10 +16,6 @@ class ContactsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.contacts',
-        'app.w9s',
-        'app.events',
-        'app.honoraria'
     ];
 
     /**
@@ -33,31 +29,41 @@ class ContactsControllerTest extends IntegrationTestCase
     }
 
     /**
-     * Test isAuthorized method
+     * Test implementedEvents method
      *
      * @return void
      */
-    public function testIsAuthorized()
+    public function testImplementedEvents()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test index method
+     * Test afterIdentify method
      *
      * @return void
      */
-    public function testIndex()
+    public function testAfterIdentify()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test view method
+     * Test login method
      *
      * @return void
      */
-    public function testView()
+    public function testLogin()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test logout method
+     *
+     * @return void
+     */
+    public function testLogout()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
