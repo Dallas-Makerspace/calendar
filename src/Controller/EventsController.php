@@ -939,7 +939,7 @@ class EventsController extends AppController
                     $email = new Email();
                     $email->transport('sparkpost');
                     $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                    if ($isDevelopment)
+                    if (Configure::read("isDevelopment"))
                         $email->to([$contact->email . ".sink.sparkpostmail.com" => $contact->name]);
                     else
                         $email->to([$contact->email => $contact->name]);
@@ -1222,7 +1222,7 @@ class EventsController extends AppController
                         $email = new Email();
                         $email->transport('sparkpost');
                         $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                        if ($isDevelopment)
+                        if (Configure::read("isDevelopment"))
                             $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
                         else
                             $email->to([$registration->email => $registration->name]);
@@ -1281,7 +1281,7 @@ class EventsController extends AppController
                         $email = new Email();
                         $email->transport('sparkpost');
                         $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                        if ($isDevelopment)
+                        if (Configure::read("isDevelopment"))
                             $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
                         else
                             $email->to([$registration->email => $registration->name]);
@@ -1363,7 +1363,7 @@ class EventsController extends AppController
                     $email = new Email();
                     $email->transport('sparkpost');
                     $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                    if ($isDevelopment)
+                    if (Configure::read("isDevelopment"))
                         $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
                     else
                         $email->to([$registration->email => $registration->name]);
@@ -1406,7 +1406,7 @@ class EventsController extends AppController
                     $email = new Email();
                     $email->transport('sparkpost');
                     $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                    if ($isDevelopment)
+                    if (Configure::read("isDevelopment"))
                         $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
                     else
                         $email->to([$registration->email => $registration->name]);
