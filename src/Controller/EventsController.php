@@ -1411,13 +1411,13 @@ class EventsController extends AppController
                     else
                         $email->to([$registration->email => $registration->name]);
                     $email->subject('Reminder: ' . $event->name . ' Starts Soon');
-                    $email->send($message);
+                    //$email->send($message);
                 } catch (\Exception $e) {
                     $this->log($e);
                 }
 
                 if ($registration->phone && $registration->send_text) {
-                    $this->__sendText($registration->phone, 'DMS Event Reminder: ' . $event->name . ' starts ' . $formattedTime . '.');
+                    //$this->__sendText($registration->phone, 'DMS Event Reminder: ' . $event->name . ' starts ' . $formattedTime . '.');
                 }
             }
 
