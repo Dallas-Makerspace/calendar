@@ -394,6 +394,7 @@ class EventsController extends AppController
                 $this->__applyQueryFilters($event);
 
                 $this->paginate['limit'] = 2147483647;
+                $this->paginate['order'] = array('Events.event_start' => 'ASC');
             }
         );
 
