@@ -1052,8 +1052,8 @@ class EventsController extends AppController
         $this->Crud->on(
             'beforeRender',
             function (\Cake\Event\Event $event) {
-                if ($this->request->getQuery('copy') !== false) {
-                    if ($this->Events->isOwnedBy($this->request->getQuery('copy'), $this->Auth->user('samaccountname')) || parent::isAuthorized($user)) {
+                if ($this->request->getQuery('copy') !== null) {
+                    if ($this->Events->isOwnedBy($this->request->getQuery('copy'), $this->Auth->user('samaccountname')) || parent::isAuthorized($this->Auth->user())) {
                         if (!$this->request->is(['post', 'put'])) {
                             $event->getSubject()->entity = $this->Events->get(
                                 $this->request->getQuery('copy'),
