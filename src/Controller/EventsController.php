@@ -260,6 +260,7 @@ class EventsController extends AppController
             $type = $this->request->getQuery("type");
             $category = $this->request->getQuery("category");
             $tool = $this->request->getQuery("tool");
+            $room = $this->request->getQuery("room");
 
             // get names for categories and tools
 
@@ -278,6 +279,10 @@ class EventsController extends AppController
 
             if (ctype_digit($tool)) {
                 $subjects[] = $this->Events->Tools->find('list')->where(['id' => $tool])->first();
+            }
+
+            if (ctype_digit($room)) {
+                $subjects[] = $this->Events->Rooms->find('list')->where(['id' => $room])->first();
             }
 
             if (!empty($subjects)) {
@@ -1452,7 +1457,8 @@ class EventsController extends AppController
     {
         $categories = $this->Events->Categories->find('list')->where(['id >' => 2])->order('name ASC')->toArray();
         $tools = $this->Events->Tools->find('list')->order('name ASC')->toArray();
-        $this->set(compact('categories', 'tools'));
+        $rooms = $this->Events->Rooms->find('list')->order('name ASC')->toArray();
+        $this->set(compact('categories', 'tools', 'rooms'));
     }
 
     public function _formContent(\Cake\Event\Event $event)
@@ -1594,6 +1600,15 @@ class EventsController extends AppController
                 'Tools',
                 function ($q) {
                     return $q->where(['Tools.id' => $this->request->getQuery('tool')]);
+                }
+            );
+        }
+
+        if (!empty($this->request->getQuery('room'))) {
+            $event->getSubject()->query->matching(
+                'Rooms',
+                function ($q) {
+                    return $q->where(['Rooms.id' => $this->request->getQuery('room')]);
                 }
             );
         }

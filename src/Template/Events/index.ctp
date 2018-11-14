@@ -99,6 +99,18 @@ $this->Html->meta(
                         <?php endforeach; ?>
                     </ul>
                 </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        By Room <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right scrollable-menu">
+                        <?php foreach ($rooms as $key => $value): ?>
+                            <li><?= $this->Html->link(h($value), [
+                                '?' => array_merge($urlparams, ['room' => $key])
+                            ]) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
         </div>
         <?php if ($urlparams): ?>
@@ -136,6 +148,14 @@ $this->Html->meta(
                                 '?' => $params
                             ], [
                                 'class' => 'label label-danger',
+                                'escape' => false
+                            ]) ?>
+                        <?php elseif ($key == 'room' && array_key_exists((int) $value, $rooms)): ?>
+                            <?php unset($params['room']); ?>
+                            <?= $this->Html->link('<i class="fa fa-wrench small" aria-hidden="true"></i> ' . $rooms[$value] . ' | x', [
+                                '?' => $params
+                            ], [
+                                'class' => 'label label-default',
                                 'escape' => false
                             ]) ?>
                         <?php endif; ?>
