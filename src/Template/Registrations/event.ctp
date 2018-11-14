@@ -107,7 +107,7 @@
     </div>
 </div>
 
-<?php if ($clientToken): ?>
+<?php if (isset($clientToken)): ?>
     <script src="https://js.braintreegateway.com/js/braintree-2.27.0.min.js"></script>
     <script>
         var clientToken = '<?= $clientToken ?>';
