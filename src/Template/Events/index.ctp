@@ -9,7 +9,8 @@ $this->Html->meta(
     	"feedtype" => "rss",
    		"category" => $this->request->getQuery("category"),
    		"type" => $this->request->getQuery("type"),
-   		"tool" => $this->request->getQuery("tool"),
+        "tool" => $this->request->getQuery("tool"),
+        "room" => $this->request->getQuery("room"),
 	], true),
     ['type' => 'rss', 'block' => 'meta']
 );
@@ -23,7 +24,8 @@ $this->Html->meta(
     	"feedtype" => "atom",
     	"category" => $this->request->getQuery("category"),
     	"type" => $this->request->getQuery("type"),
-    	"tool" => $this->request->getQuery("tool"),
+        "tool" => $this->request->getQuery("tool"),
+        "room" => $this->request->getQuery("room"),
 	], true),
     ['type' => 'atom', 'block' => 'meta']
 );
@@ -42,7 +44,8 @@ $this->Html->meta(
             'action' => 'feed', 'feedtype' => "rss",
     		"category" => $this->request->getQuery("category"),
     		"type" => $this->request->getQuery("type"),
-    		"tool" => $this->request->getQuery("tool"),
+            "tool" => $this->request->getQuery("tool"),
+            "room" => $this->request->getQuery("room"),
         ], [
             'escape' => false
         ]) ?>
@@ -50,7 +53,8 @@ $this->Html->meta(
             'action' => 'feed', 'feedtype' => "atom",
     		"category" => $this->request->getQuery("category"),
     		"type" => $this->request->getQuery("type"),
-    		"tool" => $this->request->getQuery("tool"),
+            "tool" => $this->request->getQuery("tool"),
+            "room" => $this->request->getQuery("room"),
         ], [
             'escape' => false
         ]) ?>
@@ -234,8 +238,7 @@ $this->Html->meta(
                                     )?>
                                 </span>
                                 <?php  if ($isFull) echo '<strong>FULL: </strong>';?><?= h($event->name) ?>
-                                <?php $cost = $event->cost > 0 ? '$' . $event->cost . '.00' : 'Free'; ?>
-                                - <?= $cost ?>
+                                <?php if ($event->cost > 0) print " - $" . $event->cost . ".00" ?>
                             </h4>
                         </a>
                     </div>
