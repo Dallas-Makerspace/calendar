@@ -501,4 +501,5 @@
         <div id="config-mininum-booking-lead-time" class="hidden"><?= $config[4] ?></div>
         <div id="config-maximum-booking-lead-time" class="hidden"><?= $config[5] ?></div>
     <?php endif; ?>
+    <?php if ($unlockedEdits): ?><span id="unlockedEdit" class="hidden"></span><?php endif; ?>
 </div>
