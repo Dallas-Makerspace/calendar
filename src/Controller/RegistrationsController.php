@@ -161,7 +161,7 @@ class RegistrationsController extends AppController
                     } else {
                         $this->Flash->error($result->message);
                         $event->getSubject()->entity->errors('transaction_id', [$result->message]);
-                        $event->stopPropagation();
+                        //$event->stopPropagation();
                     }
                 }
             } else {
