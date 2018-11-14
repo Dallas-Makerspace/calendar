@@ -107,7 +107,7 @@ class EventsController extends AppController
                     $end_date = new \DateTime($_GET['end_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
                     $end_date->setTimezone(new \DateTimeZone('UTC'));
 
-                    $event->getSubjec()->query
+                    $event->getSubject()->query
                         ->where(
                             [
                             'Events.part_of_id IS NULL',
