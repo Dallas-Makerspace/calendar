@@ -225,8 +225,8 @@ class EventsTable extends Table
 
                     $query = [
                         $context['field'] => $value,
-                        'event_start <' => $context['data']['booking_end'],
-                        'event_end >' => $context['data']['booking_start'],
+                        'booking_start <' => $context['data']['booking_end'],
+                        'booking_end >' => $context['data']['booking_start'],
                         'status IN' => ['approved', 'pending']
                     ];
 
@@ -266,8 +266,8 @@ class EventsTable extends Table
                     $toolNames = [];
                     foreach ($values['_ids'] as $tool) {
                         $query = [
-                            'Events.event_start <' => $context['data']['booking_end'],
-                            'Events.event_end >' => $context['data']['booking_start'],
+                            'Events.booking_start <' => $context['data']['booking_end'],
+                            'Events.booking_end >' => $context['data']['booking_start'],
                             'status IN' => ['approved', 'pending']
                         ];
 
