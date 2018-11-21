@@ -170,16 +170,18 @@ class EventsController extends AppController
         $this->Crud->on(
             'beforeSave',
             function (\Cake\Event\Event $event) {
-                $adldap = new \Adldap\Adldap();
-                $provider = new \Adldap\Connections\Provider(Configure::read('ActiveDirectory'));
-                $adldap->addProvider('default', $provider);
-                $adldap->connect('default');
+                if (!Configure::read("isDevelopment")) {
+                    $adldap = new \Adldap\Adldap();
+                    $provider = new \Adldap\Connections\Provider(Configure::read('ActiveDirectory'));
+                    $adldap->addProvider('default', $provider);
+                    $adldap->connect('default');
 
-                foreach ($event->getSubject()->entity->registrations as $registration) {
-                    if ($registration->ad_assigned && $registration->ad_username) {
-                        $group = $provider->search()->groups()->find($event->getSubject()->entity->fulfills_prerequisite->ad_group);
-                        $user = $provider->search()->find($registration->ad_username);
-                        $result = $group->addMember($user);
+                    foreach ($event->getSubject()->entity->registrations as $registration) {
+                        if ($registration->ad_assigned && $registration->ad_username) {
+                            $group = $provider->search()->groups()->find($event->getSubject()->entity->fulfills_prerequisite->ad_group);
+                            $user = $provider->search()->find($registration->ad_username);
+                            $result = $group->addMember($user);
+                        }
                     }
                 }
             }

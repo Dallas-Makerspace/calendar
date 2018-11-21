@@ -193,8 +193,16 @@
                             </ul>
                         </li>
 
-                    <?php else: ?>
-                        <?= $this->Html->link('DMS Login', [
+                    <?php else: 
+                        if ($isMockAuth) {
+                            $loginButtonText = "Login";
+                        }
+                        else {
+                            $loginButtonText = "DMS Login";
+                        }
+                        
+                        ?>
+                        <?= $this->Html->link($loginButtonText, [
                             'controller' => 'Users',
                             'action' => 'login',
                             '?' => ['redirect' => $this->request->getAttribute("here")]
