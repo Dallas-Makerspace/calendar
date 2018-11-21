@@ -14,7 +14,7 @@
                 <?php
                     $eventDate = $this->Time->format(
                         $event->event_start,
-                        'EEEE, MMMM d',
+                        'EEEE, MMMM d, YYYY',
                         null,
                         'America/Chicago'
                     )
