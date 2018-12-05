@@ -1,4 +1,4 @@
-FROM php:7-apache
+FROM hhvm/hhvm-proxygen:latest
 
 LABEL maintainer="infrastructure@dallasmakerspace.org"
 
@@ -20,35 +20,22 @@ LABEL org.dallasmakerspace.costcenter "FUNDS_MONTHLY:Web Hosting"
 LABEL org.dallasmakerspace.oid "iso.org.dod.internet.50391"
 LABEL org.dallasmakerspace.duns "iso.org.duns.053332191"
 
-ARG FWATCHDOG_VERSION="0.7.1"
+ENV DEBIAN_FRONTEND noninteractive
+
+# Install Dependancies
+RUN apt-get update -y && apt-get install -y curl
+
+# Install composer
+RUN mkdir /opt/composer
+RUN curl -sS https://getcomposer.org/installer | hhvm --php -- --install-dir=/opt/composer
+
+# Install the app
+RUN rm -rf /var/www
+COPY . /var/www
+RUN cd /var/www && hhvm /opt/composer/composer.phar install
+
+# Reconfigure HHVM
+#ADD hhvm.prod.ini /etc/hhvm/site.ini
 
 EXPOSE 80
-
-ENV VIRTUAL_PORT 80
-ENV VIRTUAL_PROTO http
-
-HEALTHCHECK --interval=5s CMD 'curl -sSlk http://localhost/'
-
-COPY . /var/www/html/
-
-RUN a2enmod rewrite && \
-    apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libmcrypt-dev \
-        libpng-dev \
-        zlib1g-dev \
-        libicu-dev \
-        mcrypt \
-        g++ \
-    && curl -sL https://github.com/openfaas/faas/releases/download/${FWATCHDOG_VERSION}/fwatchdog > /usr/bin/fwatchdog \
-    && chmod +x /usr/bin/fwatchdog \
-    && docker-php-ext-configure intl \
-    && pecl install redis && docker-php-ext-enable redis \
-    && pecl install mcrypt-1.0.1 && docker-php-ext-enable mcrypt \
-    && pecl install pdo && docker-php-ext-enable pdo \
-    && pecl install pdo_mysq && docker-php-ext-enable pdo_mysq \
-    && pecl install mbstring && docker-php-ext-enable mbstring \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd iconv \
-    && chmod -R 777 /var/www/html/{tmp,logs}
+HEALTHCHECK --interval=5m CMD 'curl -sSlk http://localhost/ || exit -1'
