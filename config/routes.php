@@ -42,24 +42,12 @@ use Cake\Routing\Router;
  */
 Router::defaultRouteClass('DashedRoute');
 
-Router::scope('/api', function ($routes) {
-    
-    $routes->prefix('v1.0', ['path' => '/v1'], function (RouteBuilder $routes) {
-        $routes->resources('Events', 'map' => [
-            'get' => [
-                'action' => 'get'
-        ];
-    });
-            
-});
-
 Router::scope('/', function (RouteBuilder $routes) {
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, src/Template/Pages/home.ctp)...
      */
-    
     $routes->connect('/', ['controller' => 'Events', 'action' => 'index']);
 
     // Events View
