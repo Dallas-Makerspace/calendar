@@ -43,17 +43,26 @@ class AppController extends Controller
     {
         parent::initialize();
 
+        $auth = [
+            'ActiveDirectoryAuthenticate.Adldap' => [
+                'config' => [
+                    'account_suffix' => Configure::read('ActiveDirectory.account_suffix'),
+                    'base_dn' => Configure::read('ActiveDirectory.base_dn'),
+                    'domain_controllers' => Configure::read('ActiveDirectory.domain_controllers')
+                ],
+                'select' => ['displayName', 'samaccountname', 'telephonenumber', 'mail']
+            ]
+        ];
+
+        // If Mock exists in config file then use that instead of real AD auth
+        if (Configure::check("MockActiveDirectory")) {
+            $auth = [
+                'ActiveDirectoryAuthenticateMock.AdldapMock' => Configure::read("MockActiveDirectory")
+            ];
+        }
+
         $this->loadComponent('Auth', [
-            'authenticate' => [
-                'ActiveDirectoryAuthenticate.Adldap' => [
-                    'config' => [
-                        'account_suffix' => Configure::read('ActiveDirectory.account_suffix'),
-                        'base_dn' => Configure::read('ActiveDirectory.base_dn'),
-                        'domain_controllers' => Configure::read('ActiveDirectory.domain_controllers')
-                    ],
-                    'select' => ['displayName', 'samaccountname', 'telephonenumber', 'mail']
-                ]
-            ],
+            'authenticate' => $auth,
             'authorize' => ['Controller'],
             'loginAction' => [
                 'controller' => 'Users',
@@ -82,7 +91,7 @@ class AppController extends Controller
         $this->loadComponent('Security');
 
         // Disables CRUD's default setFlash helper
-        $this->eventManager()->on('Crud.setFlash', function (Event $event) {
+        $this->getEventManager()->on('Crud.setFlash', function (Event $event) {
             $event->stopPropagation();
         });
 
@@ -162,9 +171,11 @@ class AppController extends Controller
 
         $this->set($isAuthorized);
         $this->set($hasMenu);
-
+        $this->set('isDevelopment', Configure::read("isDevelopment"));
+        $this->set('isMockAuth', Configure::check("MockActiveDirectory"));
+        
         if (!array_key_exists('_serialize', $this->viewVars) &&
-            in_array($this->response->type(), ['application/json', 'application/xml'])
+            in_array($this->response->getType(), ['application/json', 'application/xml'])
         ) {
             $this->set('_serialize', true);
         }

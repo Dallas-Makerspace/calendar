@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-inverse navbar-fixed-top"<?php if ($isDevelopment) echo " style='background: red'";?>>
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -10,9 +10,9 @@
             <?= $this->Html->link('Dallas Makerspace Calendar', '/', ['class' => 'navbar-brand']); ?>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-            <?php $authUser = $this->request->session()->read('Auth.User'); ?>
+            <?php $authUser = $this->request->getSession()->read('Auth.User'); ?>
             <ul class="nav navbar-nav">
-                <?php if (!($this->request->params['controller'] == 'Events' && $this->request->params['action'] == 'add')): ?>
+                <?php if (!($this->request->getParam('controller') == 'Events' && $this->request->getParam('action') == 'add')): ?>
                     <?php if ($canAddEvents): ?>
                         <li>
                             <?= $this->Html->link('Submit Event', [
@@ -193,11 +193,19 @@
                             </ul>
                         </li>
 
-                    <?php else: ?>
-                        <?= $this->Html->link('DMS Login', [
+                    <?php else: 
+                        if ($isMockAuth) {
+                            $loginButtonText = "Login";
+                        }
+                        else {
+                            $loginButtonText = "DMS Login";
+                        }
+                        
+                        ?>
+                        <?= $this->Html->link($loginButtonText, [
                             'controller' => 'Users',
                             'action' => 'login',
-                            '?' => ['redirect' => $this->request->here]
+                            '?' => ['redirect' => $this->request->getAttribute("here")]
                         ]) ?>
                     <?php endif; ?>
                 </li>

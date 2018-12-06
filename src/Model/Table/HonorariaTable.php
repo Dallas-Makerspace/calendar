@@ -26,9 +26,9 @@ class HonorariaTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('honoraria');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('honoraria');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
@@ -71,7 +71,7 @@ class HonorariaTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['committee_id'], 'Committees'));
-        
+
         return $rules;
     }
 }

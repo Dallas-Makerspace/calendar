@@ -31,13 +31,13 @@ use Cake\ORM\Entity;
  * @property int $contact_id
  * @property \App\Model\Entity\Contact $contact
  * @property int $fulfills_prerequisite_id
- * @property \App\Model\Entity\FulfillsPrerequisite $fulfills_prerequisite
+ * @property \App\Model\Entity\Prerequisite $fulfills_prerequisite
  * @property int $requires_prerequisite_id
- * @property \App\Model\Entity\RequiresPrerequisite $requires_prerequisite
+ * @property \App\Model\Entity\Prerequisite $requires_prerequisite
  * @property int $part_of_id
- * @property \App\Model\Entity\PartOf $part_of
+ * @property \App\Model\Entity\Event $part_of
  * @property int $copy_of_id
- * @property \App\Model\Entity\CopyOf $copy_of
+ * @property \App\Model\Entity\Event $copy_of
  * @property string $rejected_by
  * @property string $rejection_reason
  * @property string $created_by
@@ -77,8 +77,10 @@ class Event extends Entity
                 $this->attendee_cancellation,
                 'UTC'
             );
+
             return $startTime->diffInDays($cancellationTime);
         }
+
         return null;
     }
 
@@ -95,8 +97,10 @@ class Event extends Entity
                 $this->booking_start,
                 'UTC'
             );
+
             return $startTime->diffInMinutes($setupTime);
         }
+
         return null;
     }
 
@@ -113,8 +117,10 @@ class Event extends Entity
                 $this->booking_end,
                 'UTC'
             );
+
             return $startTime->diffInMinutes($teardownTime);
         }
+
         return null;
     }
 }

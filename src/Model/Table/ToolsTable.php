@@ -25,9 +25,9 @@ class ToolsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('tools');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('tools');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 

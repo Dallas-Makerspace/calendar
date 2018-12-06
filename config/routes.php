@@ -51,16 +51,19 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/', ['controller' => 'Events', 'action' => 'index']);
 
     // Events View
-    $routes->connect("/events/view/:id", 
-    		['controller' => 'Events', 'action' => 'view'],
-    		['id' => '\d+', 'pass' => ['id']]);
-    
-    
+    $routes->connect(
+        "/events/view/:id",
+        ['controller' => 'Events', 'action' => 'view'],
+        ['id' => '\d+', 'pass' => ['id']]
+    );
+
     // Feed
-    $routes->connect("/events/feed/:feedtype",
-    		['controller' => 'Events', 'action' => 'feed'],
-    		['feedtype' => '[a-zA-Z][a-zA-Z0-9]+', 'pass' => ['feedtype']]);
-    
+    $routes->connect(
+        "/events/feed/:feedtype",
+        ['controller' => 'Events', 'action' => 'feed'],
+        ['feedtype' => '[a-zA-Z][a-zA-Z0-9]+', 'pass' => ['feedtype']]
+    );
+
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
      */
@@ -96,4 +99,4 @@ Router::scope('/', function (RouteBuilder $routes) {
  * Load all plugin routes.  See the Plugin documentation on
  * how to customize the loading of plugin routes.
  */
-Plugin::routes();
+//Plugin::routes();

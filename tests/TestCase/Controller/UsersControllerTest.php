@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\HonorariaController;
+use App\Controller\UsersController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\HonorariaController Test Case
+ * App\Controller\UsersController Test Case
  */
-class HonorariaControllerTest extends IntegrationTestCase
+class UsersControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,65 +16,54 @@ class HonorariaControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.honoraria',
-        'app.events',
-        'app.rooms',
-        'app.contacts',
-        'app.honoraria',
-        'app.prerequisites',
-        'app.categories',
-        'app.events_categories',
-        'app.tools',
-        'app.events_tools',
-        'app.committees'
     ];
 
     /**
-     * Test index method
+     * Test beforeFilter method
      *
      * @return void
      */
-    public function testIndex()
+    public function testBeforeFilter()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test view method
+     * Test implementedEvents method
      *
      * @return void
      */
-    public function testView()
+    public function testImplementedEvents()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test add method
+     * Test afterIdentify method
      *
      * @return void
      */
-    public function testAdd()
+    public function testAfterIdentify()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test edit method
+     * Test login method
      *
      * @return void
      */
-    public function testEdit()
+    public function testLogin()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test delete method
+     * Test logout method
      *
      * @return void
      */
-    public function testDelete()
+    public function testLogout()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

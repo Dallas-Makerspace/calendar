@@ -25,9 +25,9 @@ class RoomsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('rooms');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('rooms');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 

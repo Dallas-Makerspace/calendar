@@ -24,9 +24,9 @@ class PrerequisitesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('prerequisites');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('prerequisites');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
     }

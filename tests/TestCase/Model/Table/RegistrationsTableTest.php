@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\HonorariaTable;
+use App\Model\Table\RegistrationsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\HonorariaTable Test Case
+ * App\Model\Table\RegistrationsTable Test Case
  */
-class HonorariaTableTest extends TestCase
+class RegistrationsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\HonorariaTable
+     * @var \App\Model\Table\RegistrationsTable
      */
-    public $Honoraria;
+    public $RegistrationsTable;
 
     /**
      * Fixtures
@@ -24,17 +24,8 @@ class HonorariaTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.honoraria',
-        'app.events',
-        'app.rooms',
-        'app.contacts',
-        'app.honoraria',
-        'app.prerequisites',
-        'app.categories',
-        'app.events_categories',
-        'app.tools',
-        'app.events_tools',
-        'app.committees'
+        'app.registrations',
+        'app.events'
     ];
 
     /**
@@ -45,8 +36,8 @@ class HonorariaTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Honoraria') ? [] : ['className' => 'App\Model\Table\HonorariaTable'];
-        $this->Honoraria = TableRegistry::get('Honoraria', $config);
+        $config = TableRegistry::getTableLocator()->exists('Registrations') ? [] : ['className' => RegistrationsTable::class];
+        $this->RegistrationsTable = TableRegistry::getTableLocator()->get('Registrations', $config);
     }
 
     /**
@@ -56,7 +47,7 @@ class HonorariaTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Honoraria);
+        unset($this->RegistrationsTable);
 
         parent::tearDown();
     }
@@ -87,6 +78,26 @@ class HonorariaTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test refund method
+     *
+     * @return void
+     */
+    public function testRefund()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test isOwnedBy method
+     *
+     * @return void
+     */
+    public function testIsOwnedBy()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

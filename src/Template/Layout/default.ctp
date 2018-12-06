@@ -43,14 +43,14 @@
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
 </head>
-<body<?= $this->request->action == 'embed' ? ' class="embed"' : '' ?>>
-    <?php if ($this->request->action != 'embed'): ?>
+<body<?= $this->request->getParam('action') == 'embed' ? ' class="embed"' : '' ?>>
+    <?php if ($this->request->getParam('action') != 'embed'): ?>
         <?= $this->element('Header/default') ?>
     <?php endif; ?>
-    <div class="container<?= $this->request->action == 'embed' ? '-fluid' : '' ?>">
+    <div class="container<?= $this->request->getParam('action') == 'embed' ? '-fluid' : '' ?>">
       <?= $this->fetch('content') ?>
     </div>
-    <?php if ($this->request->action != 'embed'): ?>
+    <?php if ($this->request->getParam('action') != 'embed'): ?>
         <?= $this->element('Footer/default') ?>
     <?php endif; ?>
     <?= $this->fetch('script') ?>

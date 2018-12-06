@@ -16,7 +16,7 @@ class EventsTableTest extends TestCase
      *
      * @var \App\Model\Table\EventsTable
      */
-    public $Events;
+    public $EventsTable;
 
     /**
      * Fixtures
@@ -27,15 +27,12 @@ class EventsTableTest extends TestCase
         'app.events',
         'app.rooms',
         'app.contacts',
+        'app.prerequisites',
         'app.honoraria',
-        'app.fulfills_prerequisites',
-        'app.requires_prerequisites',
-        'app.part_ofs',
-        'app.copy_ofs',
         'app.categories',
-        'app.events_categories',
         'app.tools',
-        'app.events_tools'
+        'app.files',
+        'app.registrations'
     ];
 
     /**
@@ -46,8 +43,8 @@ class EventsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Events') ? [] : ['className' => 'App\Model\Table\EventsTable'];
-        $this->Events = TableRegistry::get('Events', $config);
+        $config = TableRegistry::getTableLocator()->exists('Events') ? [] : ['className' => EventsTable::class];
+        $this->EventsTable = TableRegistry::getTableLocator()->get('Events', $config);
     }
 
     /**
@@ -57,7 +54,7 @@ class EventsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Events);
+        unset($this->EventsTable);
 
         parent::tearDown();
     }
@@ -88,6 +85,76 @@ class EventsTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test hasHonorarium method
+     *
+     * @return void
+     */
+    public function testHasHonorarium()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test getTotalSpaces method
+     *
+     * @return void
+     */
+    public function testGetTotalSpaces()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test getFilledSpaces method
+     *
+     * @return void
+     */
+    public function testGetFilledSpaces()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test hasFreeSpaces method
+     *
+     * @return void
+     */
+    public function testHasFreeSpaces()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test hasPaidSpaces method
+     *
+     * @return void
+     */
+    public function testHasPaidSpaces()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test hasOpenSpaces method
+     *
+     * @return void
+     */
+    public function testHasOpenSpaces()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test isOwnedBy method
+     *
+     * @return void
+     */
+    public function testIsOwnedBy()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

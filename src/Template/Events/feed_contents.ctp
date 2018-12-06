@@ -36,7 +36,7 @@
                                 </tr>
                                 <tr>
                                     <td><strong>Details</strong></td>
-                                    <td><?= $event->short_description ?></td>
+                                    <td><?= h($event->short_description) ?></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Cost</strong></td>
@@ -53,6 +53,6 @@
                                 </tr>
                             </table>
                             <p>
-								<?= $event->long_description ?>
+								<?= nl2br(h($event->long_description)) ?>
 							</p>
 							

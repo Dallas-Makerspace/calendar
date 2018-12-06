@@ -26,9 +26,9 @@ class EventsToolsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('events_tools');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('events_tools');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Tools', [
             'foreignKey' => 'tool_id',
@@ -66,8 +66,7 @@ class EventsToolsTable extends Table
     {
         $rules->add($rules->existsIn(['tool_id'], 'Tools'));
         $rules->add($rules->existsIn(['event_id'], 'Events'));
-        
+
         return $rules;
     }
 }
-?>

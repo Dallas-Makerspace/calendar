@@ -16,7 +16,7 @@ class FilesTableTest extends TestCase
      *
      * @var \App\Model\Table\FilesTable
      */
-    public $Files;
+    public $FilesTable;
 
     /**
      * Fixtures
@@ -25,17 +25,7 @@ class FilesTableTest extends TestCase
      */
     public $fixtures = [
         'app.files',
-        'app.events',
-        'app.rooms',
-        'app.contacts',
-        'app.honoraria',
-        'app.committees',
-        'app.fulfills_prerequisites',
-        'app.requires_prerequisites',
-        'app.categories',
-        'app.events_categories',
-        'app.tools',
-        'app.events_tools'
+        'app.events'
     ];
 
     /**
@@ -46,8 +36,8 @@ class FilesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Files') ? [] : ['className' => 'App\Model\Table\FilesTable'];
-        $this->Files = TableRegistry::get('Files', $config);
+        $config = TableRegistry::getTableLocator()->exists('Files') ? [] : ['className' => FilesTable::class];
+        $this->FilesTable = TableRegistry::getTableLocator()->get('Files', $config);
     }
 
     /**
@@ -57,7 +47,7 @@ class FilesTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Files);
+        unset($this->FilesTable);
 
         parent::tearDown();
     }

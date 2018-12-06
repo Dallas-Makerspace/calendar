@@ -26,9 +26,9 @@ class RegistrationsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('registrations');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('registrations');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
@@ -122,6 +122,7 @@ class RegistrationsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['event_id'], 'Events'));
+
         return $rules;
     }
 
@@ -140,10 +141,12 @@ class RegistrationsTable extends Table
 
                 if ($transaction->status == 'submitted_for_settlement') {
                     $result = \Braintree_Transaction::void($reg->transaction_id);
+
                     return $result->success;
                 }
 
                 $result = \Braintree_Transaction::refund($reg->transaction_id);
+
                 return $result->success;
             }
 
@@ -157,7 +160,7 @@ class RegistrationsTable extends Table
      * Returns a boolean indictating whether or not a given registration is owned
      * by a user with a given AD Username or edit key.
      *
-     * @param integer $id The id of the event to check.
+     * @param int $id The id of the event to check.
      * @param array $authorizations The username and edit key to check against.
      * @return boolean
      */

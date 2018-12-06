@@ -7,9 +7,10 @@ $this->Html->meta(
     	"controller" => "Events",
     	"action" => "feed",
     	"feedtype" => "rss",
-   		"category" => $this->request->query("category"),
-   		"type" => $this->request->query("type"),
-   		"tool" => $this->request->query("tool"),
+   		"category" => $this->request->getQuery("category"),
+   		"type" => $this->request->getQuery("type"),
+        "tool" => $this->request->getQuery("tool"),
+        "room" => $this->request->getQuery("room"),
 	], true),
     ['type' => 'rss', 'block' => 'meta']
 );
@@ -21,9 +22,10 @@ $this->Html->meta(
     	"controller" => "Events",
     	"action" => "feed",
     	"feedtype" => "atom",
-    	"category" => $this->request->query("category"),
-    	"type" => $this->request->query("type"),
-    	"tool" => $this->request->query("tool"),
+    	"category" => $this->request->getQuery("category"),
+    	"type" => $this->request->getQuery("type"),
+        "tool" => $this->request->getQuery("tool"),
+        "room" => $this->request->getQuery("room"),
 	], true),
     ['type' => 'atom', 'block' => 'meta']
 );
@@ -40,17 +42,19 @@ $this->Html->meta(
         <br>
         <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> RSS', [
             'action' => 'feed', 'feedtype' => "rss",
-    		"category" => $this->request->query("category"),
-    		"type" => $this->request->query("type"),
-    		"tool" => $this->request->query("tool"),
+    		"category" => $this->request->getQuery("category"),
+    		"type" => $this->request->getQuery("type"),
+            "tool" => $this->request->getQuery("tool"),
+            "room" => $this->request->getQuery("room"),
         ], [
             'escape' => false
         ]) ?>
         <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> ATOM', [
             'action' => 'feed', 'feedtype' => "atom",
-    		"category" => $this->request->query("category"),
-    		"type" => $this->request->query("type"),
-    		"tool" => $this->request->query("tool"),
+    		"category" => $this->request->getQuery("category"),
+    		"type" => $this->request->getQuery("type"),
+            "tool" => $this->request->getQuery("tool"),
+            "room" => $this->request->getQuery("room"),
         ], [
             'escape' => false
         ]) ?>
@@ -99,6 +103,18 @@ $this->Html->meta(
                         <?php endforeach; ?>
                     </ul>
                 </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        By Room <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right scrollable-menu">
+                        <?php foreach ($rooms as $key => $value): ?>
+                            <li><?= $this->Html->link(h($value), [
+                                '?' => array_merge($urlparams, ['room' => $key])
+                            ]) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
         </div>
         <?php if ($urlparams): ?>
@@ -136,6 +152,14 @@ $this->Html->meta(
                                 '?' => $params
                             ], [
                                 'class' => 'label label-danger',
+                                'escape' => false
+                            ]) ?>
+                        <?php elseif ($key == 'room' && array_key_exists((int) $value, $rooms)): ?>
+                            <?php unset($params['room']); ?>
+                            <?= $this->Html->link('<i class="fa fa-wrench small" aria-hidden="true"></i> ' . $rooms[$value] . ' | x', [
+                                '?' => $params
+                            ], [
+                                'class' => 'label label-default',
                                 'escape' => false
                             ]) ?>
                         <?php endif; ?>
@@ -182,7 +206,15 @@ $this->Html->meta(
                         'EEEE, MMMM d',
                         null,
                         'America/Chicago'
-                    )
+                    );
+
+                    if ($event->cost) 
+                        $spaces = $event->paid_spaces;
+                    else
+                        $spaces = $event->free_spaces;
+
+                    $isFull = $spaces != 0 && $event->registration_count >= $spaces;
+
                 ?>
                 <?php if ($currentDate != $eventDate): ?>
                     <div class="date-break">
@@ -205,10 +237,8 @@ $this->Html->meta(
                                         )
                                     )?>
                                 </span>
-                                <?= \Cake\ORM\TableRegistry::get('Events')->hasOpenSpaces($event->id) ? '' : '<strong>FULL: </strong>' ?>
-                                <?= $event->name ?>
-                                <?php $cost = $event->cost > 0 ? '$' . $event->cost . '.00' : 'Free'; ?>
-                                - <?= $cost ?>
+                                <?php  if ($isFull) echo '<strong>FULL: </strong>';?><?= h($event->name) ?>
+                                <?php if ($event->cost > 0) print " - $" . $event->cost . ".00" ?>
                             </h4>
                         </a>
                     </div>
@@ -252,7 +282,7 @@ $this->Html->meta(
                                 </tr>
                                 <tr>
                                     <td><strong>Details</strong></td>
-                                    <td><?= $event->short_description ?></td>
+                                    <td><?= h($event->short_description) ?></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Cost</strong></td>

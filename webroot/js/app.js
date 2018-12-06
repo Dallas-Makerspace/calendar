@@ -95,19 +95,36 @@ $(function() {
     var minLead = parseInt($('#config-mininum-booking-lead-time').text(), 10);
     var maxLead = parseInt($('#config-maximum-booking-lead-time').text(), 10);
     
-    $('#event-start, #event-end, #event-start-2, #event-end-2, #event-start-3, #event-end-3, #event-start-4, #event-end-4, #event-start-5, #event-end-5').each(function () {        
+    if ($('#unlockedEdit').length) {
+      $('#event-start, #event-end, #event-start-2, #event-end-2, #event-start-3, #event-end-3, #event-start-4, #event-end-4, #event-start-5, #event-end-5').each(function () {        
         $(this).datetimepicker({
-          useCurrent: false,
-          minDate: moment().add(minLead, 'days'),
-          maxDate: moment().add(maxLead, 'days'),
-          date: new Date(
-            Date.parse(
-              $(this).val(),
-              "mm/dd/yyyy hh:MM tt"
+            useCurrent: false,
+            //minDate: moment().add(minLead, 'days'),
+            //maxDate: moment().add(maxLead, 'days'),
+            date: new Date(
+              Date.parse(
+                $(this).val(),
+                "mm/dd/yyyy hh:MM tt"
+              )
             )
-          )
-        });
-    });
+          });
+      });
+    }
+    else {
+      $('#event-start, #event-end, #event-start-2, #event-end-2, #event-start-3, #event-end-3, #event-start-4, #event-end-4, #event-start-5, #event-end-5').each(function () {        
+        $(this).datetimepicker({
+            useCurrent: false,
+            minDate: moment().add(minLead, 'days'),
+            maxDate: moment().add(maxLead, 'days'),
+            date: new Date(
+              Date.parse(
+                $(this).val(),
+                "mm/dd/yyyy hh:MM tt"
+              )
+            )
+          });
+      });
+    }
     
     $('#event-start').on('dp.change', function(e) {
         if (e.oldDate === null) {

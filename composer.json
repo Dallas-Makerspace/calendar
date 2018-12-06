@@ -10,25 +10,30 @@
 		"mobiledetect/mobiledetectlib" : "2.*",
 		"cakephp/migrations" : "~1.0",
 		"cakephp/plugin-installer" : "*",
-		"friendsofcake/bootstrap-ui" : "~0.6.1",
+		"friendsofcake/bootstrap-ui" : "^1.4",
 		"friendsofcake/cakephp-csvview" : "~3.0",
 		"syntaxera/cakephp-sparkpost-plugin" : "^0.4.5",
 		"unholyknight/active-directory-authenticate" : "master",
-		"friendsofcake/crud" : "^4.3",
-		"josegonzalez/cakephp-upload" : "^3.4",
+		"friendsofcake/crud" : "^5.0",
+		"josegonzalez/cakephp-upload" : "^4.0",
 		"braintree/braintree_php" : "~3.0",
 		"adldap2/adldap2" : "~6.0",
 		"twilio/sdk" : "^4.10",
 		"php-coveralls/php-coveralls" : "^2.0",
-		"debril/feed-io": "^3.1"
+		"debril/feed-io": "^3.1",
+		"dragonsguild/active-directory-authenticate-mock": "dev-master",
+		"cakephp/cakephp-codesniffer": "^3.0",
+		"squizlabs/php_codesniffer": "*",
+		"phpunit/phpunit": "~6",
+		"guzzlehttp/guzzle": "^6.3",
+		"php-http/guzzle6-adapter": "^1.1",
+		"sparkpost/sparkpost": "^2.1"
 	},
 	"require-dev" : {
 		"psy/psysh" : "@stable",
 		"cakephp/debug_kit" : "~3.2",
 		"cakephp/bake" : "~1.1",
-        "php-coveralls/php-coveralls": "~2.0",
-        "phpunit/phpcov": "~2.0",
-        "phpunit/phpunit": ">=7.0.3"
+        "php-coveralls/php-coveralls": "~2.0"
     },
 	"suggest" : {
 		"phpunit/phpunit" : "Allows automated tests to be run without system-wide install.",
@@ -50,10 +55,10 @@
 		"post-create-project-cmd" : "App\\Console\\Installer::postInstall",
 		"post-autoload-dump" : "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
         "unit": "phpunit -c phpunit.xml.dist",
-        "cs": "phpcs -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./config ./webroot",
+        "cs": "phpcs -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
         "test": [
-            "@unit",
-            "@cs"
+			"@unit",
+			"@cs"
         ]
 	},
 	"minimum-stability" : "dev",

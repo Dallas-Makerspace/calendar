@@ -26,9 +26,9 @@ class CategoriesEventsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('categories_events');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('categories_events');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Categories', [
             'foreignKey' => 'category_id',

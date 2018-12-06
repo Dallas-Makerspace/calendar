@@ -25,9 +25,9 @@ class FilesTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('files');
-        $this->displayField('id');
-        $this->primaryKey('id');
+        $this->setTable('files');
+        $this->setDisplayField('id');
+        $this->setPrimaryKey('id');
 
         $this->addBehavior('Josegonzalez/Upload.Upload', ['file']);
         $this->addBehavior('Timestamp');
@@ -43,7 +43,7 @@ class FilesTable extends Table
      */
     public function validationDefault(Validator $validator)
     {
-        $validator->provider('upload', \Josegonzalez\Upload\Validation\UploadValidation::class);
+        $validator->setProvider('upload', \Josegonzalez\Upload\Validation\UploadValidation::class);
 
         $validator
             ->integer('id')
@@ -77,6 +77,7 @@ class FilesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['event_id'], 'Events'));
+
         return $rules;
     }
 }

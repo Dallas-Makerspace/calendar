@@ -31,15 +31,19 @@ class EventsToolsFixture extends TestFixture
     // @codingStandardsIgnoreEnd
 
     /**
-     * Records
+     * Init method
      *
-     * @var array
+     * @return void
      */
-    public $records = [
-        [
-            'id' => 1,
-            'tool_id' => 1,
-            'event_id' => 1
-        ],
-    ];
+    public function init()
+    {
+        $this->records = [
+            [
+                'id' => 1,
+                'tool_id' => 1,
+                'event_id' => 1
+            ],
+        ];
+        parent::init();
+    }
 }

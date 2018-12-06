@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\EventsCategoriesController;
+use App\Controller\RegistrationsController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\EventsCategoriesController Test Case
+ * App\Controller\RegistrationsController Test Case
  */
-class EventsCategoriesControllerTest extends IntegrationTestCase
+class RegistrationsControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,26 +16,36 @@ class EventsCategoriesControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.events_categories',
-        'app.categories',
-        'app.events',
-        'app.rooms',
-        'app.contacts',
-        'app.honoraria',
-        'app.fulfills_prerequisites',
-        'app.requires_prerequisites',
-        'app.part_ofs',
-        'app.copy_ofs',
-        'app.tools',
-        'app.events_tools'
+        'app.registrations',
+        'app.events'
     ];
 
     /**
-     * Test index method
+     * Test beforeFilter method
      *
      * @return void
      */
-    public function testIndex()
+    public function testBeforeFilter()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test isAuthorized method
+     *
+     * @return void
+     */
+    public function testIsAuthorized()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test event method
+     *
+     * @return void
+     */
+    public function testEvent()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
@@ -51,31 +61,31 @@ class EventsCategoriesControllerTest extends IntegrationTestCase
     }
 
     /**
-     * Test add method
+     * Test cancel method
      *
      * @return void
      */
-    public function testAdd()
+    public function testCancel()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test edit method
+     * Test accept method
      *
      * @return void
      */
-    public function testEdit()
+    public function testAccept()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test delete method
+     * Test reject method
      *
      * @return void
      */
-    public function testDelete()
+    public function testReject()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

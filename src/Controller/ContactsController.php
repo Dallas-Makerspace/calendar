@@ -19,7 +19,7 @@ class ContactsController extends AppController
 
     public function isAuthorized($user = null)
     {
-        if ($this->request->action == 'view') {
+        if ($this->request->getParam('action') == 'view') {
             if (parent::inAdminstrativeGroup($user, 'Honorarium Admins') || parent::inAdminstrativeGroup($user, 'Financial Reporting')) {
                 return true;
             }
@@ -31,7 +31,7 @@ class ContactsController extends AppController
     public function index()
     {
         $this->Crud->on('beforePaginate', function (\Cake\Event\Event $event) {
-            $event->subject()->query->order(['name' => 'ASC']);
+            $event->getSubject()->query->order(['name' => 'ASC']);
 
             $this->paginate['limit'] = 2147483647;
         });
@@ -48,8 +48,8 @@ class ContactsController extends AppController
     public function view($id)
     {
         $this->Crud->on('beforeFind', function (\Cake\Event\Event $event) {
-            $event->subject()->query = TableRegistry::get('Contacts')->find()
-                ->where(['Contacts.ad_username' => $event->subject()->id]);
+            $event->getSubject()->query = TableRegistry::get('Contacts')->find()
+                ->where(['Contacts.ad_username' => $event->getSubject()->id]);
         });
 
         $attended = TableRegistry::get('Registrations')->find()
