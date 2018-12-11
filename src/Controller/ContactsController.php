@@ -12,6 +12,10 @@ use Cake\ORM\TableRegistry;
  */
 class ContactsController extends AppController
 {
+    public $paginate = [
+        'maxLimit' => PHP_INT_MAX
+    ];
+
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
