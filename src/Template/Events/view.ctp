@@ -36,7 +36,15 @@
                 <tr>
                     <td><strong>When</strong></td>
                     <td>
-                        <?= str_replace(
+                    <?php
+                            $startdate = $this->Time->fromString($event->event_start, 'America/Chicago')->format('Ymd');
+                            $enddate = $this->Time->fromString($event->event_end, 'America/Chicago')->format('Ymd');
+                            if ($startdate == $enddate) {
+                                $secondFormat = "h:mma";
+                            } else {
+                                $secondFormat = "E MMM d h:mma";
+                            }
+                        ?><?= str_replace(
                             [':00', 'AM', 'PM'],
                             ['', 'am', 'pm'],
                             $this->Time->format(
@@ -51,12 +59,20 @@
                             ['', 'am', 'pm'],
                             $this->Time->format(
                                 $event->event_end,
-                                'h:mma',
+                                $secondFormat,
                                 null, 'America/Chicago'
                             )
                         )?>
                         <?php foreach ($continuedDates as $continuedDate): ?>
-                            <br/><?= str_replace(
+                            <br/><?php
+                                $startdate = $this->Time->fromString($event->event_start, 'America/Chicago')->format('Ymd');
+                                $enddate = $this->Time->fromString($event->event_end, 'America/Chicago')->format('Ymd');
+                                if ($startdate == $enddate) {
+                                    $secondFormat = "h:mma";
+                                } else {
+                                    $secondFormat = "E MMM d h:mma";
+                                }
+                            ?><?= str_replace(
                                 [':00', 'AM', 'PM'],
                                 ['', 'am', 'pm'],
                                 $this->Time->format(
@@ -71,7 +87,7 @@
                                 ['', 'am', 'pm'],
                                 $this->Time->format(
                                     $continuedDate['event_end'],
-                                    'h:mma',
+                                    $secondFormat,
                                     null, 'America/Chicago'
                                 )
                             )?>
