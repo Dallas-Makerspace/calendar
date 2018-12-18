@@ -223,6 +223,23 @@ class EventsTable extends Table
                         return true;
                     }
 
+                    // if edit, get booking from database
+                    if (isset($context['data']['id'])) {
+                        $id = intval($context['data']['id']);
+                        if ($id > 0) {
+                            $events = TableRegistry::get('Events');
+                            $event = $events->find()->where(['id =' => $id])->first();
+                            if ($event) {
+                                $context['data']['booking_start'] = $event['booking_start'];
+                                $context['data']['booking_end'] = $event['booking_end'];
+                            } else {
+                                return 'The room selected for this event is not available at the requested time.';
+                            }
+                        } else {
+                            return 'The room selected for this event is not available at the requested time.';
+                        }
+                    }
+
                     $query = [
                         $context['field'] => $value,
                         'booking_start <' => $context['data']['booking_end'],
@@ -262,6 +279,24 @@ class EventsTable extends Table
                         return true;
                     }
 
+                    // if edit, get booking from database
+                    if (isset($context['data']['id'])) {
+                        $id = intval($context['data']['id']);
+                        if ($id > 0) {
+                            $events = TableRegistry::get('Events');
+                            $event = $events->find()->where(['id =' => $id])->first();
+                            if ($event) {
+                                $context['data']['booking_start'] = $event['booking_start'];
+                                $context['data']['booking_end'] = $event['booking_end'];
+                            } else {
+                                return 'Some of the tools selected for this event are not available at the requested time.';
+                            }
+                        } else {
+                            return 'Some of the tools selected for this event are not available at the requested time.';
+                        }
+                    }
+
+                    
                     $unavailableTools = [];
                     $toolNames = [];
                     foreach ($values['_ids'] as $tool) {
