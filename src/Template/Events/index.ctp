@@ -293,7 +293,7 @@ $this->Html->meta(
                                     <td><?= h($event->short_description) ?></td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Instructor</strong></td>
+                                    <td><strong>Host</strong></td>
                                     <td><?= h($event->contact->name) ?></td>
                                 </tr>
                                 <tr>
