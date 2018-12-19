@@ -383,6 +383,7 @@ class EventsController extends AppController
                         'Events.paid_spaces',
                         'Rooms.id',
                         'Rooms.name',
+                        'Contacts.name',
                         'registration_count' => "count(Registrations.id)"
                         ]
                     )
@@ -396,7 +397,7 @@ class EventsController extends AppController
                         ]
                     )
                     ->group('Events.id')
-                    ->contain(['Rooms']);
+                    ->contain(['Rooms', 'Contacts']);
 
                 $this->__applyQueryFilters($event);
 
@@ -429,7 +430,8 @@ class EventsController extends AppController
                         'Events.name',
                         'Events.short_description',
                         'Rooms.id',
-                        'Rooms.name'
+                        'Rooms.name',
+                        'Contacts.name'
                         ]
                     )
                     ->where(
@@ -438,7 +440,7 @@ class EventsController extends AppController
                         'Events.status' => 'approved'
                         ]
                     )
-                    ->contain(['Rooms'])
+                    ->contain(['Rooms', 'Contacts'])
                     ->order(['event_start' => 'ASC']);
 
                 $this->__applyQueryFilters($event);
