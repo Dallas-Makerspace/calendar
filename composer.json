@@ -12,7 +12,6 @@
 		"cakephp/plugin-installer" : "*",
 		"friendsofcake/bootstrap-ui" : "^1.4",
 		"friendsofcake/cakephp-csvview" : "~3.0",
-		"syntaxera/cakephp-sparkpost-plugin" : "^0.4.5",
 		"unholyknight/active-directory-authenticate" : "master",
 		"friendsofcake/crud" : "^5.0",
 		"josegonzalez/cakephp-upload" : "^4.0",
@@ -25,9 +24,8 @@
 		"cakephp/cakephp-codesniffer": "^3.0",
 		"squizlabs/php_codesniffer": "*",
 		"phpunit/phpunit": "~6",
-		"guzzlehttp/guzzle": "^6.3",
-		"php-http/guzzle6-adapter": "^1.1",
-		"sparkpost/sparkpost": "^2.1"
+		"sparkpost/sparkpost": "^2.1",
+		"dallasmakerspace/cakephp-sparkpost-plugin": "^v1.0"
 	},
 	"require-dev" : {
 		"psy/psysh" : "@stable",

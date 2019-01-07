@@ -27,7 +27,8 @@
                         <?= $this->Form->input('event_start', [
                             'append' => '<span class="glyphicon glyphicon-calendar"></span>',
                             'help' => 'Event start time for attendees. Do not include any needed setup time here. If you will be requesting honorarium then the start date must be at least ' . $config[3] . ' days from today. Events cannot be scheduled more than 60 days out.',
-                            'type' => 'text'
+                            'type' => 'text',
+                            'autocomplete' => 'off'
                         ]) ?>
                     <?php else: ?>
                         <h5>Event Start</h5>
@@ -46,7 +47,8 @@
                         <?= $this->Form->input('event_end', [
                             'append' => '<span class="glyphicon glyphicon-calendar"></span>',
                             'help' => 'Event end time for attendees. Do not include any needed teardown time here.',
-                            'type' => 'text'
+                            'type' => 'text',
+                            'autocomplete' => 'off'
                         ]) ?>
                     <?php else: ?>
                         <h5>Event End</h5>
@@ -133,25 +135,29 @@
                             'append' => '<span class="glyphicon glyphicon-calendar"></span>',
                             'help' => 'Event start time for attendees. Do not include any needed setup time here.',
                             'label' => 'Second Date Start',
-                            'type' => 'text'
+                            'type' => 'text',
+                            'autocomplete' => 'off'
                         ]) ?>
                         <?= $this->Form->input('event_end_2', [
                             'append' => '<span class="glyphicon glyphicon-calendar"></span>',
                             'help' => 'Event end time for attendees. Do not include any needed teardown time here.',
                             'label' => 'Second Date End',
-                            'type' => 'text'
+                            'type' => 'text',
+                            'autocomplete' => 'off'
                         ]) ?>
                         <?= $this->Form->input('event_start_3', [
                             'append' => '<span class="glyphicon glyphicon-calendar"></span>',
                             'help' => 'Event start time for attendees. Do not include any needed setup time here.',
                             'label' => 'Third Date Start',
-                            'type' => 'text'
+                            'type' => 'text',
+                            'autocomplete' => 'off'
                         ]) ?>
                         <?= $this->Form->input('event_end_3', [
                             'append' => '<span class="glyphicon glyphicon-calendar"></span>',
                             'help' => 'Event end time for attendees. Do not include any needed teardown time here.',
                             'label' => 'Third Date End',
-                            'type' => 'text'
+                            'type' => 'text',
+                            'autocomplete' => 'off'
                         ]) ?>
                     </div>
                     <div class="col-sm-6">
@@ -159,25 +165,29 @@
                             'append' => '<span class="glyphicon glyphicon-calendar"></span>',
                             'help' => 'Event start time for attendees. Do not include any needed setup time here.',
                             'label' => 'Fourth Date Start',
-                            'type' => 'text'
+                            'type' => 'text',
+                            'autocomplete' => 'off'
                         ]) ?>
                         <?= $this->Form->input('event_end_4', [
                             'append' => '<span class="glyphicon glyphicon-calendar"></span>',
                             'help' => 'Event end time for attendees. Do not include any needed teardown time here.',
                             'label' => 'Fourth Date End',
-                            'type' => 'text'
+                            'type' => 'text',
+                            'autocomplete' => 'off'
                         ]) ?>
                         <?= $this->Form->input('event_start_5', [
                             'append' => '<span class="glyphicon glyphicon-calendar"></span>',
                             'help' => 'Event start time for attendees. Do not include any needed setup time here.',
                             'label' => 'Fifth Date Start',
-                            'type' => 'text'
+                            'type' => 'text',
+                            'autocomplete' => 'off'
                         ]) ?>
                         <?= $this->Form->input('event_end_5', [
                             'append' => '<span class="glyphicon glyphicon-calendar"></span>',
                             'help' => 'Event end time for attendees. Do not include any needed teardown time here.',
                             'label' => 'Fifth Date End',
-                            'type' => 'text'
+                            'type' => 'text',
+                            'autocomplete' => 'off'
                         ]) ?>
                     </div>
                 </div>

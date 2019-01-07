@@ -248,7 +248,15 @@ $this->Html->meta(
                                 <tr>
                                     <td><strong>When</strong></td>
                                     <td>
-                                        <?= str_replace(
+                                        <?php
+                                            $startdate = $this->Time->fromString($event->event_start, 'America/Chicago')->format('Ymd');
+                                            $enddate = $this->Time->fromString($event->event_end, 'America/Chicago')->format('Ymd');
+                                            if ($startdate == $enddate) {
+                                                $secondFormat = "h:mma";
+                                            } else {
+                                                $secondFormat = "E MMM d h:mma";
+                                            }
+                                        ?><?= str_replace(
                                             [':00', 'AM', 'PM'],
                                             ['', 'am', 'pm'],
                                             $this->Time->format(
@@ -263,7 +271,7 @@ $this->Html->meta(
                                             ['', 'am', 'pm'],
                                             $this->Time->format(
                                                 $event->event_end,
-                                                'h:mma',
+                                                $secondFormat,
                                                 null, 'America/Chicago'
                                             )
                                         )?>
@@ -283,6 +291,10 @@ $this->Html->meta(
                                 <tr>
                                     <td><strong>Details</strong></td>
                                     <td><?= h($event->short_description) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Host</strong></td>
+                                    <td><?= h($event->contact->name) ?></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Cost</strong></td>
