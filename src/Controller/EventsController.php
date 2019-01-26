@@ -1020,11 +1020,11 @@ class EventsController extends AppController
                 );*/
 
                 $totalSpaces = $this->Events->getTotalSpaces($this->passedArgs[0]);
-                $filledSpaces = $this->Events->getFilledSpaces($this->passedArgs[0]);
-                if (is_int($totalSpaces) && is_int($filledSpaces)) {
+                if ($totalSpaces !== true) {  // if not unlimited
+                    $filledSpaces = $this->Events->getFilledSpaces($this->passedArgs[0]);
                     $openSpaces = $totalSpaces - $filledSpaces;
                 } else {
-                    $openSpaces = true;
+                    $openSpaces = true; // set to unlimited
                 }
 
                 $this->set('hasOpenSpaces', $this->Events->hasOpenSpaces($this->passedArgs[0]));
