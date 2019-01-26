@@ -388,7 +388,10 @@ class EventsController extends AppController
                         ]
                     )
                     ->leftJoinWith('Registrations', function ($q) {
-                        return $q->where(['Registrations.status !=' => 'cancelled']);
+                        return $q->where([
+                            'Registrations.status !=' => 'cancelled',
+                            'Registrations.status !=' => 'rejected'
+                        ]);
                     })
                     ->where(
                         [
