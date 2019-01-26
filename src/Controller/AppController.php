@@ -30,6 +30,12 @@ class AppController extends Controller
 {
     use \Crud\Controller\ControllerTrait;
 
+    public $helpers = [
+        'DataTables' => [
+            'className' => 'DataTables.DataTables'
+        ]
+    ];
+
     /**
      * Initialization hook method.
      *
@@ -89,7 +95,8 @@ class AppController extends Controller
         $this->loadComponent('Flash');
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Security');
-
+        $this->loadComponent('DataTables.DataTables');
+        
         // Disables CRUD's default setFlash helper
         $this->getEventManager()->on('Crud.setFlash', function (Event $event) {
             $event->stopPropagation();

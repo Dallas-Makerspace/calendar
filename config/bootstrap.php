@@ -210,3 +210,5 @@ Plugin::load('ActiveDirectoryAuthenticateMock');
 Plugin::load('ActiveDirectoryAuthenticate');
 
 Plugin::load('CsvView');
+
+Plugin::load('DataTables', ['bootstrap' => false, 'routes' => false]);

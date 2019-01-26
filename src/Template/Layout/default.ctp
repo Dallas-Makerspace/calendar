@@ -30,6 +30,7 @@
         'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
         'bootstrap/bootstrap.min.css',
         'eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.css',
+        '/datatables/datatables.min.css',
         'app.css'
     ]) ?>
     <?= $this->Html->script([
@@ -37,6 +38,8 @@
         'bootstrap/bootstrap.min.js',
         'moment/moment.min.js',
         'eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.js',
+        '/datatables/datatables.min.js',
+        'DataTables.cakephp.dataTables.js',
         'app.js'
     ]) ?>
 

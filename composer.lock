@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "841cc82f63cfaa95ce08b089af2edc55",
+    "content-hash": "636b3b43ae382696fc4938c235f8b098",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -4393,6 +4393,54 @@
                 "validate"
             ],
             "time": "2018-01-29T19:49:41+00:00"
+        },
+        {
+            "name": "ypnos-web/cakephp-datatables",
+            "version": "v3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ypnos-web/cakephp-datatables.git",
+                "reference": "d5b442231c9d00170b017f8e17e7894774c61a60"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ypnos-web/cakephp-datatables/zipball/d5b442231c9d00170b017f8e17e7894774c61a60",
+                "reference": "d5b442231c9d00170b017f8e17e7894774c61a60",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^3.6",
+                "php": ">=7.0"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "DataTables\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank Heider",
+                    "homepage": "https://github.com/fheider",
+                    "role": "Author"
+                },
+                {
+                    "name": "Johannes Jordan",
+                    "homepage": "https://github.com/ypnos-web",
+                    "role": "Author"
+                }
+            ],
+            "description": "jQuery DataTables for CakePHP 3",
+            "homepage": "https://github.com/ypnos-web/cakephp-datatables",
+            "keywords": [
+                "cakephp",
+                "datatables"
+            ],
+            "time": "2018-05-16T15:24:30+00:00"
         },
         {
             "name": "zendframework/zend-diactoros",

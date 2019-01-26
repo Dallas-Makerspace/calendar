@@ -25,7 +25,8 @@
 		"squizlabs/php_codesniffer": "*",
 		"phpunit/phpunit": "~6",
 		"sparkpost/sparkpost": "^2.1",
-		"dallasmakerspace/cakephp-sparkpost-plugin": "^v1.0"
+		"dallasmakerspace/cakephp-sparkpost-plugin": "^v1.0",
+		"ypnos-web/cakephp-datatables": "^3.0"
 	},
 	"require-dev" : {
 		"psy/psysh" : "@stable",
