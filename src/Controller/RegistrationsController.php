@@ -57,14 +57,25 @@ class RegistrationsController extends AppController
     public function event($eventId = null)
     {
         if ($this->Auth->user() &&
-            $this->Registrations->exists(['event_id' => $eventId, 'ad_username' => $this->Auth->user('samaccountname')])
+            $this->Registrations->exists([
+                'event_id' => $eventId, 
+                'ad_username' => $this->Auth->user('samaccountname'),
+                'OR' => [
+                    ['status !=' => 'cancelled'], 
+                    [
+                        'status' => 'cancelled',
+                        'type' => 'paid'
+                    ]
+                ]
+            ])
         ) {
             $registration = $this->Registrations->find('all')
                 ->select(['id'])
                 ->where([
                     'event_id' => $eventId,
-                    'ad_username' => $this->Auth->user('samaccountname')
+                    'ad_username' => $this->Auth->user('samaccountname'),
                 ])
+                ->order(['modified' => 'DESC'])
                 ->first();
 
             return $this->redirect(['action' => 'view', $registration->id]);

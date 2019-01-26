@@ -621,7 +621,12 @@ class EventsController extends AppController
                     ->innerJoinWith(
                         'Registrations',
                         function ($q) {
-                            return $q->where(['Registrations.ad_username' => $this->Auth->user('samaccountname')]);
+                            return $q->where(
+                                [
+                                    'Registrations.ad_username' => $this->Auth->user('samaccountname'),
+                                    'Registrations.status IN' => ['confirmed', 'pending']
+                                ]
+                            );
                         }
                     )
                 ->contain(['Rooms'])
@@ -1012,7 +1017,14 @@ class EventsController extends AppController
 
                 $this->Registrations = TableRegistry::get('Registrations');
                 if ($this->Auth->user()) {
-                    $this->set('hasRegistration', $this->Registrations->exists(['event_id' => $this->passedArgs[0], 'ad_username' => $this->Auth->user('samaccountname')]));
+                    $this->set('hasRegistration', $this->Registrations->exists([
+                        'event_id' => $this->passedArgs[0], 
+                        'ad_username' => $this->Auth->user('samaccountname'),
+                        'OR' => [
+                            ['status' => 'confirmed'],
+                            ['status' => 'pending']
+                        ]
+                    ]));
                 } else {
                     $this->set('hasRegistration', false);
                 }

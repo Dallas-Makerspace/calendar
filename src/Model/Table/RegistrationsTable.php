@@ -66,20 +66,59 @@ class RegistrationsTable extends Table
             ->email('email')
             ->requirePresence('email', 'create')
             ->notEmpty('email')
-            ->add('email', ['unique' => [
+            /*->add('email', ['unique' => [
                 'rule' => ['validateUnique', ['scope' => 'event_id']],
                 'provider' => 'table',
                 'message' => 'This email address is already associated with a registration for this event.'
-            ]]);
+            ]]);*/
+            ->add(
+                'email', 
+                'custom', 
+                [
+                    'rule' => function ($value, $context) {
+                        return !$context['providers']['table']->exists(
+                            [
+                                'event_id' => $context['data']['event_id'], 
+                                'OR' => [
+                                    ['status' => 'confirmed'],
+                                    ['status' => 'pending']
+                                ],
+                                $context['field'] => $value
+                            ]
+                        );
+                    },
+                    'provider' => 'table',
+                    'message' => 'This email address is already associated with a registration for this event.'
+                ]
+            );
 
         $validator
             ->allowEmpty('phone');
 
         $validator
             ->allowEmpty('ad_username')
-            ->add('ad_username', ['unique' => [
+            /*->add('ad_username', ['unique' => [
                 'rule' => ['validateUnique', ['scope' => 'event_id']], 'provider' => 'table']
-            ]);
+            ]);*/
+            ->add(
+                'ad_username', 
+                'custom', 
+                [
+                    'rule' => function ($value, $context) {
+                        return !$context['providers']['table']->exists(
+                            [
+                                'event_id' => $context['data']['event_id'],
+                                'OR' => [
+                                    ['status' => 'confirmed'],
+                                    ['status' => 'pending']
+                                ],
+                                $context['field'] => $value
+                            ]
+                        );
+                    },
+                    'provider' => 'table'
+                ]
+            );            
 
         $validator
             ->boolean('send_text')
