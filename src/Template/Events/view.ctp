@@ -117,6 +117,18 @@
                         <td><?= $event->contact->name ?></td>
                     <?php endif; ?>
                 </tr>
+                <?php if ($event->requires_prerequisite_id): ?>
+                    <tr>
+                        <td><strong>Requires</strong></td>
+                        <td><?= $event->requires_prerequisite->name ?></td>
+                    </tr>
+                <?php endif; ?>                    
+                <?php if ($event->fulfills_prerequisite_id): ?>
+                    <tr>
+                        <td><strong>Fulfills</strong></td>
+                        <td><?= $event->fulfills_prerequisite->name ?></td>
+                    </tr>
+                <?php endif; ?>  
                 <tr>
                     <td><strong>Categories</strong></td>
                     <td>
