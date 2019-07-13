@@ -117,9 +117,9 @@ $this->Html->meta(
                 </div>
             </div>
         </div>
-        <?php if ($urlparams): ?>
-            <ul class="list-inline active-filters">
-                <?php foreach ($urlparams as $key => $value): ?>
+        <ul class="list-inline active-filters">
+            <?php foreach ($urlparams as $key => $value): ?>
+                <?php if(!in_array($key, ['sort', 'direction'])): ?>
                     <li>
                         <?php $params = $urlparams; ?>
                         <?php if ($key == 'type' && $value == 1): ?>
@@ -164,9 +164,9 @@ $this->Html->meta(
                             ]) ?>
                         <?php endif; ?>
                     </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
         <div class="row">
             <div class="col-md-offset-8 col-md-4">
                 <div class="text-right">
