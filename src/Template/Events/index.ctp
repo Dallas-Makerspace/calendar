@@ -65,7 +65,7 @@ $this->Html->meta(
                 <h1 style="margin-top:0">Upcoming Classes and Events</h1>
             </div>
             <div class="col-sm-5 text-right">
-                <?php parse_str($_SERVER['QUERY_STRING'], $urlparams); ?>
+                <?php $urlparams = $this->request->getQueryParams(); ?>
                 <div class="btn-group">
                     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         By Type <span class="caret"></span>
@@ -208,7 +208,7 @@ $this->Html->meta(
                         'America/Chicago'
                     );
 
-                    if ($event->cost) 
+                    if ($event->cost)
                         $spaces = $event->paid_spaces;
                     else
                         $spaces = $event->free_spaces;
