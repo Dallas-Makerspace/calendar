@@ -12,33 +12,34 @@ use Cake\ORM\TableRegistry;
  */
 class CalendarAdminController extends AppController
 {
-  public function isAuthorized($user = null) {
-    return $this->inAdminstrativeGroup($user, 'Calendar Super Admins');
-  }
+    public function isAuthorized($user = null)
+    {
+        return $this->inAdminstrativeGroup($user, 'Calendar Super Admins');
+    }
 
-  public function beforeFilter(Event $event)
-  {
-      parent::beforeFilter($event);
+    public function beforeFilter(Event $event)
+    {
+        parent::beforeFilter($event);
 
-      $this->Security->setConfig('unlockedActions', ['edit']);
-  }
+        $this->Security->setConfig('unlockedActions', ['edit']);
+    }
 
-  public function edit() {
-    $configurations = TableRegistry::getTableLocator()->get('Configurations');
-    $calendarConfigurations = TableRegistry::getTableLocator()->get('CalendarSuperConfigurations');
+    public function edit() {
+        $configurations = TableRegistry::getTableLocator()->get('Configurations');
+        $calendarConfigurations = TableRegistry::getTableLocator()->get('CalendarSuperConfigurations');
 
-    if ($this->request->getData('id')) {
-	$configuration = $configurations->get(7); // Return article with id 12
+        if ($this->request->getData('id')) {
+	        $configuration = $configurations->get(7); // Return article with id 12
 
-	$configuration->value = $this->request->getData('value');
-	$configurations->save($configuration);
+	    $configuration->value = $this->request->getData('value');
+	    $configurations->save($configuration);
 
-	$message = $calendarConfigurations->get(1);
+	    $message = $calendarConfigurations->get(1);
 
-	$message->value = $this->request->getData('Honoraria.message');
-	$calendarConfigurations->save($message);
+	    $message->value = $this->request->getData('Honoraria.message');
+	    $calendarConfigurations->save($message);
 
-	$this->Flash->success('Updated successfully');
+	    $this->Flash->success('Updated successfully');
     }
 
     // get the message
@@ -47,6 +48,5 @@ class CalendarAdminController extends AppController
     $this->set('message', $message->value);
 
     $this->set('configuration', $configurations->find()->where(['id' => 7])->first());
-
   }
 }
