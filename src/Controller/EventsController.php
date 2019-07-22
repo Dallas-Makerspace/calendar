@@ -35,6 +35,7 @@ class EventsController extends AppController
         parent::beforeFilter($event);
 
         $this->Auth->allow(['calendar', 'cron', 'embed', 'feed', 'index', 'view']);
+        $this->Security->setConfig('unlockedActions', ['edit']);
 
         $this->Crud->mapAction('all', 'Crud.Index');
         $this->Crud->mapAction('attendance', 'Crud.Edit');
@@ -1040,6 +1041,9 @@ class EventsController extends AppController
 
     public function add()
     {
+        $this->calendarConfigurations = TableRegistry::get('CalendarSuperConfigurations');
+	    $this->set('honorariaMessage', $this->calendarConfigurations->get(1)->value);
+
         $this->Configurations = TableRegistry::get('Configurations');
         $config = $this->Configurations->find('list')->toArray();
         $this->set('config', $config);
@@ -1541,8 +1545,10 @@ class EventsController extends AppController
                 $this->Events->save($continuedEvent);
             }
 
+            $this->customLog("User changed :" . serialize($event->getSubject()->entity->extractOriginalChanged($event->getSubject()->entity->visibleProperties())));
             $this->Flash->success(__('The event has been updated.'));
         } else {
+            $this->customLog("User failed to change :" . serialize($event->getSubject()->entity->extractOriginalChanged(['name', 'short_description'])));
             $this->__resetCategorySplits();
 
             $this->Flash->error(__('The event could not be updated. Errors are highlighted in red below. Make any necessary adjustments and try submitting again.'));
