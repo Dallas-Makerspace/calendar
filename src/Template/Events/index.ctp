@@ -65,7 +65,7 @@ $this->Html->meta(
                 <h1 style="margin-top:0">Upcoming Classes and Events</h1>
             </div>
             <div class="col-sm-5 text-right">
-                <?php parse_str($_SERVER['QUERY_STRING'], $urlparams); ?>
+                <?php $urlparams = $this->request->getQueryParams(); ?>
                 <div class="btn-group">
                     <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         By Type <span class="caret"></span>
@@ -117,9 +117,9 @@ $this->Html->meta(
                 </div>
             </div>
         </div>
-        <?php if ($urlparams): ?>
-            <ul class="list-inline active-filters">
-                <?php foreach ($urlparams as $key => $value): ?>
+        <ul class="list-inline active-filters">
+            <?php foreach ($urlparams as $key => $value): ?>
+                <?php if(!in_array($key, ['sort', 'direction'])): ?>
                     <li>
                         <?php $params = $urlparams; ?>
                         <?php if ($key == 'type' && $value == 1): ?>
@@ -164,9 +164,9 @@ $this->Html->meta(
                             ]) ?>
                         <?php endif; ?>
                     </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
         <div class="row">
             <div class="col-md-offset-8 col-md-4">
                 <div class="text-right">
@@ -208,7 +208,7 @@ $this->Html->meta(
                         'America/Chicago'
                     );
 
-                    if ($event->cost) 
+                    if ($event->cost)
                         $spaces = $event->paid_spaces;
                     else
                         $spaces = $event->free_spaces;

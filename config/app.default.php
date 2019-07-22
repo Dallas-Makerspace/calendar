@@ -86,7 +86,7 @@ return [
      */
     'Cache' => [
         'default' => [
-            'className' => 'Cake\Cache\Engine\FileEngine',
+            'className' => 'File',
             'path' => CACHE,
             'url' => env('CACHE_DEFAULT_URL', null),
         ],
@@ -119,6 +119,20 @@ return [
             'serialize' => true,
             'duration' => '+2 minutes',
             'url' => env('CACHE_CAKEMODEL_URL', null),
+        ],
+
+        /**
+         * Configure the cache for routes. The cached routes collection is built the
+         * first time the routes are processed via `config/routes.php`.
+         * Duration will be set to '+2 seconds' in bootstrap.php when debug = true
+         */
+        '_cake_routes_' => [
+            'className' => 'Cake\Cache\Engine\FileEngine',
+            'prefix' => 'myapp_cake_routes_',
+            'path' => CACHE,
+            'serialize' => true,
+            'duration' => '+1 years',
+            'url' => env('CACHE_CAKEROUTES_URL', null),
         ],
     ],
 

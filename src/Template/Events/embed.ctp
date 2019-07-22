@@ -6,7 +6,7 @@
                     <h2 class="hidden-xs">Upcoming Classes and Events</h2>
                 </div>
                 <div class="col-sm-5 text-right">
-                    <?php parse_str($_SERVER['QUERY_STRING'], $urlparams); ?>
+                    <?php $urlparams = $this->request->getQueryParams(); ?>
                     <div class="btn-group">
                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             By Type <span class="caret"></span>
