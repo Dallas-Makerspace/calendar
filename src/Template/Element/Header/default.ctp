@@ -86,7 +86,7 @@
                         </ul>
                     </li>
                 <?php endif; ?>
-		<?php if ($hasCalendarAdminMenu || $canDisableHonoraria): ?>
+		        <?php if ($hasCalendarAdminMenu || $canDisableHonoraria): ?>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Super Calendar Admin <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -98,10 +98,9 @@
                                'controller' => 'Logs',
                                'action' => 'index'
                            ]) ?></li>
-			</ul>
-		     </li>
-
-		<?php endif; ?>
+			            </ul>
+		            </li>
+		        <?php endif; ?>
                 <?php if ($hasAdminMenu): ?>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
