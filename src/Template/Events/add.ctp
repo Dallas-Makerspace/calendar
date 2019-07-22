@@ -365,9 +365,9 @@
                     <li><strong>Don't Forget!</strong> Class attendance must be marked within <?= $config[6] * 24 ?> hours of completion of the event.</li>
                 </ul>
             </div>
-	    <?php if (!empty($honorariaMessage)): ?>
-		<span style="color: red;"><?= $honorariaMessage ?></span>
-	    <?php endif; ?>
+	        <?php if (!empty($honorariaMessage)): ?>
+		        <span style="color: red;"><?= $honorariaMessage ?></span>
+	        <?php endif; ?>
             <?= $this->Form->input('request_honorarium', [
                 'type' => 'checkbox',
                 'value' => 1,
