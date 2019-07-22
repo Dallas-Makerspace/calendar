@@ -371,7 +371,7 @@
             <?= $this->Form->input('request_honorarium', [
                 'type' => 'checkbox',
                 'value' => 1,
-		'disabled' => ($config[7] == 0) ? true : false,
+		        'disabled' => ($config[7] == 0) ? true : false,
             ]) ?>
             <div class="row" data-depends-on-field="request-honorarium" data-dependent-required="0">
                 <div class="col-sm-4">
