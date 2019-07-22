@@ -1042,7 +1042,7 @@ class EventsController extends AppController
     public function add()
     {
         $this->calendarConfigurations = TableRegistry::get('CalendarSuperConfigurations');
-	$this->set('honorariaMessage', $this->calendarConfigurations->get(1)->value);
+	    $this->set('honorariaMessage', $this->calendarConfigurations->get(1)->value);
 
         $this->Configurations = TableRegistry::get('Configurations');
         $config = $this->Configurations->find('list')->toArray();
