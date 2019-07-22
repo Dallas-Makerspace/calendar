@@ -28,7 +28,6 @@ use Cake\Validation\Validator;
 class EventsTable extends Table
 {
 
-
     /**
      * Initialize method
      *
