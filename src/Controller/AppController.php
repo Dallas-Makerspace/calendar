@@ -165,9 +165,9 @@ class AppController extends Controller
                     'canManageFinanceReports',
                     'canExportHonoraria'
                 ],
-    'Calendar Super Admins' => [
-        'canDisableHonoraria'
-    ],
+                'Calendar Super Admins' => [
+                    'canDisableHonoraria'
+                ],
             ];
 
             foreach ($authorizations as $group => $authorizedActions) {
