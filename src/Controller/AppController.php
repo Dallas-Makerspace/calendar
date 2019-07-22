@@ -17,6 +17,7 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 
 /**
  * Application Controller
@@ -98,6 +99,21 @@ class AppController extends Controller
         $this->Crud->addListener('relatedModels', 'Crud.RelatedModels');
     }
 
+    public function customLog($description) {
+        // log this
+        $this->logs = TableRegistry::getTableLocator()->get('Logs');
+        $log = $this->logs->newEntity();
+        $log->description   = $description;
+        $log->user          = $this->Auth->user()['samaccountname'];
+        $log->date_time     = date('Y-m-d H:i:s');
+        $log->ip_address    = $_SERVER['REMOTE_ADDR'];
+        $log->url           = $_SERVER['REQUEST_URI'];
+        $log->controller    = $this->request->getParam('controller');
+        $log->action        = $this->request->getParam('action');
+
+        $this->logs->save($log);
+    }
+
     /**
      * Before render callback.
      *
@@ -106,6 +122,8 @@ class AppController extends Controller
      */
     public function beforeRender(Event $event)
     {
+        $this->customLog('Viewed ' . $_SERVER[ 'REQUEST_URI' ]);
+
         $isAuthorized = [
             'canAddEvents' => 0,
             'canManageCategories' => 0,
@@ -117,6 +135,7 @@ class AppController extends Controller
             'canManageTools' => 0,
             'canManageHonoraria' => 0,
             'canManageW9s' => 0,
+            'canDisableHonoraria' => 0,
             'canManageFinanceReports' => 0
         ];
 
@@ -145,7 +164,10 @@ class AppController extends Controller
                     'canManageW9s',
                     'canManageFinanceReports',
                     'canExportHonoraria'
-                ]
+                ],
+    'Calendar Super Admins' => [
+        'canDisableHonoraria'
+    ],
             ];
 
             foreach ($authorizations as $group => $authorizedActions) {
@@ -163,6 +185,10 @@ class AppController extends Controller
 
         if ($this->inAdminstrativeGroup($this->Auth->user(), 'Calendar Admins')) {
             $hasMenu['hasAdminMenu'] = 1;
+        }
+
+        if ($this->inAdminstrativeGroup($this->Auth->user(), 'Calendar Super Admins')) {
+            $hasMenu['hasCalendarAdminMenu'] = 1;
         }
 
         if ($this->inAdminstrativeGroup($this->Auth->user(), 'Financial Reporting')) {
