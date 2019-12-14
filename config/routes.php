@@ -75,6 +75,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/events/honoraria/pending', ['controller' => 'Events', 'action' => 'pendingHonoraria']);
     $routes->connect('/events/honoraria/accepted', ['controller' => 'Events', 'action' => 'acceptedHonoraria']);
     $routes->connect('/events/honoraria/rejected', ['controller' => 'Events', 'action' => 'rejectedHonoraria']);
+    $routes->connect('/events/honoraria/upcoming', ['controller' => 'Events', 'action' => 'upcomingHonoraria']);
 
     /**
      * Connect catchall routes for all controllers.

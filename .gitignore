@@ -8,4 +8,5 @@
 /webroot/files
 /.idea
 /.vscode
-/webroot/webroot
+/protected
+/webroot/google*.html

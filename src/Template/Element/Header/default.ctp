@@ -52,6 +52,12 @@
                                     'action' => 'rejectedHonoraria'
                                 ]) ?>
                             </li>
+                            <li>
+                                <?= $this->Html->link('Counts', [
+                                    'controller' => 'Events',
+                                    'action' => 'upcomingHonoraria'
+                                ]) ?>
+                            </li>
                         </ul>
                     </li>
                 <?php endif; ?>
@@ -208,14 +214,14 @@
                             </ul>
                         </li>
 
-                    <?php else: 
+                    <?php else:
                         if ($isMockAuth) {
                             $loginButtonText = "Login";
                         }
                         else {
                             $loginButtonText = "DMS Login";
                         }
-                        
+
                         ?>
                         <?= $this->Html->link($loginButtonText, [
                             'controller' => 'Users',
