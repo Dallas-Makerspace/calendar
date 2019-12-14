@@ -52,6 +52,7 @@ class EventsController extends AppController
         $this->Crud->mapAction('pendingHonoraria', 'Crud.Index');
         $this->Crud->mapAction('acceptedHonoraria', 'Crud.Index');
         $this->Crud->mapAction('rejectedHonoraria', 'Crud.Index');
+        $this->Crud->mapAction('upcomingHonoraria', 'Crud.Index');
 
         $this->Crud->disable(['Delete']);
 
@@ -76,7 +77,7 @@ class EventsController extends AppController
         }
 
         // Honorarium Admins only
-        if (in_array($this->request->getParam('action'), ['acceptedHonoraria', 'pendingHonoraria', 'rejectedHonoraria'])) {
+        if (in_array($this->request->getParam('action'), ['acceptedHonoraria', 'pendingHonoraria', 'rejectedHonoraria', 'upcomingHonoraria'])) {
             return parent::inAdminstrativeGroup($user, 'Honorarium Admins');
         }
 
@@ -829,6 +830,30 @@ class EventsController extends AppController
         );
 
         return $this->Crud->execute();
+    }
+
+    public function upcomingHonoraria()
+    {
+        $months = [];
+        for ($i = 0; $i < 4; $i++) {
+            $nextMonth = date('M', strtotime('+' . $i . ' month'));
+            $nextMonthStart = date('Y-m-01 00:00:00', strtotime('+' . $i . ' month'));
+            $nextMonthEnd = date('Y-m-31 23:59:59', strtotime('+' . $i . ' month'));
+            $events = TableRegistry::get('Events');
+            $results = $events->find('all')
+                ->where(
+                    [
+                        'Events.part_of_id IS NULL',
+                        'Events.status IN' => ['approved', 'completed'],
+                        'Events.event_start >=' => $nextMonthStart,
+                        'Events.event_end <=' => $nextMonthEnd,
+                        'Honoraria.id IS NOT NULL'
+                    ]
+                )->contain(['Honoraria'])->toList();
+            $months[$nextMonth] = count($results);
+        }
+
+        $this->set(compact('months'));
     }
 
     public function acceptedHonoraria()
