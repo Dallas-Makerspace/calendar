@@ -325,3 +325,7 @@ $this->Html->meta(
         <div class="alert alert-warning" role="alert">No classes or events match your selected criteria.</div>
     <?php endif; ?>
 </div>
+
+<?= $this->Html->script([
+    'kiosk.js'
+]) ?>

@@ -210,10 +210,10 @@
                     ], [
                         'class' => 'btn btn-lg btn-success',
                         'style' => 'margin-top: 30px'
-                    ]) ?><?php 
-                    if (is_int($openSpaces)): 
-                        ?><p class="spaces_avaliable"><?= $openSpaces ?> spaces of <?= $totalSpaces ?> avaliable</p><?php 
-                    endif; 
+                    ]) ?><?php
+                    if (is_int($openSpaces)):
+                        ?><p class="spaces_avaliable"><?= $openSpaces ?> spaces of <?= $totalSpaces ?> available</p><?php
+                    endif;
                     ?>
                 <?php else: ?>
                     <?php if ($hasRegistration): ?>
@@ -265,7 +265,7 @@
         <div class="page-header">
             <h3>Registered Attendees</h3>
         </div>
-		
+
 		<div>
 			<ul class="nav nav-tabs" role="tablist">
 			    <li role="presentation" class="active"><a href="#registrations" aria-controls="registrations" role="tab" data-toggle="tab">Registrations <span class="badge"><?= (isset($event->registrations) && !empty($event->registration)) ? count($event->registrations) : "0"; ?></span></a></li>
@@ -274,7 +274,7 @@
 					<li role="presentation"><a href="#assignments" aria-controls="assignments" role="tab" data-toggle="tab">AD Assignment</a></li>
 				<?php endif; ?>
 			</ul>
-			
+
 			<div class="tab-content">
 			    <div role="tabpanel" class="tab-pane active" id="registrations">
 			        <table class="table table-striped">
@@ -334,13 +334,13 @@
                         $now = Time::now();
                         $time = new Time($event->event_start);
                     ?>
-                    
+
                     <?php if ($time->wasWithinLast($config[6] * 24 . ' hours')): ?>
     					<?php echo $this->Form->create($event, [
     					    'url' => ['controller' => 'Events', 'action' => 'attendance']
     					]); ?>
                     <?php endif; ?>
-                    
+
 			        <table class="table table-striped">
 			            <thead>
 			                <tr>
@@ -372,10 +372,10 @@
 								<?php $i+=1; endforeach; ?>
 			            </tbody>
 			        </table>
-					
+
                     <?php if ($time->wasWithinLast($config[6] * 24 . ' hours')): ?>
 					    <?php echo $this->Form->button('Mark Attended', ['class' => 'btn-success pull-right', 'type' => 'submit']); ?>
-					
+
 					    <?php echo $this->Form->end(); ?>
                     <?php else: ?>
                         <?php if ($time > $now): ?>
@@ -390,11 +390,11 @@
 						<div class="alert alert-warning" role="alert">
 							<strong>Caution!</strong> AD Permissions can not be removed once given. Double check your assignments before submitting. If you do make a mistake the group will need to be remove manually in Active Directory.
 						</div>
-						
+
 						<?php echo $this->Form->create($event, [
 						    'url' => ['controller' => 'Events', 'action' => 'assignments']
 						]); ?>
-						
+
 				        <table class="table table-striped">
 				            <thead>
 				                <tr>
@@ -420,9 +420,9 @@
 									<?php $i+=1; endforeach; ?>
 				            </tbody>
 				        </table>
-					
+
 						<?php echo $this->Form->button('Assign AD Group', ['class' => 'btn-success pull-right', 'type' => 'submit']); ?>
-					
+
 						<?php echo $this->Form->end(); ?>
 			    	</div>
 				<?php endif; ?>
