@@ -139,7 +139,7 @@ class AppController extends Controller
             'canManageFinanceReports' => 0
         ];
 
-        $hasMenu = ['hasAdminMenu' => 0, 'hasFinancialMenu' => 0];
+        $hasMenu = ['hasAdminMenu' => 0, 'hasFinancialMenu' => 0, 'hasCalendarAdminMenu' => 0];
 
         if ($this->Auth->user()) {
             $authorizations = [
@@ -199,7 +199,7 @@ class AppController extends Controller
         $this->set($hasMenu);
         $this->set('isDevelopment', Configure::read("isDevelopment"));
         $this->set('isMockAuth', Configure::check("MockActiveDirectory"));
-        
+
         if (!array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->getType(), ['application/json', 'application/xml'])
         ) {
