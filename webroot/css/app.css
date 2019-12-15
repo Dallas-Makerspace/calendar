@@ -245,3 +245,9 @@ footer {
 	margin-left: 30px;
 	margin-top: 0;
 }
+
+@media (max-width: 767px) {
+    .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+        color: #ffffff !important;
+    }
+}
