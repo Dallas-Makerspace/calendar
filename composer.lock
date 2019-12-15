@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c5c8a014058356c759d809a7b32fd07a",
+    "content-hash": "719049df89d2e53cd28b92c70c71e375",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -153,16 +153,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "3.6.15",
+            "version": "3.8.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "69f10c11e18c9f41ea2554742b997702b08e4ed0"
+                "reference": "bf96319a3688c191742d4a3a1680740abef1b371"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/69f10c11e18c9f41ea2554742b997702b08e4ed0",
-                "reference": "69f10c11e18c9f41ea2554742b997702b08e4ed0",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/bf96319a3688c191742d4a3a1680740abef1b371",
+                "reference": "bf96319a3688c191742d4a3a1680740abef1b371",
                 "shasum": ""
             },
             "require": {
@@ -172,6 +172,7 @@
                 "ext-mbstring": "*",
                 "php": ">=5.6.0",
                 "psr/log": "^1.0.0",
+                "psr/simple-cache": "^1.0.0",
                 "zendframework/zend-diactoros": "^1.4.0"
             },
             "conflict": {
@@ -194,9 +195,11 @@
             },
             "require-dev": {
                 "cakephp/cakephp-codesniffer": "^3.0",
+                "cakephp/chronos": "^1.2.1",
                 "phpunit/phpunit": "^5.7.14|^6.0"
             },
             "suggest": {
+                "ext-curl": "To enable more efficient network calls in Http\\Client.",
                 "ext-openssl": "To use Security::encrypt() or have secure CSRF token generation.",
                 "lib-ICU": "The intl PHP library, to use Text::transliterate() or Text::slug()"
             },
@@ -235,7 +238,7 @@
                 "rapid-development",
                 "validation"
             ],
-            "time": "2019-04-24T01:52:39+00:00"
+            "time": "2019-12-08T02:59:05+00:00"
         },
         {
             "name": "cakephp/cakephp-codesniffer",
