@@ -27,6 +27,9 @@ Copy the `config/app.default.php` file to `config/app.php`. This file is a mirro
 The `.htaccess-sample` file in the root directory can, in most cases, be renamed to `.htaccess` and provide everything needed for CakePHP to route necessary traffic to the `webroot` directory.
 
 ## Development Quickstart Guide
+
+For an overview of how the caleander works, see [./docs/README.md](./docs/README.md).
+
 These instructions have only been tested on Ubuntu Linux, the commands may vary slightly for other OS/distro.
 1. Fork this repo in Github.
 2. Clone your forked version to your development computer using whatever tool works best for you (CLI/GUI/IDE/etc).

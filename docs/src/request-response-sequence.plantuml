@@ -1,0 +1,24 @@
+@startuml
+
+title DMS calendar request response sequence
+
+actor "User (web browser)" as User
+participant CakePHP
+participant "config/routes.php" as router
+
+User -> CakePHP: GET /
+note over CakePHP: framework magic here
+CakePHP -> router: execute route matching URL
+CakePHP -> EventController: index()
+EventController ->]: fetch data from MariaDB
+]-> EventController: event data
+EventController -> CakePHP: data used during rendering
+note over CakePHP: Template chosen by convention
+CakePHP -> "Template/Events/index.ctp": render
+"Template/Events/index.ctp" -> CakePHP: body content
+CakePHP -> "Template/Layout/default.ctp": render w/ body content in "content"
+"Template/Layout/default.ctp" -> CakePHP: fully-rendered response
+CakePHP -> User: response
+
+
+@enduml

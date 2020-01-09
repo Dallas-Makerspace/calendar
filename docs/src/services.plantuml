@@ -1,0 +1,20 @@
+'edit with planttext.com
+
+@startuml
+
+title DMS Calendar services
+
+node Calendar
+node MariaDB
+node LDAP
+node "Braintree API" as Braintree
+node Sparkpost
+node Twilio
+
+Calendar -- LDAP
+Calendar -- MariaDB
+Calendar -- Braintree
+Calendar -- Sparkpost
+Calendar -- Twilio
+
+@enduml
