@@ -12,8 +12,8 @@ DMS calendar communicates with:
 * MariaDB: holds persistent data (e.g. calendar events, attendees, etc.); MySQL-compatible database server
 * DMS Active Directory (LDAP): connects the calendar to DMS accounts used across DMS's other services; account / authentication server
 * Braintree: credit card processesing; third-party service
-* Twilio: sends SMS notifications; third-party service
 * Sparkpost: sends email notifications? third-party service
+* Twilio: sends SMS notifications; third-party service
 
 
 ## Webserver
