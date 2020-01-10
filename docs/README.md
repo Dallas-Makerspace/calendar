@@ -18,9 +18,13 @@ DMS calendar communicates with:
 
 ## Webserver
 
-The webserver is [HHVM](https://docs.hhvm.com/hhvm/getting-started/getting-started) and it uses Proxygen internally - you can think of these as a wrapper around CakePHP that handles low-level stuff like managing parallel requests, network connections, etc. 
+The webserver is one of:
 
-I believe the webserver just invokes [/index.php](/index.php) with each request, and that triggers all the CakePHP framework magic; however, I didn't look into this too much.
+* Production: [Apache](https://httpd.apache.org/) and [PHP-FPM](https://www.php.net/manual/en/install.fpm.php) for calendar.dallasmakerspace.org. If you run locally without Docker, you might also be using these.
+
+* Local Docker: [HHVM](https://docs.hhvm.com/hhvm/getting-started/getting-started) with Proxygen.
+
+You can think of these as wrappers around CakePHP that handle low-level stuff like managing parallel requests, network connections, etc. They just invoke [index.php](../index.php) with each request. This activates the CakePHP framework, and eventually the calendar code under [src/](../src/) is invoked (see next section).
 
 
 ## Application
@@ -29,10 +33,10 @@ The app is built with CakePHP, which is a pretty typical [MVC](https://en.wikipe
 
 Key files:
 
-* /index.php - entrypoint for everything
-* config/bootstrap.php - global setup type stuff
-* config/routes.php - URL-to-Controller mappings
-* src/ - all the core business logic for the calendar and associated UI markup
+* [index.php](../index.php) - entrypoint for everything
+* [config/bootstrap.php](../config/bootstrap.php) - global setup type stuff
+* [config/routes.php](../config/routes.php) - URL-to-Controller mappings
+* [src/](../src/) - all the core business logic for the calendar and associated UI markup
 
 Here's how a response is computed:
 
@@ -40,5 +44,5 @@ Here's how a response is computed:
 
 More details on the rest can be found at [CakePHP](https://book.cakephp.org/) - [request cycle](https://book.cakephp.org/3/en/intro.html#cakephp-request-cycle) and [controllers request flow](https://book.cakephp.org/3/en/controllers.html#request-flow) are especially helpful.
 
-**Warning:** check [/composer.json](/composer.json) to ensure you're looking at docs for the right version of CakePHP.
+**Warning:** check [composer.json](../composer.json) to ensure you're looking at docs for the right version of CakePHP.
 
