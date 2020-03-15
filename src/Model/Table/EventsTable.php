@@ -296,7 +296,7 @@ class EventsTable extends Table
                         }
                     }
 
-                    
+
                     $unavailableTools = [];
                     $toolNames = [];
                     foreach ($values['_ids'] as $tool) {
@@ -450,7 +450,8 @@ class EventsTable extends Table
                 'Registrations',
                 function ($q) {
                     return $q->where([
-                        'Registrations.status !=' => 'cancelled'
+                        'Registrations.status !=' => 'cancelled',
+                        'Registrations.status !=' => 'rejected'
                     ]);
                 }
             )
@@ -475,7 +476,8 @@ class EventsTable extends Table
                     function ($q) {
                         return $q->where([
                             'Registrations.type' => 'free',
-                            'Registrations.status !=' => 'cancelled'
+                            'Registrations.status !=' => 'cancelled',
+                            'Registrations.status !=' => 'rejected'
                         ]);
                     }
                 )
@@ -506,7 +508,8 @@ class EventsTable extends Table
                         function ($q) {
                             return $q->where([
                                 'Registrations.type' => 'paid',
-                                'Registrations.status !=' => 'cancelled'
+                                'Registrations.status !=' => 'cancelled',
+                                'Registrations.status !=' => 'rejected'
                             ]);
                         }
                     )
