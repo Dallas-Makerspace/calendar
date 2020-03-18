@@ -317,8 +317,7 @@ class EventsController extends AppController
                 $feed_event = $feed->newItem();
                 $feed_event->setTitle($event->name);
                 $feed_event->setLink($url);
-                //$feed_event->setLastModified(new \DateTime($event->modified));
-                $feed_event->setLastModified(new \DateTime($event->event_start));
+                $feed_event->setLastModified(new \DateTime($event->created));
                 $feed_event->setDescription($desc_html);
                 $feed_event->setPublicId($url, false);
 
