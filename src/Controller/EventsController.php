@@ -1472,14 +1472,18 @@ class EventsController extends AppController
             foreach ($event->getSubject()->entities as $entity) {
                 $entity->address = '1825 Monetary Ln #104 Carrollton, TX 75006';
 
-                if ($entity->room && $entity->room->id == 23) {
+                # WARNING: Ugly hack, relies on room_ids which could change
+                # Don't put our address for off-site and online classes
+                if ($entity->room && in_array($entity->room->id, [23, 58])) {
                     $entity->address = null;
                 }
             }
         } else {
             $event->getSubject()->entity->address = '1825 Monetary Ln #104 Carrollton, TX 75006';
 
-            if ($event->getSubject()->entity->room && $event->getSubject()->entity->room->id == 23) {
+            # WARNING: Ugly hack, relies on room_ids which could change
+            # Don't put our address for off-site and online classes
+            if ($event->getSubject()->entity->room && in_array($event->getSubject()->entity->room->id, [23, 58])) {
                 $event->getSubject()->entity->address = null;
             }
         }
