@@ -104,7 +104,7 @@ class EventsController extends AppController
             'beforePaginate',
             function (\Cake\Event\Event $event) {
                 if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
-                    $start_date = new \DateTime($_GET['start_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
+                    $start_date = new \DateTime($_GET['start_date'] . ' 00:00:00', new \DateTimeZone('America/Chicago'));
                     $start_date->setTimezone(new \DateTimeZone('UTC'));
                     $end_date = new \DateTime($_GET['end_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
                     $end_date->setTimezone(new \DateTimeZone('UTC'));
@@ -670,7 +670,7 @@ class EventsController extends AppController
                 }
             }
 
-            $start_date = new \DateTime($_GET['start_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
+            $start_date = new \DateTime($_GET['start_date'] . ' 00:00:00', new \DateTimeZone('America/Chicago'));
             $start_date->setTimezone(new \DateTimeZone('UTC'));
             $end_date = new \DateTime($_GET['end_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
             $end_date->setTimezone(new \DateTimeZone('UTC'));
@@ -726,7 +726,7 @@ class EventsController extends AppController
         ];
 
         $oldCutoff = new Time('2017-01-01 00:00', 'America/Chicago');
-        $start_date = new \DateTime($_GET['start_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
+        $start_date = new \DateTime($_GET['start_date'] . ' 00:00:00', new \DateTimeZone('America/Chicago'));
         $start_date->setTimezone(new \DateTimeZone('UTC'));
         $end_date = new \DateTime($_GET['end_date'] . ' 23:59:59', new \DateTimeZone('America/Chicago'));
         $end_date->setTimezone(new \DateTimeZone('UTC'));
