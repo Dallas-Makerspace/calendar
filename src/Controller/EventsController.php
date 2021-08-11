@@ -801,7 +801,8 @@ class EventsController extends AppController
         }
 
         $_serialize = 'export';
-
+        
+        $this->setResponse($this->getResponse()->withDownload('honoria_export.csv'));
         $this->viewBuilder()->className('CsvView.Csv');
         $this->set(compact('export', '_serialize'));
     }
