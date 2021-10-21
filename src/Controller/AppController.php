@@ -104,7 +104,7 @@ class AppController extends Controller
         $this->logs = TableRegistry::getTableLocator()->get('Logs');
         $log = $this->logs->newEntity();
         $log->description   = $description;
-        $log->user          = $this->Auth->user()['samaccountname'];
+        $log->user          = $this->Auth->user() != null ? $this->Auth->user()['samaccountname'] : "";
         $log->date_time     = date('Y-m-d H:i:s');
         $log->ip_address    = $_SERVER['REMOTE_ADDR'];
         $log->url           = $_SERVER['REQUEST_URI'];

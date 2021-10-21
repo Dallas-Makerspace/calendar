@@ -7,6 +7,7 @@
 	"require" : {
 		"php" : ">=5.5.9",
 		"cakephp/cakephp" : ">=3.6 <3.7.0",
+		"vlucas/phpdotenv" : "~3.6.8",
 		"mobiledetect/mobiledetectlib" : "2.*",
 		"cakephp/migrations" : "~1.0",
 		"cakephp/plugin-installer" : "*",
@@ -26,12 +27,12 @@
 		"phpunit/phpunit": "~6",
 		"sparkpost/sparkpost": "^2.1",
 		"dallasmakerspace/cakephp-sparkpost-plugin": "^v1.0"
+		
 	},
 	"require-dev" : {
 		"psy/psysh" : "@stable",
 		"cakephp/debug_kit" : "~3.2",
-		"cakephp/bake" : "~1.1",
-        "php-coveralls/php-coveralls": "~2.0"
+		"cakephp/bake" : "~1.1"
     },
 	"suggest" : {
 		"phpunit/phpunit" : "Allows automated tests to be run without system-wide install.",
@@ -51,7 +52,6 @@
 	"scripts" : {
 		"post-install-cmd" : "App\\Console\\Installer::postInstall",
 		"post-create-project-cmd" : "App\\Console\\Installer::postInstall",
-		"post-autoload-dump" : "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
         "unit": "phpunit -c phpunit.xml.dist",
         "cs": "phpcs -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
         "test": [

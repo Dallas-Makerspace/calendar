@@ -1,36 +1,75 @@
----
-version: '3.2'
-
 services:
-    ipam:
-        image: osixia/openldap:1.2.0
-        command: ["--copy-service", "--loglevel", "debug"]
-        volumes: ["/srv/ldap/schema:/etc/ldap/schema:rw"]
-
+    ldap:
+        extends:
+            file: ./dms-ad-openldap/docker-compose.yml
+            service: openldap
+            #container_name: openldap
+        networks:
+            main:
+                aliases:
+                    - openldap
+    phpldapadmin:
+        extends:
+            file: ./dms-ad-openldap/docker-compose.yml
+            service: phpldapadmin
+            #container_name: phpldapadmin
+        networks:
+            main:
+                aliases:
+                    - phpldapadmin
+        links:
+        - ldap
     db:
-        image: mariadb:5.5
+        image: mariadb:latest
         ports:
-            - "3306:3306"
+            - "53306:3306"
         environment:
           MYSQL_ROOT_PASSWORD: 'cakephp'
-          MYSQL_DATABASE: 'calendarapp'
-
+          MYSQL_DATABASE: 'dms-calendar'
+          MYSQL_USER: 'calendar'
+          MYSQL_PASSWORD: 'calendar'
+        networks:
+            main:
+                aliases:
+                    - db
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            - PMA_ARBITRARY=1
+            - PMA_HOST=db
+            - PMA_USER=root
+            - PMA_PASSWORD=cakephp
+        links:
+            - db
+        ports:
+            - 8081:80
+        volumes:
+            - /sessions
+        networks:
+          main:
+              aliases:
+                  - phpmyadmin
     app:
-        image: dms_calendar:latest
+        #image: dms_calendar:latest
         build:
           context: .
           args:
             FWATCHDOG_VERSION: "0.7.1"
         volumes:
-            - ./logs/calendar:/www/app/logs
+           # - ./logs/calendar:/var/www/logs/calendar
+            - .:/var/www
         links:
             - db
+        ports:
+            - "8080:80"
+        entrypoint: ['/var/www/bin/wait-for-it.sh', "db:3306", "-s", "-t", "120", "--" ]
+        command: '/var/www/bin/startup.sh'
         environment:
           DEBUG: 'true'
           DB_HOST: 'db' # Leave this as 'db' to utilize MySQL container(s)
-          DB_USERNAME: 'root'
-          DB_PASSWORD: 'cakephp'
-          DB_DATABASE: 'cakephp'
+          DB_USERNAME: 'calendar'
+          DB_PASSWORD: 'calendar'
+          DB_DATABASE: 'dms-calendar'
           DB_SEED: 'DatabaseSeed'
           VIRTUAL_HOST: 'calendar.dallasmakerspace.org'
           EMAIL_HOST: 'localhost'
@@ -39,5 +78,12 @@ services:
           EMAIL_USERNAME: 'user'
           EMAIL_PASSWORD: 'secret'
           EMAIL_TLS: 'false'
-          REPO: 'https://github.com/Dallas-Makerspace/calendar.git'
-          REPO_HOST: 'github.com'
+          #REPO: 'https://github.com/Dallas-Makerspace/calendar.git'
+          #REPO_HOST: 'github.com'
+          #WEB_DOCUMENT_ROOT: '/var/www'
+        networks:
+            main:
+                aliases:
+                    - app
+networks:
+    main:
