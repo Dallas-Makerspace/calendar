@@ -240,7 +240,10 @@ class AppController extends Controller
      */
     public function inAdminstrativeGroup($user, $group)
     {
-        if ($user && in_array($group, $user['groups'])) {
+        if ($user
+            && array_key_exists('groups', $user)
+            && is_array($user['groups'])
+            && in_array($group, $user['groups'])) {
             return true;
         }
 

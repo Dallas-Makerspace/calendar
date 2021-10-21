@@ -19,6 +19,11 @@ services:
                     - phpldapadmin
         links:
         - ldap
+    mail:
+      image: mailhog/mailhog
+      restart: always
+      ports:
+        - 8025:8025
     db:
         image: mariadb:latest
         ports:
