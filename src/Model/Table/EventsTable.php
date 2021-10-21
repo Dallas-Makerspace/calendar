@@ -9,6 +9,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
+use Cake\Log\Log;
 
 /**
  * Events Model
@@ -449,10 +450,7 @@ class EventsTable extends Table
             ->innerJoinWith(
                 'Registrations',
                 function ($q) {
-                    return $q->where([
-                        'Registrations.status !=' => 'cancelled',
-                        'Registrations.status !=' => 'rejected'
-                    ]);
+                    return $q->where(['Registrations.status !=' => 'cancelled'])->andWhere(['Registrations.status !=' => 'rejected']);
                 }
             )
             ->count();
@@ -476,13 +474,14 @@ class EventsTable extends Table
                     function ($q) {
                         return $q->where([
                             'Registrations.type' => 'free',
-                            'Registrations.status !=' => 'cancelled',
-                            'Registrations.status !=' => 'rejected'
+                            'AND' => [
+                                ['Registrations.status !=' => 'cancelled'],
+                                ['Registrations.status !=' => 'rejected'],
+                            ],
                         ]);
                     }
                 )
                 ->count();
-
             if ($freeRegs < $event->free_spaces) {
                 return true;
             }
@@ -508,8 +507,10 @@ class EventsTable extends Table
                         function ($q) {
                             return $q->where([
                                 'Registrations.type' => 'paid',
-                                'Registrations.status !=' => 'cancelled',
-                                'Registrations.status !=' => 'rejected'
+                                'AND' => [
+                                    ['Registrations.status !=' => 'cancelled'],
+                                    ['Registrations.status !=' => 'rejected'],
+                                ],
                             ]);
                         }
                     )
@@ -542,3 +543,4 @@ class EventsTable extends Table
         return $this->exists(['id' => $id, 'created_by' => $user]);
     }
 }
+
