@@ -10,7 +10,7 @@ return [
      * true: Errors and warnings shown.
      */
     'debug' => true, //filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
-    'isDevelopment' => false, //filter_var(env('DEV', true), FILTER_VALIDATE_BOOLEAN),
+    'isDevelopment' => true, //filter_var(env('DEV', true), FILTER_VALIDATE_BOOLEAN),
 
     /**
      * Configure basic information about the application.
@@ -166,7 +166,7 @@ return [
      *   breathing room to complete logging or error handling.
      */
     'Error' => [
-        'errorLevel' => E_ALL, 
+        'errorLevel' => E_ALL,
         'exceptionRenderer' => 'Cake\Error\ExceptionRenderer',
         'skipLog' => [],
         'log' => true,
@@ -196,11 +196,11 @@ return [
         'default' => [
             'className' => 'Cake\Mailer\Transport\MailTransport',
             // The following keys are used in SMTP transports
-            'host' => 'localhost',
-            'port' => 25,
+            'host' => 'mail',
+            'port' => 1025,
             'timeout' => 30,
-            'username' => 'user',
-            'password' => 'secret',
+            'username' => null,
+            'password' => null,
             'client' => null,
             'tls' => null,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
@@ -236,21 +236,21 @@ return [
             'className' => 'Cake\Database\Connection',
             'driver' => 'Cake\Database\Driver\Mysql',
             'persistent' => false,
-            'host' => 'localhost',
+            'host' => 'db',
             /**
              * CakePHP will use the default DB port based on the driver selected
              * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => 'root',
-            'password' => '',
-            'database' => 'main',
+            'username' => 'calendar',
+            'password' => 'calendar',
+            'database' => 'dms-calendar',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'flags' => [],
             'cacheMetadata' => true,
-            'log' => false,
+            'log' => true,
 
             /**
              * Set identifier quoting to true if you are using reserved words or
@@ -271,29 +271,10 @@ return [
              */
             //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
 
-            'url' => env('DATABASE_URL', null),
+            //'url' => env('DATABASE_URL', null),
         ],
 
-        /**
-         * The test connection is used during the test suite.
-         */
-        'test' => [
-            'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
-            'persistent' => false,
-            'host' => 'localhost',
-            //'port' => 'non_standard_port_number',
-            'username' => 'root',
-            'password' => '',
-            'database' => 'test',
-            'encoding' => 'utf8',
-            'timezone' => 'UTC',
-            'cacheMetadata' => true,
-            'quoteIdentifiers' => false,
-            'log' => false,
-            //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
-            'url' => env('DATABASE_TEST_URL', null),
-        ],
+
     ],
 
     /**
@@ -363,7 +344,8 @@ return [
      * To use database sessions, load the SQL file located at config/Schema/sessions.sql
      */
     'Session' => [
-        'defaults' => 'php',
+        'defaults' => 'cache',
+        'timeout' => 120, // 2 hours
     ],
 
     /**
@@ -398,56 +380,13 @@ return [
      * AD configuration
      */
     'ActiveDirectory' => [
-        'account_suffix' => '@dev.com',
-        'admin_username' => 'AD_ADMIN',
-        'admin_password' => 'AD_ADMIN_PW',
-        'base_dn' => 'DC=dev,DC=com',
-        'domain_controllers' => ['dc1.dev.com']
+        'username_field' => 'sAMAccountName',
+        'admin_username' => 'cn=admin,dc=dms,dc=local',
+        'admin_password' => 'Adm1n!',
+        'base_dn' => 'DC=dms,DC=local',
+        'domain_controllers' => ['openldap']
     ],
-
-    'MockActiveDirectory' => [
-        'users' => [
-            [
-                'samaccountname' => 'admin',
-                'password' => 'password',
-                'displayname' => 'Calendar Admin',
-                'telephonenumber' => '555-555-5555',
-                'mail' => 'admin@none.none.none',
-                'groups' => ['Calendar Admins', 'Members']
-            ],
-            [
-                'samaccountname' => 'honoradmin',
-                'password' => 'password',
-                'displayname' => 'Honorarium Admin',
-                'telephonenumber' => '555-555-5555',
-                'mail' => 'admin@none.none.none',
-                'groups' => ['Honorarium Admins', 'Members']
-            ],
-            [
-                'samaccountname' => 'reporting',
-                'password' => 'password',
-                'displayname' => 'Financial Reporting',
-                'telephonenumber' => '555-555-5555',
-                'mail' => 'admin@none.none.none',
-                'groups' => ['Financial Reporting', 'Members']
-            ],
-            [
-                'samaccountname' => 'user1',
-                'password' => 'password',
-                'displayname' => 'Test User 1',
-                'telephonenumber' => '555-555-5555',
-                'mail' => 'user1@none.none.none',
-                'groups' => ['Members']
-            ],
-            [
-                'samaccountname' => 'user2',
-                'password' => 'password',
-                'displayname' => 'Test User 2',
-                'telephonenumber' => '555-555-5555',
-                'mail' => 'user2@none.none.none',
-                'groups' => ['Members']
-            ]
-        ],
-
-    ]
+    /* You can also connect to ad.dallasmakerspace.org with your own
+     * account to validate production account permissions
+     */
 ];

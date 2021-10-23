@@ -9,6 +9,9 @@ RUN apt update -y && \
     sync && \
     install-php-extensions ldap intl zip pdo_mysql
 
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug
+
 RUN a2enmod rewrite && \
     a2enmod expires && \
     a2enmod headers && \

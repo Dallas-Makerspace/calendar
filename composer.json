@@ -13,21 +13,18 @@
 		"cakephp/plugin-installer" : "*",
 		"friendsofcake/bootstrap-ui" : "^1.4",
 		"friendsofcake/cakephp-csvview" : "~3.0",
-		"unholyknight/active-directory-authenticate" : "master",
 		"friendsofcake/crud" : "^5.0",
 		"josegonzalez/cakephp-upload" : "^4.0",
 		"braintree/braintree_php" : "~3.0",
-		"adldap2/adldap2" : "~6.0",
 		"twilio/sdk" : "^4.10",
 		"php-coveralls/php-coveralls" : "^2.0",
 		"debril/feed-io": "^3.1",
-		"dragonsguild/active-directory-authenticate-mock": "dev-master",
 		"cakephp/cakephp-codesniffer": "^3.0",
 		"squizlabs/php_codesniffer": "*",
 		"phpunit/phpunit": "~6",
 		"sparkpost/sparkpost": "^2.1",
-		"dallasmakerspace/cakephp-sparkpost-plugin": "^v1.0"
-		
+		"dallasmakerspace/cakephp-sparkpost-plugin": "^v1.0",
+		"directorytree/ldaprecord": "2.*"
 	},
 	"require-dev" : {
 		"psy/psysh" : "@stable",

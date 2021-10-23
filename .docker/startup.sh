@@ -1,12 +1,15 @@
 #!/bin/bash
 
-cd /var/www
 rm -rf /var/www/html
 ln -s /var/www/webroot /var/www/html
 php /opt/composer/composer.phar install
-#cp -R webroot /var/www/html
-#chown -R www-data.www-data /var/www
-cd /var/www/html
+cp /var/www/.docker/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+touch /var/log/xdebug.log
+touch /var/www/logs/queries.log
+
+chmod 666 /var/log/xdebug.log
+chmod 666 /var/www/logs/queries.log
+
 php /var/www/bin/cake.php migrations migrate
 result=`mysql -N -h $DB_HOST -u $DB_USERNAME -p$DB_PASSWORD $DB_DATABASE -s -e "select count(*) from categories;"`
 if (( $result == 0 ))

@@ -1,4 +1,7 @@
 {
     //"phpcbf.standard": "${workspaceRoot}\\vendor\\cakephp\\cakephp-codesniffer\\CakePHP\\ruleset.xml",
     "phpcbf.executablePath": "${workspaceRoot}\\vendor\\bin\\phpcbf.bat",
+    "files.eol": "\r\n",
+    "prettier.endOfLine": "auto",
+    "editor.formatOnSaveMode": "modifications",
 }

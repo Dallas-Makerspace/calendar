@@ -205,8 +205,4 @@ Plugin::load('Crud');
 
 Plugin::load('Josegonzalez/Upload');
 
-Plugin::load('ActiveDirectoryAuthenticateMock');
-
-Plugin::load('ActiveDirectoryAuthenticate');
-
 Plugin::load('CsvView');
