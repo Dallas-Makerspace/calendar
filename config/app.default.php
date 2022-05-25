@@ -198,9 +198,9 @@ return [
             /*
              * The following keys are used in SMTP transports:
              */
-            'host' => 'localhost',
-            'port' => 25,
-            'timeout' => 30,
+            'host' => env('EMAIL_HOST', 'localhost'),
+            'port' => env('EMAIL_PORT', 25),
+            'timeout' => env('EMAIL_TIMEOUT', 30),
             'username' => null,
             'password' => null,
             'client' => null,
@@ -238,16 +238,16 @@ return [
             'className' => 'Cake\Database\Connection',
             'driver' => 'Cake\Database\Driver\Mysql',
             'persistent' => false,
-            'host' => 'localhost',
+            'host' => env('DB_HOST', 'localhost'),
             /**
              * CakePHP will use the default DB port based on the driver selected
              * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => 'mysql',
-            'password' => 'mysql',
-            'database' => 'dms-calendar',
+            'username' => env('DB_USERNAME', 'mysql'),
+            'password' => env('DB_PASSWORD', 'mysql'),
+            'database' => env('DB_DATABASE', 'dms-calendar'),
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'flags' => [],
@@ -400,10 +400,11 @@ return [
      * AD configuration
      */
     'ActiveDirectory' => [
-        'account_suffix' => '@dev.com',
-        'admin_username' => 'AD_ADMIN',
-        'admin_password' => 'AD_ADMIN_PW',
-        'base_dn' => 'DC=dev,DC=com',
-        'domain_controllers' => ['dc1.dev.com']
+        'account_suffix' => env('AD_SUFFIX','@dms.local'),
+        'admin_username' => env('AD_BIND_UN',''),
+        'admin_password' => env('AD_BIND_PW',''),
+        'username_field' => 'sAMAccountName',
+        'base_dn' => env('AD_BASE','DC=dev,DC=com'),
+        'domain_controllers' => [env('AD_SERVER','dms.local')]
     ],
 ];

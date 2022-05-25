@@ -5,7 +5,7 @@
 	"type" : "project",
 	"license" : "MIT",
 	"require" : {
-		"php" : ">=5.5.9",
+		"php" : ">=7.4",
 		"cakephp/cakephp" : ">=3.6 <3.7.0",
 		"vlucas/phpdotenv" : "~3.6.8",
 		"mobiledetect/mobiledetectlib" : "2.*",
@@ -57,5 +57,10 @@
         ]
 	},
 	"minimum-stability" : "dev",
-	"prefer-stable" : true
+	"prefer-stable" : true,
+	"config": {
+		"allow-plugins": {
+			"cakephp/plugin-installer": true
+		}
+	}
 }

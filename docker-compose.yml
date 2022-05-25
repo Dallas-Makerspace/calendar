@@ -58,6 +58,8 @@ services:
           args:
             FWATCHDOG_VERSION: "0.7.1"
         volumes:
+            - vendor:/var/www/vendor
+            - logs:/var/www/logs
             - .:/var/www
         links:
             - db
@@ -71,14 +73,22 @@ services:
           DB_USERNAME: 'calendar'
           DB_PASSWORD: 'calendar'
           DB_DATABASE: 'dms-calendar'
-          DB_SEED: 'DatabaseSeed'
           EMAIL_HOST: 'email'
           EMAIL_PORT: '1025'
-          EMAIL_TIMEOUT: '30'
-          EMAIL_TLS: 'false'
+          EMAIL_TIMEOUT: 30
+          EMAIL_TLS: false
+          AD_SERVER: 'openldap'
+          AD_BASE: 'dc=dms,dc=local'
+          AD_SUFFIX: '@dms.local'
+          AD_BIND_UN: 'cn=admin,dc=dms,dc=local'
+          AD_BIND_PW: 'Adm1n!'
+
         networks:
             main:
                 aliases:
                     - app
 networks:
     main:
+volumes:
+    vendor:
+    logs:
