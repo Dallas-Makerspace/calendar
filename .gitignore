@@ -10,3 +10,6 @@
 /.vscode
 /protected
 /webroot/google*.html
+config/Migrations/schema-dump-default.lock
+/html
+.vscode/settings.json

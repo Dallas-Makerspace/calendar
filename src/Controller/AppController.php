@@ -45,22 +45,16 @@ class AppController extends Controller
         parent::initialize();
 
         $auth = [
-            'ActiveDirectoryAuthenticate.Adldap' => [
+            'Ad' => [
                 'config' => [
-                    'account_suffix' => Configure::read('ActiveDirectory.account_suffix'),
+                    'username_field' => Configure::read('ActiveDirectory.username_field'),
                     'base_dn' => Configure::read('ActiveDirectory.base_dn'),
-                    'domain_controllers' => Configure::read('ActiveDirectory.domain_controllers')
-                ],
-                'select' => ['displayName', 'samaccountname', 'telephonenumber', 'mail']
+                    'domain_controllers' => Configure::read('ActiveDirectory.domain_controllers'),
+                    'admin_user' => Configure::read('ActiveDirectory.admin_username'),
+                    'admin_pw' => Configure::read('ActiveDirectory.admin_password'),
+                ]
             ]
         ];
-
-        // If Mock exists in config file then use that instead of real AD auth
-        if (Configure::check("MockActiveDirectory")) {
-            $auth = [
-                'ActiveDirectoryAuthenticateMock.AdldapMock' => Configure::read("MockActiveDirectory")
-            ];
-        }
 
         $this->loadComponent('Auth', [
             'authenticate' => $auth,
@@ -104,7 +98,7 @@ class AppController extends Controller
         $this->logs = TableRegistry::getTableLocator()->get('Logs');
         $log = $this->logs->newEntity();
         $log->description   = $description;
-        $log->user          = $this->Auth->user()['samaccountname'];
+        $log->user          = $this->Auth->user() != null ? $this->Auth->user()['samaccountname'] : "";
         $log->date_time     = date('Y-m-d H:i:s');
         $log->ip_address    = $_SERVER['REMOTE_ADDR'];
         $log->url           = $_SERVER['REQUEST_URI'];
@@ -240,7 +234,10 @@ class AppController extends Controller
      */
     public function inAdminstrativeGroup($user, $group)
     {
-        if ($user && in_array($group, $user['groups'])) {
+        if ($user
+            && array_key_exists('groups', $user)
+            && is_array($user['groups'])
+            && in_array($group, $user['groups'])) {
             return true;
         }
 

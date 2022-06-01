@@ -1,16 +1,25 @@
-# DMS Calendar [![Build Status](https://travis-ci.org/Dallas-Makerspace/calendar.svg?branch=master)](https://travis-ci.org/Dallas-Makerspace/calendar) [![Docker Build Status](https://img.shields.io/docker/build/dallasmakerspace/calendar.svg)](https://hub.docker.com/r/dallasmakerspace/calendar) [![License](https://img.shields.io/github/license/Dallas-Makerspace/calendar.svg?style=flat-square)](https://github.com/Dallas-Makerspace/calendar/blob/master/LICENCE) [![Coverage Status](https://coveralls.io/repos/github/Dallas-Makerspace/calendar/badge.svg?branch=master)](https://coveralls.io/github/Dallas-Makerspace/calendar?branch=master)
-[![Release](https://img.shields.io/github/tag/Dallas-Makerspace/calendar.svg?style=flat-square)](https://github.com/Dallas-Makerspace/calendar/tags)
+# DMS Calendar
 
+## Development Quickstart Guide
 
-Find a copy of the latest build at [Docker Hub](https://hub.docker.com/r/dallasmakerspace/calendar/). Join us <a href="https://discord.gg/rDVJgbe"><img src="https://img.shields.io/discord/300062029559889931.svg?logo=discord" alt="on Discord"></a>.
+For an overview of how the calendar works, see [./docs/README.md](./docs/README.md).
 
-## Prerequisites
+1. Fork this repo in Github.
+2. Clone your forked version to your development computer using whatever tool works best for you (CLI/GUI/IDE/etc). Make sure to use the recursive clone flag.
+3. If you forget to use the recursive clone, make sure any submodules are up to date with `git submodule update --init`
+4. Create a local branch to hold your changes, you'll want to leave the master branch alone and keep it synced with the upstream repo.
+5. Install a version of [Docker Desktop](https://www.docker.com/products/docker-desktop/), or something like [Rancher Desktop](https://rancherdesktop.io/)
+6. After installation, you should be able to navigate to the root directory of this repository. Then type "docker compose up"
+7. After some time, the containers  the application will be availbe at http://localhost:8080
+8. Mail will be available at http://localhost:8025. PhpMyAdmin is at http://localhost:8081. Open LDAP is at http://localhost:8888
+9. The docker environment automatically maps your local filesystem into the server. Any changes you make in the PHP files will be reflected. You may need to rebuild the app container if you change dependencies.
+10. VS Code launch settings and xdebug files are included for convenience.
 
-* PHP-ldap
-* PHP >=5.5.9
-* MySQL (version compatible with your environment)
-* Composer
-
+Ctrl+C will stop your containers
+`docker compose down` will reset your containers along with your data
+Log into OpenLDAP with `cn=admin,dc=dms,dc=local`, password `Adm1n!`
+Default credentials for application will be `user1` and `password`
+user2 may be used for admin rights
 ## Installation
 
 1. Download [Composer](http://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
@@ -26,20 +35,3 @@ Copy the `config/app.default.php` file to `config/app.php`. This file is a mirro
 
 The `.htaccess-sample` file in the root directory can, in most cases, be renamed to `.htaccess` and provide everything needed for CakePHP to route necessary traffic to the `webroot` directory.
 
-## Development Quickstart Guide
-
-For an overview of how the calendar works, see [./docs/README.md](./docs/README.md).
-
-These instructions have only been tested on Ubuntu Linux, the commands may vary slightly for other OS/distro.
-1. Fork this repo in Github.
-2. Clone your forked version to your development computer using whatever tool works best for you (CLI/GUI/IDE/etc).
-3. Create a local branch to hold your changes, you'll want to leave the master branch alone and keep it synced with the upstream repo.
-4. If you don't have the latest version of [Composer](http://getcomposer.org/doc/00-intro.md), download it or update using `composer self-update`.
-5. Run `php composer.phar install` to install all the required packages, this will also automatically create an `config/app.php` file for you.
-6. Install MySQL server if you don't already have it (this varies based on OS/distro).
-7. Create a MySQL database and user with access to that database.
-8. Run `DATABASE_URL="mysql://mysql_user_you_made:password_for_that_user@localhost/name_of_the_database" bin/cake migrations migrate` this will create all the necessary tables/structure.
-9. Run `DATABASE_URL="mysql://mysql_user_you_made:password_for_that_user@localhost/name_of_the_database" bin/cake migrations seed` to fill those tables with some useful data.
-10. Copy the `MockActiveDirectory` configuration from `config/app.testing.php` to your `config/app.php` file. This will let you "login" using mock users/accounts.
-11. Run `DATABASE_URL="mysql://mysql_user_you_made:password_for_that_user@localhost/name_of_the_database" bin/cake server` and then open http://localhost:8765/ in a browser.
-12. When your changes are done, create a pull request via Github, all the changes in the branch you created will show up in the PR. If additional changes need to be made before the PR is merged, you can simply add more commits to your branch.

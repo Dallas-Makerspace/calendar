@@ -22,7 +22,6 @@ The webserver is one of:
 
 * Production: [Apache](https://httpd.apache.org/) and [PHP-FPM](https://www.php.net/manual/en/install.fpm.php) for calendar.dallasmakerspace.org. If you run locally without Docker, you might also be using these.
 
-* Local Docker: [HHVM](https://docs.hhvm.com/hhvm/getting-started/getting-started) with Proxygen.
 
 You can think of these as wrappers around CakePHP that handle low-level stuff like managing parallel requests, network connections, etc. They just invoke [index.php](../index.php) with each request. This activates the CakePHP framework, and eventually the calendar code under [src/](../src/) is invoked (see next section).
 
