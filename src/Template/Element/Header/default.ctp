@@ -100,10 +100,6 @@
                                'controller' => 'CalendarAdmin',
                                'action' => 'edit'
                            ]) ?></li>
-                           <li><?= $this->Html->link('Logs', [
-                               'controller' => 'Logs',
-                               'action' => 'index'
-                           ]) ?></li>
 			            </ul>
 		            </li>
 		        <?php endif; ?>
