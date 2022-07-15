@@ -450,7 +450,7 @@ class EventsTable extends Table
             ->innerJoinWith(
                 'Registrations',
                 function ($q) {
-                    return $q->where(['Registrations.status !=' => 'cancelled'])->andWhere(['Registrations.status !=' => 'rejected']);
+                    return $q->where(['Registrations.status NOT IN' => ['cancelled','rejected']]);
                 }
             )
             ->count();
@@ -475,8 +475,7 @@ class EventsTable extends Table
                         return $q->where([
                             'Registrations.type' => 'free',
                             'AND' => [
-                                ['Registrations.status !=' => 'cancelled'],
-                                ['Registrations.status !=' => 'rejected'],
+                                'Registrations.status NOT IN' => ['cancelled', 'rejected'],
                             ],
                         ]);
                     }
@@ -508,8 +507,7 @@ class EventsTable extends Table
                             return $q->where([
                                 'Registrations.type' => 'paid',
                                 'AND' => [
-                                    ['Registrations.status !=' => 'cancelled'],
-                                    ['Registrations.status !=' => 'rejected'],
+                                    'Registrations.status NOT IN' => ['cancelled', 'rejected'],
                                 ],
                             ]);
                         }
