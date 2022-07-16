@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\ContactsController;
+use App\Controller\FilesController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\ContactsController Test Case
+ * App\Controller\FilesController Test Case
  */
-class ContactsControllerTest extends IntegrationTestCase
+class FilesControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,11 +16,9 @@ class ContactsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.contacts',
-        'app.w9s',
-        'app.events',
-        'app.honoraria'
-    ];
+		'app.files',
+		'app.events'
+	];
 
     /**
      * Test beforeFilter method
@@ -43,21 +41,11 @@ class ContactsControllerTest extends IntegrationTestCase
     }
 
     /**
-     * Test index method
+     * Test delete method
      *
      * @return void
      */
-    public function testIndex()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test view method
-     *
-     * @return void
-     */
-    public function testView()
+    public function testDelete()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

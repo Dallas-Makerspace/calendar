@@ -145,7 +145,7 @@ if (!Configure::read('App.fullBaseUrl')) {
 
 Cache::setConfig(Configure::consume('Cache'));
 ConnectionManager::setConfig(Configure::consume('Datasources'));
-Email::setConfigTransport(Configure::consume('EmailTransport'));
+//Email::setConfigTransport(Configure::consume('EmailTransport'));
 Email::setConfig(Configure::consume('Email'));
 Log::setConfig(Configure::consume('Log'));
 Security::setSalt(Configure::consume('Security.salt'));
@@ -187,22 +187,3 @@ Type::build('datetime')
     ->useImmutable();
 Type::build('timestamp')
     ->useImmutable();
-
-/*
- * Custom Inflector rules, can be set to correctly pluralize or singularize
- * table, model, controller names or whatever other string is passed to the
- * inflection functions.
- */
-//Inflector::rules('plural', ['/^(inflect)or$/i' => '\1ables']);
-//Inflector::rules('irregular', ['red' => 'redlings']);
-//Inflector::rules('uninflected', ['dontinflectme']);
-//Inflector::rules('transliteration', ['/å/' => 'aa']);
-
-
-Plugin::load('BootstrapUI');
-
-Plugin::load('Crud');
-
-Plugin::load('Josegonzalez/Upload');
-
-Plugin::load('CsvView');

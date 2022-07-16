@@ -16,9 +16,9 @@ class RoomsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.rooms',
-        'app.events'
-    ];
+		'app.rooms',
+		'app.events'
+	];
 
     /**
      * Test beforeFilter method

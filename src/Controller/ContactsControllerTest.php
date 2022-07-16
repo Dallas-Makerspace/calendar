@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\HonorariaController;
+use App\Controller\ContactsController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\HonorariaController Test Case
+ * App\Controller\ContactsController Test Case
  */
-class HonorariaControllerTest extends IntegrationTestCase
+class ContactsControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,10 +16,31 @@ class HonorariaControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.honoraria',
-        'app.events',
-        'app.committees'
-    ];
+		'app.contacts',
+		'app.w9s',
+		'app.events',
+		'app.honorarias'
+	];
+
+    /**
+     * Test beforeFilter method
+     *
+     * @return void
+     */
+    public function testBeforeFilter()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test isAuthorized method
+     *
+     * @return void
+     */
+    public function testIsAuthorized()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
 
     /**
      * Test index method
@@ -37,36 +58,6 @@ class HonorariaControllerTest extends IntegrationTestCase
      * @return void
      */
     public function testView()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test add method
-     *
-     * @return void
-     */
-    public function testAdd()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test edit method
-     *
-     * @return void
-     */
-    public function testEdit()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test delete method
-     *
-     * @return void
-     */
-    public function testDelete()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

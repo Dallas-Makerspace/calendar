@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\FilesTable;
+use App\Model\Table\RegistrationsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\FilesTable Test Case
+ * App\Model\Table\RegistrationsTable Test Case
  */
-class FilesTableTest extends TestCase
+class RegistrationsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\FilesTable
+     * @var \App\Model\Table\RegistrationsTable
      */
-    public $FilesTable;
+    public $RegistrationsTable;
 
     /**
      * Fixtures
@@ -24,9 +24,9 @@ class FilesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.files',
-        'app.events'
-    ];
+		'app.registrations',
+		'app.events'
+	];
 
     /**
      * setUp method
@@ -36,8 +36,8 @@ class FilesTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Files') ? [] : ['className' => FilesTable::class];
-        $this->FilesTable = TableRegistry::getTableLocator()->get('Files', $config);
+        $config = TableRegistry::getTableLocator()->exists('Registrations') ? [] : ['className' => RegistrationsTable::class];
+        $this->RegistrationsTable = TableRegistry::getTableLocator()->get('Registrations', $config);
     }
 
     /**
@@ -47,7 +47,7 @@ class FilesTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->FilesTable);
+        unset($this->RegistrationsTable);
 
         parent::tearDown();
     }
@@ -78,6 +78,26 @@ class FilesTableTest extends TestCase
      * @return void
      */
     public function testBuildRules()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test refund method
+     *
+     * @return void
+     */
+    public function testRefund()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    /**
+     * Test isOwnedBy method
+     *
+     * @return void
+     */
+    public function testIsOwnedBy()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

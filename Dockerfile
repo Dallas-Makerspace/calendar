@@ -1,4 +1,4 @@
-FROM php:7.4-apache-buster
+FROM php:7.4-apache
 
 # Install Dependancies
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/

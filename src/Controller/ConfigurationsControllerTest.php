@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\PrerequisitesController;
+use App\Controller\ConfigurationsController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\PrerequisitesController Test Case
+ * App\Controller\ConfigurationsController Test Case
  */
-class PrerequisitesControllerTest extends IntegrationTestCase
+class ConfigurationsControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,8 +16,8 @@ class PrerequisitesControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.prerequisites'
-    ];
+		'app.configurations'
+	];
 
     /**
      * Test beforeFilter method

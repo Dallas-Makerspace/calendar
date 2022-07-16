@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\CommitteesController;
+use App\Controller\ToolsController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\CommitteesController Test Case
+ * App\Controller\ToolsController Test Case
  */
-class CommitteesControllerTest extends IntegrationTestCase
+class ToolsControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,9 +16,9 @@ class CommitteesControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.committees',
-        'app.honoraria'
-    ];
+		'app.tools',
+		'app.events'
+	];
 
     /**
      * Test beforeFilter method
