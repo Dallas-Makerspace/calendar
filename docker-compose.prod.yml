@@ -1,0 +1,45 @@
+services:
+  traefik:
+    image: "traefik:latest"
+    container_name: "traefik"
+    restart: unless-stopped
+    labels:
+     - "traefik.enable=true"
+     - "traefik.http.routers.traefik=true"
+    ports:
+      # HTTPS / SSL port
+      - "443:443"
+      - "80:80"
+    environment:
+      # Traefik configuraiton w/ automatic letsencrypt via cloudflare DNS auth
+      - TRAEFIK_GLOBAL_SENDANONYMOUSUSAGE=false
+      - TRAEFIK_API_DASHBOARD=false
+      - TRAEFIK_API_INSECURE=false
+      - TRAEFIK_PROVIDERS_DOCKER=true
+      - TRAEFIK_LOG_FORMAT=common
+      - TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_DNSCHALLENGE=true
+      - TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_DNSCHALLENGE_PROVIDER=cloudflare
+      - TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_EMAIL=${CERT_EMAIL}
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_API_EMAIL}
+      - CLOUDFLARE_DNS_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      - TRAEFIK_ENTRYPOINTS_http_ADDRESS=:80
+      - TRAEFIK_ENTRYPOINTS_http_HTTP_REDIRECTIONS_ENTRYPOINT_TO=https
+      - TRAEFIK_ENTRYPOINTS_http_HTTP_REDIRECTIONS_ENTRYPOINT_SCHEME=https
+      - TRAEFIK_ENTRYPOINTS_https_ADDRESS=:443
+      - TRAEFIK_ENTRYPOINTS_https_HTTP_TLS_CERTRESOLVER=letsencrypt
+      - TRAEFIK_ENTRYPOINTS_https_HTTP_TLS_DOMAINS_0_MAIN=${HOSTNAME}
+      - TRAEFIK_ENTRYPOINTS_https_HTTP_TLS_DOMAINS_0_SANS=*.${HOSTNAME}
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock:ro
+  app:
+    build:
+      context: .
+      target: production
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app.tls=true
+      - traefik.http.routers.app.rule=Host("${HOSTNAME}")
+    volumes:
+      - ./files:./webroot/files/Files/file #Mount in uploaded files
+    entrypoint: ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

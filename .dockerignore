@@ -1,0 +1,16 @@
+.DS_Store
+/bower_components
+/logs
+/tmp
+/vendor
+/webroot/files
+/.idea
+/.vscode
+/dms-ad-openldap
+/protected
+/webroot/google*.html
+config/Migrations/schema-dump-default.lock
+/html
+.vscode/*
+.github/*
+*.dist
