@@ -253,7 +253,7 @@
                 <ul>
                     <?php foreach ($event->files as $file): ?>
 						<?php if (!$file->private || $canManageEvents || $event->created_by == $authUsername): ?>
-                        	<li><a href="/<?= $file->dir . $file->file ?>" target="_new"><?= h($file->file) ?></a></li>
+                        	<li><a href="/<?= str_replace("webroot/", "", $file->dir) . $file->file ?>" target="_new"><?= h($file->file) ?></a></li>
 						<?php endif; ?>
                     <?php endforeach; ?>
                 </ul>

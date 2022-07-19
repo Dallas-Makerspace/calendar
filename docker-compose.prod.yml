@@ -41,5 +41,5 @@ services:
       - traefik.http.routers.app.tls=true
       - traefik.http.routers.app.rule=Host("${HOSTNAME}")
     volumes:
-      - ./files:./webroot/files/Files/file #Mount in uploaded files
+      - ./files:./webroot/files #Mount in uploaded files
     entrypoint: ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

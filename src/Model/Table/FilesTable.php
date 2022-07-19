@@ -29,7 +29,10 @@ class FilesTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Josegonzalez/Upload.Upload', ['file']);
+        $this->addBehavior('Josegonzalez/Upload.Upload', ['file' => [
+            'path' => 'webroot{DS}files{DS}{field-value:event_id}{DS}',
+            'restoreValueOnFailure' => false
+        ]]);
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Events', ['joinType' => 'INNER']);
