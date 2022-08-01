@@ -1,13 +1,13 @@
 <?php
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\RegistrationsController;
+use App\Controller\UsersController;
 use Cake\TestSuite\IntegrationTestCase;
 
 /**
- * App\Controller\RegistrationsController Test Case
+ * App\Controller\UsersController Test Case
  */
-class RegistrationsControllerTest extends IntegrationTestCase
+class UsersControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,9 +16,8 @@ class RegistrationsControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.registrations',
-        'app.events'
-    ];
+		
+	];
 
     /**
      * Test beforeFilter method
@@ -31,61 +30,41 @@ class RegistrationsControllerTest extends IntegrationTestCase
     }
 
     /**
-     * Test isAuthorized method
+     * Test implementedEvents method
      *
      * @return void
      */
-    public function testIsAuthorized()
+    public function testImplementedEvents()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test event method
+     * Test afterIdentify method
      *
      * @return void
      */
-    public function testEvent()
+    public function testAfterIdentify()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test view method
+     * Test login method
      *
      * @return void
      */
-    public function testView()
+    public function testLogin()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**
-     * Test cancel method
+     * Test logout method
      *
      * @return void
      */
-    public function testCancel()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test accept method
-     *
-     * @return void
-     */
-    public function testAccept()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test reject method
-     *
-     * @return void
-     */
-    public function testReject()
+    public function testLogout()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

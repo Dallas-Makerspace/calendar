@@ -10,7 +10,7 @@ For an overview of how the calendar works, see [./docs/README.md](./docs/README.
 4. Create a local branch to hold your changes, you'll want to leave the master branch alone and keep it synced with the upstream repo.
 5. Install a version of [Docker Desktop](https://www.docker.com/products/docker-desktop/), or something like [Rancher Desktop](https://rancherdesktop.io/)
 6. After installation, you should be able to navigate to the root directory of this repository. Then type "docker compose up"
-7. After some time, the containers  the application will be availbe at http://localhost:8080
+7. After some time, the application will be availbe at https://calendar.docker.localhost (you will need to proceed past the certificate warning). If you want to bypass the TLS proxy, use http://localhost:8000
 8. Mail will be available at http://localhost:8025. PhpMyAdmin is at http://localhost:8081. Open LDAP is at http://localhost:8888
 9. The docker environment automatically maps your local filesystem into the server. Any changes you make in the PHP files will be reflected. You may need to rebuild the app container if you change dependencies.
 10. VS Code launch settings and xdebug files are included for convenience.

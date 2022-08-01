@@ -55,6 +55,10 @@ class Application extends BaseApplication
         if (Configure::read('debug')) {
             $this->addPlugin(\DebugKit\Plugin::class);
         }
+        $this->addPlugin('BootstrapUI');
+        $this->addPlugin('Crud');
+        $this->addPlugin('Josegonzalez/Upload');
+        $this->addPlugin('CsvView');
     }
 
     /**

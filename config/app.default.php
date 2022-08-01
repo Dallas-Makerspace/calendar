@@ -201,8 +201,8 @@ return [
             'host' => env('EMAIL_HOST', 'localhost'),
             'port' => env('EMAIL_PORT', 25),
             'timeout' => env('EMAIL_TIMEOUT', 30),
-            'username' => null,
-            'password' => null,
+            'username' => env('EMAIL_USERNAME', null),
+            'password' => env('EMAIL_PASSWORD', null),
             'client' => null,
             'tls' => null,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
@@ -351,10 +351,10 @@ return [
      * Braintree configuration
      */
     'Braintree' => [
-        'environment' => 'production',
-        'merchantId' => 'MERCHANT_ID',
-        'publicKey' => 'PUBLIC_KEY',
-        'privateKey' => 'PRIVATE_KEY',
+        'environment' => env('BRAINTREE_ENV', null),
+        'merchantId' => env('BRAINTREE_MERCHID', null),
+        'publicKey' => env('BRAINTREE_PUBKEY', null),
+        'privateKey' => env('BRAINTREE_PRIVKEY', null),
     ],
 
     /**
@@ -362,7 +362,7 @@ return [
      */
     'SparkPost' => [
         'Api' => [
-            'key' => 'API_KEY',
+            'key' => env('SPARKPOST_APIKEY', null),
         ],
     ],
 
@@ -370,9 +370,9 @@ return [
      * Twilio configuration
      */
     'Twilio' => [
-        'accountSid' => 'ACCOUNT_SID',
-        'authToken' => 'AUTH_TOKEN',
-        'phone' => 'FROM_PHONE_NUMBER'
+        'accountSid' => env('TWILIO_ACCTSID',null),
+        'authToken' => env('TWILIO_AUTHTOKEN', null),
+        'phone' => env('TWILIO_PHONENUM', null)
     ],
 
     /**
