@@ -24,7 +24,8 @@ RUN mkdir /opt/composer && \
 FROM base as develop
 
 RUN pecl install xdebug && \
-    docker-php-ext-enable xdebug
+    docker-php-ext-enable xdebug && \
+    mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 FROM base as production
 
@@ -32,5 +33,12 @@ WORKDIR /var/www
 
 COPY . .
 COPY ./webroot ./html
-RUN php /opt/composer/composer.phar -n install
+RUN mkdir logs && \
+    chown www-data.www-data logs && \
+    cp ./.docker/environment.conf /etc/apache2/conf-enabled/ && \
+    cp ./config/app.default.php ./config/app.php && \
+    mkdir ./tmp && chown www-data.www-data ./tmp && chmod 767 ./tmp && \
+    rm -rf ./html && ln -s /var/www/webroot /var/www/html && \
+    cp ./.docker/prod/php-production.ini /usr/local/etc/php/php.ini && \
+    php /opt/composer/composer.phar -n install
 EXPOSE 80
