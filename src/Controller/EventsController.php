@@ -819,7 +819,7 @@ class EventsController extends AppController
                     'Honoraria.id IS NOT NULL'
                     ]
                 )
-                    ->contain(['Honoraria']);
+                    ->contain(['Honoraria' => ['Committees'],'Contacts']);
 
                 if (!isset($_GET['sort'])) {
                     $event->getSubject()->query->order(['event_start' => 'DESC']);
