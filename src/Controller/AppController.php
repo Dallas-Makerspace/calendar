@@ -99,8 +99,8 @@ class AppController extends Controller
 
         // don't log some stuff
         if( is_null($user) ||
-            $action == 'index' ||
-            $action == 'view' ){
+            $action === 'index' ||
+            $action === 'view' ){
 
             return;
         }
