@@ -23,10 +23,12 @@ RUN mkdir /opt/composer && \
 
 FROM base as develop
 
+COPY .docker/environment.conf /etc/apache2/conf-enabled/
+
 RUN pecl install xdebug && \
     docker-php-ext-enable xdebug && \
-    mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
-
+    mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" && \
+    echo "TLS_REQCERT never" >> /etc/ldap.conf
 FROM base as production
 
 WORKDIR /var/www

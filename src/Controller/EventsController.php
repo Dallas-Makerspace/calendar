@@ -1,7 +1,12 @@
 <?php
 namespace App\Controller;
 
-use Adldap\Adldap;
+
+use LdapRecord\Models\ActiveDirectory\User;
+use LdapRecord\Models\ActiveDirectory\Group;
+use LdapRecord\Container;
+use LdapRecord\Connection;
+
 use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -13,7 +18,7 @@ use Cake\Routing\Router;
 use Cake\View\View;
 use FeedIo\Factory;
 use FeedIo\Feed;
-use FeedIo\Feed\Node;
+
 
 /**
  * Events Controller
@@ -172,18 +177,39 @@ class EventsController extends AppController
         $this->Crud->on(
             'beforeSave',
             function (\Cake\Event\Event $event) {
-                if (!Configure::read("isDevelopment")) {
-                    $adldap = new \Adldap\Adldap();
-                    $provider = new \Adldap\Connections\Provider(Configure::read('ActiveDirectory'));
-                    $adldap->addProvider('default', $provider);
-                    $adldap->connect('default');
+                $cfg = Configure::read('ActiveDirectory');
 
-                    foreach ($event->getSubject()->entity->registrations as $registration) {
-                        if ($registration->ad_assigned && $registration->ad_username) {
-                            $group = $provider->search()->groups()->find($event->getSubject()->entity->fulfills_prerequisite->ad_group);
-                            $user = $provider->search()->find($registration->ad_username);
-                            $result = $group->addMember($user);
-                        }
+                // Connecting with an an account...
+                $connection = new \LdapRecord\Connection([
+                    'hosts' => $cfg['domain_controllers'],
+                    'base_dn' => $cfg['base_dn'],
+                    'username' => $cfg['admin_username'],
+                    'password' => $cfg['admin_password'],
+                    'version' => 3,
+                    'use_tls' => $cfg['use_tls'],
+                    'options' => [
+                        // See: http://php.net/ldap_set_option
+                        LDAP_OPT_X_TLS_REQUIRE_CERT => LDAP_OPT_X_TLS_NEVER
+                    ]
+                ]);
+
+                $connection->connect();
+                Container::addConnection($connection);
+                //$connection->auth()->attempt($cfg['admin_user'], $cfg['admin_pw']);
+
+                foreach ($event->getSubject()->entity->registrations as $registration) {
+                    if ($registration->ad_assigned && $registration->ad_username) {
+                        $groupname = $event->getSubject()->entity->fulfills_prerequisite->ad_group;
+
+                        $grouprec = $connection->query()->where([
+                                ['cn', '=', $groupname],
+                                ['objectclass', '=', 'group']
+                        ])->first();
+
+                        $group = Group::find($grouprec['dn']);
+                        $user = User::findByOrFail($cfg['username_field'], $registration->ad_username);
+
+                        $group->members()->attach($user);
                     }
                 }
             }

@@ -383,6 +383,7 @@ return [
         'admin_username' => env('AD_BIND_UN',''),
         'admin_password' => env('AD_BIND_PW',''),
         'username_field' => 'sAMAccountName',
+        'use_tls' => filter_var(env('AD_USE_TLS', true), FILTER_VALIDATE_BOOLEAN),
         'base_dn' => env('AD_BASE','DC=dev,DC=com'),
         'domain_controllers' => [env('AD_SERVER','dms.local')]
     ],

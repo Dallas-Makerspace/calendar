@@ -50,8 +50,10 @@ class AppController extends Controller
                     'username_field' => Configure::read('ActiveDirectory.username_field'),
                     'base_dn' => Configure::read('ActiveDirectory.base_dn'),
                     'domain_controllers' => Configure::read('ActiveDirectory.domain_controllers'),
-                    'admin_user' => Configure::read('ActiveDirectory.admin_username'),
-                    'admin_pw' => Configure::read('ActiveDirectory.admin_password'),
+                    'admin_username' => Configure::read('ActiveDirectory.admin_username'),
+                    'admin_password' => Configure::read('ActiveDirectory.admin_password'),
+                    'account_suffix' => Configure::read('ActiveDirectory.account_suffix'),
+                    'use_tls' => Configure::read('ActiveDirectory.use_tls')
                 ]
             ]
         ];

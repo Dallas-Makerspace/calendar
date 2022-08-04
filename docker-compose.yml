@@ -118,6 +118,7 @@ services:
       AD_SUFFIX: '@dms.local'
       AD_BIND_UN: 'cn=admin,dc=dms,dc=local'
       AD_BIND_PW: 'Adm1n!'
+      AD_USE_TLS: true
     networks:
         main:
             aliases:

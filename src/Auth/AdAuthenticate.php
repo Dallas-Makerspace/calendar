@@ -30,8 +30,14 @@ class AdAuthenticate extends FormAuthenticate
         $this->connection = new \LdapRecord\Connection([
             'hosts' => $this->config['domain_controllers'],
             'base_dn' => $this->config['base_dn'],
-            'username' => $this->config['admin_user'],
-            'password' => $this->config['admin_pw'],
+            'username' => $this->config['admin_username'],
+            'password' => $this->config['admin_password'],
+            'use_tls' => $this->config['use_tls'],
+            'version' => 3,
+            'options' => [
+                // See: http://php.net/ldap_set_option
+                LDAP_OPT_X_TLS_REQUIRE_CERT => LDAP_OPT_X_TLS_NEVER
+            ]
         ]);
 
         Container::addConnection($this->connection);
