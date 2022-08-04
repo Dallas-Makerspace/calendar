@@ -10,6 +10,9 @@
                 <th>Cost</th>
                 <th><?php echo $this->Paginator->sort('created'); ?></th>
                 <th><?php echo $this->Paginator->sort('created_by'); ?></th>
+                <th>Contact</th>
+                <th>Pay Contact</th>
+                <th>Committee</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -36,11 +39,17 @@
                         ) ?>
                     </td>
                     <td><?= $this->Html->link($event->created_by, ['controller' => 'contacts', 'action' => 'view', $event->created_by]) ?></td>
+                    <td><?= $event->contact->name . "(" . $this->Html->link($event->contact->email,"mailto:" . $event->contact->email) . ")"?></td>
+                    <td><?= $event->honorarium->pay_contact ? "yes" : "no" ?> </td>
+                    <td><?= $event->honorarium->committee->name ?></td>
                     <td>
-                        <?php /* $this->Form->postLink(__('Approve'),
-                            ['action' => 'approve', $event->id, '?' => ['redirect_url' => '/events/honoraria/pending']],
+                        <?=
+                        $this->Form->postLink(__('Approve'),
+                            ['action' => 'approve',
+                            $event->id,
+                            '?' => ['redirect_url' => '/events/honoraria/pending']],
                             ['confirm' => __('Are you sure you want to approve event {0}?', $event->name)]
-                        ) */ ?>
+                        )  ?> |
                         <?= $this->Html->link(__('Reject'), [
                             'action' => 'processRejection',
                             $event->id,

@@ -56,6 +56,12 @@ class ConfigurationsSeed extends AbstractSeed
                 'value' => 2,
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s')
+            ], [
+                'id' => 7,
+                'name' => 'Allow Honoraria',
+                'value' => 1,
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s')
             ]
         ];
 
