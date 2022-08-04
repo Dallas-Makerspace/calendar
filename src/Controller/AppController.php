@@ -96,16 +96,27 @@ class AppController extends Controller
     }
 
     public function customLog($description) {
+        $user = $this->Auth->user() != null ? $this->Auth->user()['samaccountname'] : null;
+        $action = $this->request->getParam('action');
+
+        // don't log some stuff
+        if( is_null($user) ||
+            $action === 'index' ||
+            $action === 'view' ){
+
+            return;
+        }
+
         // log this
         $this->logs = TableRegistry::getTableLocator()->get('Logs');
         $log = $this->logs->newEntity();
         $log->description   = $description;
-        $log->user          = $this->Auth->user() != null ? $this->Auth->user()['samaccountname'] : "";
+        $log->user          = $user;
         $log->date_time     = date('Y-m-d H:i:s');
         $log->ip_address    = $_SERVER['REMOTE_ADDR'];
         $log->url           = $_SERVER['REQUEST_URI'];
         $log->controller    = $this->request->getParam('controller');
-        $log->action        = $this->request->getParam('action');
+        $log->action        = $action;
 
         $this->logs->save($log);
     }
