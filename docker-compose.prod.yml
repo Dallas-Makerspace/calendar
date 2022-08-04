@@ -40,6 +40,27 @@ services:
       - traefik.enable=true
       - traefik.http.routers.app.tls=true
       - traefik.http.routers.app.rule=Host("${HOSTNAME}")
+    environment:
+    - DEBUG=${DEBUG}
+    - APP_SECURITY_SALT=${APP_SECURITY_SALT}
+    - DB_HOST=${DB_HOST}
+    - APP_SECURITY_SALT=${APP_SECURITY_SALT}
+    - DB_DATABASE=${DB_DATABASE}
+    - DB_USERNAME=${DB_USERNAME}
+    - DB_PASSWORD=${DB_PASSWORD}
+    - AD_SERVER=${AD_SERVER}
+    - AD_BASE=${AD_BASE}
+    - AD_SUFFIX=${AD_SUFFIX}
+    - AD_BIND_UN=${AD_BIND_UN}
+    - AD_BIND_PW=${AD_BIND_PW}
+    - BRAINTREE_ENV=${BRAINTREE_ENV}
+    - BRAINTREE_MERCHID=${BRAINTREE_MERCHID}
+    - BRAINTREE_PUBKEY=${BRAINTREE_PUBKEY}
+    - BRAINTREE_PRIVKEY=${BRAINTREE_PRIVKEY}
+    - SPARKPOST_APIKEY=${SPARKPOST_APIKEY}
+    - TWILIO_ACCTSID=${TWILIO_ACCTSID}
+    - TWILIO_AUTHTOKEN=${TWILIO_AUTHTOKEN}
+    - TWILIO_PHONENUM=${TWILIO_PHONENUM}
+    - SERVERNAME=${SERVERNAME}
     volumes:
       - ./files:./webroot/files #Mount in uploaded files
-    entrypoint: ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

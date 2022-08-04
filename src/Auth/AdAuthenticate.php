@@ -63,7 +63,6 @@ class AdAuthenticate extends FormAuthenticate
      */
     public function authenticate(Request $request, Response $response)
     {
-        xdebug_break();
         if( !array_key_exists("username",$request->data) || !array_key_exists("password",$request->data )){
             return false;
         }
