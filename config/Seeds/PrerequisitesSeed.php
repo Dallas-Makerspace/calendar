@@ -22,22 +22,22 @@ class PrerequisitesSeed extends AbstractSeed
         $data = [
             [
                 'name' => '3D Printer Basics',
-                'ad_group' => '3dPrinterbasics',
+                'ad_group' => '3D Printer Basics',
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s')
             ], [
                 'name' => 'Laser Basics',
-                'ad_group' => 'LaserBasics',
+                'ad_group' => 'Laser Basics',
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s')
             ], [
-                'name' => 'Milticam CNC Router',
-                'ad_group' => 'MulticamCNCRouter',
+                'name' => 'Multicam CNC Router',
+                'ad_group' => 'Multicam CNC Router',
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s')
             ], [
                 'name' => 'Woodshop Basics',
-                'ad_group' => 'WoodshopBasics',
+                'ad_group' => 'Woodshop Basics',
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s')
             ]

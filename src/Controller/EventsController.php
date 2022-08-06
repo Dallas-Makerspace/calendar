@@ -12,7 +12,6 @@ use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\I18n\Time;
 use Cake\Log\Log;
-use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\View\View;
@@ -34,6 +33,11 @@ class EventsController extends AppController
        ],
        'maxLimit' => PHP_INT_MAX
      ];
+
+    public function initialize(){
+        parent::initialize();
+        $this->loadComponent('Email');
+    }
 
     public function beforeFilter(Event $event)
     {
@@ -962,14 +966,6 @@ class EventsController extends AppController
 
     public function reject($id = null)
     {
-        Email::configTransport(
-            'sparkpost',
-            [
-                'className' => 'SparkPost.SparkPost',
-                'apiKey' => Configure::read('SparkPost.Api.key')
-            ]
-        );
-
         $this->Crud->on(
             'beforeSave',
             function (\Cake\Event\Event $event) {
@@ -994,23 +990,10 @@ class EventsController extends AppController
                     ->where(['ad_username' => $event->getSubject()->entity->created_by])
                     ->first();
 
-                try {
-                    $rejection_reason = ($event->getSubject()->entity->rejection_reason ? $event->getSubject()->entity->rejection_reason : 'No additional information given.');
-                    $message = $contact->name . ",<br/><br/>The following even you submitted to the Dallas Makerspace Calendar has been rejected.<br/><br/>" . $event->getSubject()->entity->name . "<br/><br/>Reason: " . $rejection_reason . ".<br/><br/>Dallas Makerspace";
-
-                    $email = new Email();
-                    $email->transport('sparkpost');
-                    $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                    if (Configure::read("isDevelopment"))
-                        $email->to([$contact->email . ".sink.sparkpostmail.com" => $contact->name]);
-                    else
-                        $email->to([$contact->email => $contact->name]);
-                    //$email->subject('DMS Event Rejection: ' . $event->getSubject()->entity->name);
-                    $email->subject('DMS Event Rejection: ' . (strlen($event->getSubject()->entity->name) > 45 ? substr($event->getSubject()->entity->name, 0, 45) . "..." : $event->getSubject()->entity->name));
-                    $email->send($message);
-                } catch (\Exception $e) {
-                    $this->log($e);
-                }
+                $this->Email->SendEventRejected(
+                    $contact,
+                    $event->getSubject()->entity, //Event
+                );
             }
         );
 
@@ -1272,30 +1255,10 @@ class EventsController extends AppController
                 $registrations = $this->Registrations->find('all')
                     ->where(['event_id' => $this->passedArgs[0], 'status IN' => ['confirmed', 'pending']]);
 
-                Email::configTransport(
-                    'sparkpost',
-                    [
-                    'className' => 'SparkPost.SparkPost',
-                    'apiKey' => Configure::read('SparkPost.Api.key')
-                    ]
-                );
+                $eventRef = $event->getSubject()->entity;
 
                 foreach ($registrations as $registration) {
-                    try {
-                        $message = $registration->name . ",<br/><br/>An event that you RSVP'd for has been cancelled.<br/><br/>" . $event->getSubject()->entity->name . "<br/><br/>If you paid to register for this event then a refund has been submitted for processing.<br/><br/>Dallas Makerspace";
-
-                        $email = new Email();
-                        $email->transport('sparkpost');
-                        $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                        if (Configure::read("isDevelopment"))
-                            $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
-                        else
-                            $email->to([$registration->email => $registration->name]);
-                        $email->subject('Update: ' . $event->getSubject()->entity->name . ' has been Cancelled');
-                        $email->send($message);
-                    } catch (\Exception $e) {
-                        $this->log($e);
-                    }
+                    $this->Email->SendEventCancelled($eventRef, $registration);
 
                     if ($registration->phone && $registration->send_text) {
                         $this->__sendText($registration->phone, 'DMS Event Update: ' . $event->getSubject()->entity->name . ' has been cancelled.');
@@ -1318,14 +1281,6 @@ class EventsController extends AppController
 
     public function cron()
     {
-        Email::configTransport(
-            'sparkpost',
-            [
-            'className' => 'SparkPost.SparkPost',
-            'apiKey' => Configure::read('SparkPost.Api.key')
-            ]
-        );
-
         $this->Registrations = TableRegistry::get('Registrations');
         $this->Configurations = TableRegistry::get('Configurations');
 
@@ -1336,25 +1291,15 @@ class EventsController extends AppController
 
         foreach ($completedEvents as $event) {
             if (!$event->part_of_id) {
-                $registrations = $this->Registrations->find('all')
-                    ->where(['event_id' => $event->id, 'status' => 'pending']);
+                $registrations = $this->Registrations
+                    ->find('all')
+                    ->where([
+                        'event_id' => $event->id,
+                        'status' => 'pending'
+                    ]);
 
                 foreach ($registrations as $registration) {
-                    try {
-                        $message = $registration->name . ",<br/><br/>Your registration for the following event was cancelled automatically by our system.<br/><br/>" . $event->name . "<br/><br/>If you paid to register for this event then a refund has been submitted for processing.<br/><br/>Dallas Makerspace";
-
-                        $email = new Email();
-                        $email->transport('sparkpost');
-                        $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                        if (Configure::read("isDevelopment"))
-                            $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
-                        else
-                            $email->to([$registration->email => $registration->name]);
-                        $email->subject($event->name . ' Registration Cancelled');
-                        $email->send($message);
-                    } catch (\Exception $e) {
-                        $this->log($e);
-                    }
+                    $this->Email->SendUnapprovedRegistrationCancelled($registration, $event);
 
                     $this->Registrations->refund($registration->id);
                     $registration->status = 'cancelled';
@@ -1418,28 +1363,18 @@ class EventsController extends AppController
             );
 
         foreach ($cancelNotices as $event) {
-            $registrations = $this->Registrations->find('all')
-                ->where(['event_id' => $event->id, 'status IN' => ['confirmed', 'pending']]);
+            $registrations = $this->Registrations
+                ->find('all')
+                ->where([
+                        'event_id' => $event->id,
+                        'status IN' => ['confirmed', 'pending']
+                ]);
 
             foreach ($registrations as $registration) {
-                try {
-                    $message = $registration->name . ",<br/><br/>This is a reminder that you don't have much time left to cancel your RSVP for the following event. If you are still planning on attending you can ignore this reminder.<br/><br/>" . $event->name . "<br/><br/>If you need to review or cancel your RSVP you can do so at https://calendar.dallasmakerspace.org/registrations/view/" . $registration->id . "?edit_key=" . $registration->edit_key . "<br/><br/>Dallas Makerspace";
-
-                    $email = new Email();
-                    $email->transport('sparkpost');
-                    $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                    if (Configure::read("isDevelopment"))
-                        $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
-                    else
-                        $email->to([$registration->email => $registration->name]);
-                    $email->subject('Reminder: ' . $event->name . ' Cancellation Cutoff is Soon');
-                    //$email->send($message);
-                } catch (\Exception $e) {
-                    $this->log($e);
-                }
+                $this->Email->SendCancellationReminder($registration, $event);
 
                 if ($registration->phone && $registration->send_text) {
-                   // $this->__sendText($registration->phone, 'DMS Event Reminder: ' . $event->name . ' cancellation deadline is soon.');
+                    // $this->__sendText($registration->phone, 'DMS Event Reminder: ' . $event->name . ' cancellation deadline is soon.');
                 }
             }
 
@@ -1465,21 +1400,7 @@ class EventsController extends AppController
                 ->where(['event_id' => $event->id, 'status IN' => ['confirmed']]);
 
             foreach ($registrations as $registration) {
-                try {
-                    $message = $registration->name . ",<br/><br/>This is a reminder that you have an event starting soon at Dallas Makerspace.<br/><br/>" . $event->name . "<br/>" . $formattedTime . "<br/><br/>Full event details are available at https://calendar.dallasmakerspace.org/events/view/" . $event->id . ".<br/><br/>Dallas Makerspace";
-
-                    $email = new Email();
-                    $email->transport('sparkpost');
-                    $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                    if (Configure::read("isDevelopment"))
-                        $email->to([$registration->email . ".sink.sparkpostmail.com" => $registration->name]);
-                    else
-                        $email->to([$registration->email => $registration->name]);
-                    $email->subject('Reminder: ' . $event->name . ' Starts Soon');
-                    //$email->send($message);
-                } catch (\Exception $e) {
-                    $this->log($e);
-                }
+                $this->Email->SendEventStarting($event, $registration);
 
                 if ($registration->phone && $registration->send_text) {
                     //$this->__sendText($registration->phone, 'DMS Event Reminder: ' . $event->name . ' starts ' . $formattedTime . '.');

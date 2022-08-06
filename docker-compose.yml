@@ -52,6 +52,10 @@ services:
     restart: always
     ports:
       - 8025:8025
+    networks:
+      main:
+        aliases:
+          - mail
   db:
     image: mariadb:latest
     ports:
@@ -109,7 +113,7 @@ services:
       DB_PASSWORD: 'calendar'
       DB_DATABASE: 'dms-calendar'
       DB_SEED: 'DatabaseSeed'
-      EMAIL_HOST: 'email'
+      EMAIL_HOST: 'mail'
       EMAIL_PORT: 1025
       EMAIL_TIMEOUT: 30
       EMAIL_TLS: false

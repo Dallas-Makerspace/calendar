@@ -5,7 +5,6 @@ use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\I18n\Time;
-use Cake\Mailer\Email;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Security;
 
@@ -122,14 +121,14 @@ class RegistrationsController extends AppController
 
         $this->Crud->on('beforeSave', function (\Cake\Event\Event $event) {
             $this->Events = TableRegistry::get('Events');
-
-            if ($event->getSubject()->entity->type == 'paid') {
-                if (!$this->Events->hasPaidSpaces($event->getSubject()->entity->event_id)) {
+            $registration = $event->getSubject()->entity;
+            if ($registration->type == 'paid') {
+                if (!$this->Events->hasPaidSpaces($registration->event_id)) {
                     $this->Flash->error('This event no longer has any paid spaces available. You have not been charged.');
-                    $event->getSubject()->entity->errors('type', ['This event no longer has any paid spaces available.']);
+                    $registration->errors('type', ['This event no longer has any paid spaces available.']);
                     $event->stopPropagation();
                 } else {
-                    $nameParts = explode(' ', $event->getSubject()->entity->name);
+                    $nameParts = explode(' ', $registration->name);
                     $firstName = $nameParts[0];
                     $lastName = '';
                     $partCount = count($nameParts);
@@ -137,21 +136,21 @@ class RegistrationsController extends AppController
                         $lastName .= $nameParts[$i] . ' ';
                     }
 
-                    $eventData = $this->Events->get($event->getSubject()->entity->event_id);
+                    $eventData = $this->Events->get($registration->event_id);
 
                     $this->__configureBraintree();
                     $result = \Braintree_Transaction::sale([
-                        'amount' => $event->getSubject()->entity->cost,
-                        'paymentMethodNonce' => $event->getSubject()->entity->payment_method_nonce,
+                        'amount' =>  $eventData->cost,
+                        'paymentMethodNonce' => $registration->payment_method_nonce,
                         'options' => ['submitForSettlement' => true],
                         'customer' => [
-                            'email' => $event->getSubject()->entity->email,
-                            'phone' => $event->getSubject()->entity->phone,
+                            'email' => $registration->email,
+                            'phone' => $registration->phone,
                             'firstName' => $firstName,
                             'lastName' => $lastName
                         ],
                         'customFields' => [
-                            'event_id' => $event->getSubject()->entity->event_id,
+                            'event_id' => $registration->event_id,
                             'event_name' => $eventData->name
                         ]
                     ]);
@@ -165,9 +164,9 @@ class RegistrationsController extends AppController
                     }
                 }
             } else {
-                if (!$this->Events->hasFreeSpaces($event->getSubject()->entity->event_id)) {
+                if (!$this->Events->hasFreeSpaces($registration->event_id)) {
                     $this->Flash->error('This event no longer has any free spaces available.');
-                    $event->getSubject()->entity->errors('type', ['This event no longer has any free spaces available.']);
+                    $$registration->errors('type', ['This event no longer has any free spaces available.']);
                     $event->stopPropagation();
                 }
             }
@@ -175,57 +174,31 @@ class RegistrationsController extends AppController
 
         $this->Crud->on('afterSave', function (\Cake\Event\Event $event) {
             $this->Events = TableRegistry::get('Events');
-            $eventReference = $this->Events->get($event->getSubject()->entity->event_id, [
-                'contain' => 'Contacts'
-            ]);
-            $time = new Time($eventReference->event_start);
-            $formattedTime = $time->i18nFormat('EEEE MMMM d, h:mma', 'America/Chicago');
+            $eventReference = $this->Events->get(
+                $event->getSubject()->entity->event_id,
+                ['contain' => 'Contacts' ]
+            );
+            $registration =  $event->getSubject()->entity;
 
-            Email::configTransport('sparkpost', [
-                'className' => 'SparkPost.SparkPost',
-                'apiKey' => Configure::read('SparkPost.Api.key')
-            ]);
+            if($eventReference->attendees_require_approval){
+                $this->Email->SendRegistrationPending(
+                    $registration, //Registration
+                    $eventReference //Event
+                );
 
-            try {
-                $message = $event->getSubject()->entity->name . ",<br/><br/>You're confirmed for an event! Keep this email for your records.<br/><br/>" . $eventReference->name . "<br/>" . $formattedTime . "<br/><br/>If you need to review or cancel your RSVP you can do so at https://calendar.dallasmakerspace.org/registrations/view/" . $event->getSubject()->entity->id . "?edit_key=" . $event->getSubject()->entity->edit_key . "<br/><br/>Dallas Makerspace";
-                $subject = 'Event Confirmation: ' . $eventReference->name;
+                $this->Email->SendRegistrationRequested(
+                    $registration, //Registration
+                    $eventReference, //Event
+                );
 
-                if ($eventReference->attendees_require_approval) {
-                    $message = $event->getSubject()->entity->name . ",<br/><br/>You're registration has been submitted for an event. The event host will need to accept your RSVP before you will be confirmed for the event. A follow up notification will be sent once your registration is approved or rejected.<br/><br/>" . $eventReference->name . "<br/>" . $formattedTime . "<br/><br/>If you need to review or cancel your RSVP you can do so at https://calendar.dallasmakerspace.org/registrations/view/" . $event->getSubject()->entity->id . "?edit_key=" . $event->getSubject()->entity->edit_key . "<br/><br/>Dallas Makerspace";
-                    $subject = 'Event Pending: ' . $eventReference->name;
-                }
-
-                $email = new Email();
-                $email->transport('sparkpost');
-                $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                if (Configure::read("isDevelopment"))
-                    $email->to([$event->getSubject()->entity->email . ".sink.sparkpostmail.com" => $event->getSubject()->entity->name]);
-                else
-                    $email->to([$event->getSubject()->entity->email => $event->getSubject()->entity->name]);
-                $email->subject($subject);
-                $email->send($message);
-            } catch (\Exception $e) {
-                $this->log($e);
+            } else {
+                $this->Email->SendRegistrationConfirmation(
+                    $registration, //Registration
+                    $eventReference //Event
+                );
             }
 
-            // Notify event host
-            if ($eventReference->attendees_require_approval) {
-                try {
-                    $message = $eventReference->contact->name . ",<br/><br/>Someone new has requested to attend " . $eventReference->name . ".<br/><br/>" . $event->getSubject()->entity->name . "<br/>" . $event->getSubject()->entity->email . "<br/><br/>Approve or deny this request at your earliest convenience at https://calendar.dallasmakerspace.org/events/view/" . $eventReference->id . "<br/><br/>Dallas Makerspace";
 
-                    $email = new Email();
-                    $email->transport('sparkpost');
-                    $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                    if (Configure::read("isDevelopment"))
-                        $email->to([$eventReference->contact->email . ".sink.sparkpostmail.com" => $eventReference->contact->name]);
-                    else
-                        $email->to([$eventReference->contact->email => $eventReference->contact->name]);
-                    $email->subject('Attendance Request: ' . $eventReference->name);
-                    $email->send($message);
-                } catch (\Exception $e) {
-                    $this->log($e);
-                }
-            }
         });
 
         $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {
@@ -282,27 +255,8 @@ class RegistrationsController extends AppController
         $this->Crud->on('afterSave', function (\Cake\Event\Event $event) {
             $this->Events = TableRegistry::get('Events');
             $eventReference = $this->Events->get($event->getSubject()->entity->event_id);
-
-            Email::configTransport('sparkpost', [
-                'className' => 'SparkPost.SparkPost',
-                'apiKey' => Configure::read('SparkPost.Api.key')
-            ]);
-
-            try {
-                $message = $event->getSubject()->entity->name . ",<br/><br/>Your RSVP for the following event has been cancelled.<br/><br/>" . $eventReference->name . "<br/><br/>If you paid to register for this event then a refund has been submitted for processing.<br/><br/>Dallas Makerspace";
-
-                $email = new Email();
-                $email->transport('sparkpost');
-                $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                if (Configure::read("isDevelopment"))
-                    $email->to([$event->getSubject()->entity->email . ".sink.sparkpostmail.com" => $event->getSubject()->entity->name]);
-                else
-                    $email->to([$event->getSubject()->entity->email => $event->getSubject()->entity->name]);
-                $email->subject('Event Cancellation: ' . $eventReference->name);
-                $email->send($message);
-            } catch (\Exception $e) {
-                $this->log($e);
-            }
+            $registration = $event->getSubject()->entity;
+            $this->Email->SendRegistrationCancelled($registration, $eventReference);
         });
 
         $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {
@@ -342,29 +296,8 @@ class RegistrationsController extends AppController
         $this->Crud->on('afterSave', function (\Cake\Event\Event $event) {
             $this->Events = TableRegistry::get('Events');
             $eventReference = $this->Events->get($event->getSubject()->entity->event_id);
-            $time = new Time($eventReference->event_start);
-            $formattedTime = $time->i18nFormat('EEEE MMMM d, h:mma', 'America/Chicago');
-
-            Email::configTransport('sparkpost', [
-                'className' => 'SparkPost.SparkPost',
-                'apiKey' => Configure::read('SparkPost.Api.key')
-            ]);
-
-            try {
-                $message = $event->getSubject()->entity->name . ",<br/><br/>You've been approved to attend an event! Keep this email for your records.<br/><br/>" . $eventReference->name . "<br/>" . $formattedTime . "<br/><br/>If you need to review or cancel your RSVP you can do so at https://calendar.dallasmakerspace.org/registrations/view/" . $event->getSubject()->entity->id . "?edit_key=" . $event->getSubject()->entity->edit_key . "<br/><br/>Dallas Makerspace";
-
-                $email = new Email();
-                $email->transport('sparkpost');
-                $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                if (Configure::read("isDevelopment"))
-                    $email->to([$event->getSubject()->entity->email . ".sink.sparkpostmail.com" => $event->getSubject()->entity->name]);
-                else
-                    $email->to([$event->getSubject()->entity->email => $event->getSubject()->entity->name]);
-                $email->subject('Update: You have been approved to attend ' . $eventReference->name);
-                $email->send($message);
-            } catch (\Exception $e) {
-                $this->log($e);
-            }
+            $registration =  $event->getSubject()->entity;
+            $this->Email->SendRegistrationApproved($registration, $eventReference);
         });
 
         $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {
@@ -396,27 +329,8 @@ class RegistrationsController extends AppController
         $this->Crud->on('afterSave', function (\Cake\Event\Event $event) {
             $this->Events = TableRegistry::get('Events');
             $eventReference = $this->Events->get($event->getSubject()->entity->event_id);
-
-            Email::configTransport('sparkpost', [
-                'className' => 'SparkPost.SparkPost',
-                'apiKey' => Configure::read('SparkPost.Api.key')
-            ]);
-
-            try {
-                $message = $event->getSubject()->entity->name . ",<br/><br/>Your RSVP for the following event has been cancelled due to the event organizer rejecting your registration.<br/><br/>" . $eventReference->name . "<br/><br/>If you paid to register for this event then a refund has been submitted for processing.<br/><br/>Dallas Makerspace";
-
-                $email = new Email();
-                $email->transport('sparkpost');
-                $email->from(['admin@dallasmakerspace.org' => 'Dallas Makerspace']);
-                if (Configure::read("isDevelopment"))
-                    $email->to([$event->getSubject()->entity->email . ".sink.sparkpostmail.com" => $event->getSubject()->entity->name]);
-                else
-                    $email->to([$event->getSubject()->entity->email => $event->getSubject()->entity->name]);
-                $email->subject('Update: Your request to attend ' . $eventReference->name . ' has been rejected');
-                $email->send($message);
-            } catch (\Exception $e) {
-                $this->log($e);
-            }
+            $registration = $event->getSubject()->entity;
+            $this->Email->SendRegistrationRejected($registration, $eventReference);
         });
 
         $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {

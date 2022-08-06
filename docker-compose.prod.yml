@@ -44,7 +44,6 @@ services:
     - DEBUG=${DEBUG}
     - APP_SECURITY_SALT=${APP_SECURITY_SALT}
     - DB_HOST=${DB_HOST}
-    - APP_SECURITY_SALT=${APP_SECURITY_SALT}
     - DB_DATABASE=${DB_DATABASE}
     - DB_USERNAME=${DB_USERNAME}
     - DB_PASSWORD=${DB_PASSWORD}
@@ -62,5 +61,3 @@ services:
     - TWILIO_AUTHTOKEN=${TWILIO_AUTHTOKEN}
     - TWILIO_PHONENUM=${TWILIO_PHONENUM}
     - SERVERNAME=${SERVERNAME}
-    volumes:
-      - ./files:./webroot/files #Mount in uploaded files

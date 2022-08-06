@@ -210,16 +210,8 @@
                             </ul>
                         </li>
 
-                    <?php else:
-                        if ($isMockAuth) {
-                            $loginButtonText = "Login";
-                        }
-                        else {
-                            $loginButtonText = "DMS Login";
-                        }
-
-                        ?>
-                        <?= $this->Html->link($loginButtonText, [
+                    <?php else: ?>
+                       <?= $this->Html->link( "DMS Login", [
                             'controller' => 'Users',
                             'action' => 'login',
                             '?' => ['redirect' => $this->request->getAttribute("here")]

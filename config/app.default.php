@@ -194,18 +194,19 @@ return [
      */
     'EmailTransport' => [
         'default' => [
-            'className' => 'Cake\Mailer\Transport\MailTransport',
-            /*
-             * The following keys are used in SMTP transports:
-             */
+            'className' => 'Smtp',
             'host' => env('EMAIL_HOST', 'localhost'),
             'port' => env('EMAIL_PORT', 25),
             'timeout' => env('EMAIL_TIMEOUT', 30),
             'username' => env('EMAIL_USERNAME', null),
             'password' => env('EMAIL_PASSWORD', null),
             'client' => null,
-            'tls' => null,
+            'tls' => filter_var(env('EMAIL_TLS', false), FILTER_VALIDATE_BOOLEAN),
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
+        ],
+        'sparkpost' => [
+            'className' => 'SparkPost.SparkPost',
+            'apiKey' => env('SPARKPOST_APIKEY', null),
         ],
     ],
 
@@ -221,9 +222,7 @@ return [
     'Email' => [
         'default' => [
             'transport' => 'default',
-            'from' => 'you@localhost',
-            //'charset' => 'utf-8',
-            //'headerCharset' => 'utf-8',
+            'from' => 'admin@dallasmakerspace.org',
         ],
     ],
 
@@ -239,12 +238,6 @@ return [
             'driver' => 'Cake\Database\Driver\Mysql',
             'persistent' => false,
             'host' => env('DB_HOST', 'localhost'),
-            /**
-             * CakePHP will use the default DB port based on the driver selected
-             * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
-             * the following line and set the port accordingly
-             */
-            //'port' => 'non_standard_port_number',
             'username' => env('DB_USERNAME', 'mysql'),
             'password' => env('DB_PASSWORD', 'mysql'),
             'database' => env('DB_DATABASE', 'dms-calendar'),
@@ -253,26 +246,7 @@ return [
             'flags' => [],
             'cacheMetadata' => true,
             'log' => false,
-
-            /**
-             * Set identifier quoting to true if you are using reserved words or
-             * special characters in your table or column names. Enabling this
-             * setting will result in queries built using the Query Builder having
-             * identifiers quoted when creating SQL. It should be noted that this
-             * decreases performance because each query needs to be traversed and
-             * manipulated before being executed.
-             */
             'quoteIdentifiers' => false,
-
-            /**
-             * During development, if using MySQL < 5.6, uncommenting the
-             * following line could boost the speed at which schema metadata is
-             * fetched from the database. It can also be set directly with the
-             * mysql configuration directive 'innodb_stats_on_metadata = 0'
-             * which is the recommended value in production environments
-             */
-            //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
-
             'url' => env('DATABASE_URL', null),
         ],
     ],
@@ -285,23 +259,26 @@ return [
             'className' => 'Cake\Log\Engine\FileLog',
             'path' => LOGS,
             'file' => 'debug',
-            'levels' => ['notice', 'info', 'debug'],
-            'url' => env('LOG_DEBUG_URL', null),
+            'rotate' => 10,
+            'size' => 10485760,
+            'levels' => filter_var(env('DEBUG', false), FILTER_VALIDATE_BOOLEAN) ? ['notice', 'info', 'debug'] : [],
         ],
         'error' => [
             'className' => 'Cake\Log\Engine\FileLog',
             'path' => LOGS,
             'file' => 'error',
+            'rotate' => 10,
+            'size' => 10485760,
             'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
-            'url' => env('LOG_ERROR_URL', null),
         ],
         // To enable this dedicated query log, you need set your datasource's log flag to true
         'queries' => [
             'className' => 'Cake\Log\Engine\FileLog',
             'path' => LOGS,
             'file' => 'queries',
-            'url' => env('LOG_QUERIES_URL', null),
-            'scopes' => ['queriesLog'],
+            'rotate' => 10,
+            'size' => 10485760,
+            'scopes' => filter_var(env('DEBUG', false), FILTER_VALIDATE_BOOLEAN) ? ['queriesLog'] : [],
         ],
     ],
 
@@ -355,15 +332,6 @@ return [
         'merchantId' => env('BRAINTREE_MERCHID', null),
         'publicKey' => env('BRAINTREE_PUBKEY', null),
         'privateKey' => env('BRAINTREE_PRIVKEY', null),
-    ],
-
-    /**
-     * Sparkpost configuration
-     */
-    'SparkPost' => [
-        'Api' => [
-            'key' => env('SPARKPOST_APIKEY', null),
-        ],
     ],
 
     /**

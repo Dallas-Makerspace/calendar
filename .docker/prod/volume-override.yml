@@ -1,4 +1,4 @@
 services:
   app:
     volumes:
-      - /opt/calendar/files/files:/var/www/html/files #Mount in uploaded files
+      - /opt/calendar/files/files:/var/www/webroot/files #Mount in uploaded files
