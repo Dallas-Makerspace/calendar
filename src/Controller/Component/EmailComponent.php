@@ -17,7 +17,7 @@ class EmailComponent extends Component
         $this->_config = $config;
     }
 
-    public function SendEventRejected(
+    public function sendEventRejected(
         Contact $contact = null,
         Event $event = null
     ){
@@ -39,7 +39,7 @@ class EmailComponent extends Component
         );
     }
 
-    public function SendEventCancelled(
+    public function sendEventCancelled(
         Registration $registration,
         Event $event
     ){
@@ -60,7 +60,7 @@ class EmailComponent extends Component
         );
     }
 
-    public function SendEventStarting(
+    public function sendEventStarting(
         Registration $registration,
         Event $event
     ){
@@ -83,7 +83,7 @@ class EmailComponent extends Component
         );
     }
 
-    public function SendUnapprovedRegistrationCancelled(
+    public function sendUnapprovedRegistrationCancelled(
         Registration $registration,
         Event $event
     ){
@@ -107,7 +107,7 @@ class EmailComponent extends Component
         );
     }
 
-    public function SendCancellationReminder(
+    public function sendCancellationReminder(
         Registration $registration,
         Event $event
     ){
@@ -133,7 +133,7 @@ class EmailComponent extends Component
         );
     }
 
-    public function SendRegistrationConfirmation(
+    public function sendRegistrationConfirmation(
         Registration $registration,
         Event $event
     ){
@@ -159,7 +159,7 @@ class EmailComponent extends Component
         );
     }
 
-    public function SendRegistrationPending(
+    public function sendRegistrationPending(
         Registration $registration,
         Event $event
     ){
@@ -189,7 +189,7 @@ class EmailComponent extends Component
         );
     }
 
-    public function SendRegistrationRequested(
+    public function sendRegistrationRequested(
         Registration $registration,
         Event $event
     ){
@@ -220,7 +220,7 @@ class EmailComponent extends Component
         );
     }
 
-    public function SendRegistrationApproved(
+    public function sendRegistrationApproved(
         Registration $registration,
         Event $event
     ){
@@ -246,7 +246,7 @@ class EmailComponent extends Component
         );
     }
 
-    public function SendRegistrationRejected(
+    public function sendRegistrationRejected(
         Registration $registration,
         Event $event
     ){
@@ -273,7 +273,7 @@ class EmailComponent extends Component
         );
     }
 
-    public function SendRegistrationCancelled(
+    public function sendRegistrationCancelled(
         Registration $registration,
         Event $event
     ){

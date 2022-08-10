@@ -181,18 +181,18 @@ class RegistrationsController extends AppController
             $registration =  $event->getSubject()->entity;
 
             if($eventReference->attendees_require_approval){
-                $this->Email->SendRegistrationPending(
+                $this->Email->sendRegistrationPending(
                     $registration, //Registration
                     $eventReference //Event
                 );
 
-                $this->Email->SendRegistrationRequested(
+                $this->Email->sendRegistrationRequested(
                     $registration, //Registration
                     $eventReference, //Event
                 );
 
             } else {
-                $this->Email->SendRegistrationConfirmation(
+                $this->Email->sendRegistrationConfirmation(
                     $registration, //Registration
                     $eventReference //Event
                 );
@@ -256,7 +256,7 @@ class RegistrationsController extends AppController
             $this->Events = TableRegistry::get('Events');
             $eventReference = $this->Events->get($event->getSubject()->entity->event_id);
             $registration = $event->getSubject()->entity;
-            $this->Email->SendRegistrationCancelled($registration, $eventReference);
+            $this->Email->sendRegistrationCancelled($registration, $eventReference);
         });
 
         $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {
@@ -297,7 +297,7 @@ class RegistrationsController extends AppController
             $this->Events = TableRegistry::get('Events');
             $eventReference = $this->Events->get($event->getSubject()->entity->event_id);
             $registration =  $event->getSubject()->entity;
-            $this->Email->SendRegistrationApproved($registration, $eventReference);
+            $this->Email->sendRegistrationApproved($registration, $eventReference);
         });
 
         $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {
@@ -330,7 +330,7 @@ class RegistrationsController extends AppController
             $this->Events = TableRegistry::get('Events');
             $eventReference = $this->Events->get($event->getSubject()->entity->event_id);
             $registration = $event->getSubject()->entity;
-            $this->Email->SendRegistrationRejected($registration, $eventReference);
+            $this->Email->sendRegistrationRejected($registration, $eventReference);
         });
 
         $this->Crud->on('beforeRedirect', function (\Cake\Event\Event $event) {

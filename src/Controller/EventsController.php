@@ -990,7 +990,7 @@ class EventsController extends AppController
                     ->where(['ad_username' => $event->getSubject()->entity->created_by])
                     ->first();
 
-                $this->Email->SendEventRejected(
+                $this->Email->sendEventRejected(
                     $contact,
                     $event->getSubject()->entity, //Event
                 );
@@ -1258,7 +1258,7 @@ class EventsController extends AppController
                 $eventRef = $event->getSubject()->entity;
 
                 foreach ($registrations as $registration) {
-                    $this->Email->SendEventCancelled($eventRef, $registration);
+                    $this->Email->sendEventCancelled($eventRef, $registration);
 
                     if ($registration->phone && $registration->send_text) {
                         $this->__sendText($registration->phone, 'DMS Event Update: ' . $event->getSubject()->entity->name . ' has been cancelled.');
@@ -1299,7 +1299,7 @@ class EventsController extends AppController
                     ]);
 
                 foreach ($registrations as $registration) {
-                    $this->Email->SendUnapprovedRegistrationCancelled($registration, $event);
+                    $this->Email->sendUnapprovedRegistrationCancelled($registration, $event);
 
                     $this->Registrations->refund($registration->id);
                     $registration->status = 'cancelled';
@@ -1371,7 +1371,7 @@ class EventsController extends AppController
                 ]);
 
             foreach ($registrations as $registration) {
-                $this->Email->SendCancellationReminder($registration, $event);
+                $this->Email->sendCancellationReminder($registration, $event);
 
                 if ($registration->phone && $registration->send_text) {
                     // $this->__sendText($registration->phone, 'DMS Event Reminder: ' . $event->name . ' cancellation deadline is soon.');
@@ -1400,7 +1400,7 @@ class EventsController extends AppController
                 ->where(['event_id' => $event->id, 'status IN' => ['confirmed']]);
 
             foreach ($registrations as $registration) {
-                $this->Email->SendEventStarting($event, $registration);
+                $this->Email->sendEventStarting($event, $registration);
 
                 if ($registration->phone && $registration->send_text) {
                     //$this->__sendText($registration->phone, 'DMS Event Reminder: ' . $event->name . ' starts ' . $formattedTime . '.');
