@@ -229,6 +229,14 @@
                         <div class="alert alert-info">There are no more spaces available for this event.</div>
                     <?php endif; ?>
                 <?php endif; ?>
+                <div>
+                        <div>Add to calendar:</div>
+                        <?php foreach ($addToCalLinks as $link): ?>
+                            <span>
+                                <a target="_blank" href="<?= $link['url'] ?>"><img alt="<?= $link['hint'] ?>" src="/img/<?= $link["icon"] ?>"></a>
+                            </span>
+                        <?php endforeach; ?>
+                </div>
             <?php else: ?>
                 <div class="alert alert-info">Registration for the event is closed.</div>
             <?php endif; ?>

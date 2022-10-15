@@ -1082,12 +1082,40 @@ class EventsController extends AppController
                 $this->set('hasOpenSpaces', $this->Events->hasOpenSpaces($this->passedArgs[0]));
                 $this->set('openSpaces', $openSpaces);
                 $this->set('totalSpaces', $totalSpaces);
+
+                // Add to calendar links
+                $this->set('addToCalLinks', $this->getAddToCalLinks($event->getSubject()->entity));
             }
         );
 
         $this->Crud->on('beforeRender', [$this, '_applyAddress']);
 
         return $this->Crud->execute();
+    }
+
+    public function getAddToCalLinks(object $event) {
+        $start_date_iso8601 = $this->getISO8601Date($event->event_start);
+        $end_date_iso8601 = $this->getISO8601Date($event->event_end);
+        $start_date_c = urlencode($event->event_start->setTimezone('America/Chicago')->format('c'));
+        $end_date_c = urlencode($event->event_end->setTimezone('America/Chicago')->format('c'));
+        $title = urlencode($event->name);
+        $description = urlencode($event->short_description);
+        $address = '1825%20Monetary%20Ln%20%23104%20Carrollton%2C%20TX%2075006';
+        $gcal = [
+            "icon" => "gcal.svg",
+            "url" => "https://calendar.google.com/calendar/render?action=TEMPLATE&dates=$start_date_iso8601%2F$end_date_iso8601&details=$description&location=$address&text=$title",
+            "hint" => "Add to Google Calendar"
+        ];
+        $outlook = [
+            "icon" => "outlook.svg",
+            "url" => "https://outlook.live.com/calendar/0/deeplink/compose?allday=false&body=$description&enddt=$end_date_c&location=$address&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=$start_date_c&subject=$title",
+            "hint" => "Add to Outlook"
+        ];
+        return [$gcal, $outlook];
+    }
+
+    public function getISO8601Date(\Cake\I18n\FrozenTime $start_date) {
+        return $start_date->i18nFormat("yyyyMMdd'T'HHmmss'Z'");
     }
 
     public function add()
