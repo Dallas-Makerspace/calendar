@@ -1096,8 +1096,8 @@ class EventsController extends AppController
     public function getAddToCalLinks(object $event) {
         $start_date_iso8601 = $this->getISO8601Date($event->event_start);
         $end_date_iso8601 = $this->getISO8601Date($event->event_end);
-        $start_date_c = urlencode($event->event_start->setTimezone('America/Chicago')->format('c'));
-        $end_date_c = urlencode($event->event_end->setTimezone('America/Chicago')->format('c'));
+        $start_date_c = urlencode($event->event_start->setTimezone('America/Chicago')->i18nFormat("yyyy-MM-dd'T'HH:mm:ss")); // 2020-04-19T13:30:00Z
+        $end_date_c = urlencode($event->event_end->setTimezone('America/Chicago')->i18nFormat("yyyy-MM-dd'T'HH:mm:ss"));
         $title = urlencode($event->name);
         $description = urlencode($event->short_description);
         $address = '1825%20Monetary%20Ln%20%23104%20Carrollton%2C%20TX%2075006';
