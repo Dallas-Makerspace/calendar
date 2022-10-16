@@ -1111,6 +1111,7 @@ class EventsController extends AppController
             "url" => "https://outlook.live.com/calendar/0/deeplink/compose?allday=false&body=$description&enddt=$end_date_c&location=$address&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=$start_date_c&subject=$title",
             "hint" => "Add to Outlook"
         ];
+        //https://outlook.live.com/calendar/0/deeplink/compose?allday=false&body=Short%20desc%0Alsdkjf%0Alsdkjf&enddt=2022-10-28T02%3A00%3A00%2B00%3A00&location=1825%20Monetary%20Ln&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=2022-10-28T00%3A00%3A00%2B00%3A00&subject=Test%20event%20for%20DMS
         return [$gcal, $outlook];
     }
 
