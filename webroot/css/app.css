@@ -251,3 +251,18 @@ footer {
         color: #ffffff !important;
     }
 }
+
+.dropdown-filter {
+  /* Fix dropdown width so it doesn't change when we filter items */
+  width: 270px;
+}
+
+.dropdown-filter-room {
+  /* By room dropdown needs to be extra wide */
+  width: 380px;
+}
+
+.dropdown-filter > input[type='text'] {
+  /* Filter text input should match the width of parent ul */
+  width: 100%;
+}

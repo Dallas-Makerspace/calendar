@@ -192,4 +192,31 @@ $(function() {
       }
     });
   }
+
+  /**
+   * Setup dropdown filters
+   */
+  let ddFilterList = document.getElementsByClassName('dropdown-filter');
+  for (let ddElement of ddFilterList) {
+    let textElement = document.createElement('input');
+    textElement.setAttribute('type', 'text');
+    textElement.setAttribute('placeholder', 'Type to filter ...');
+    // Filter list items on keyup event
+    textElement.addEventListener('keyup', (e) => {
+      let searchTerm = e.target.value.toLowerCase();
+      let parentUL = e.target.parentElement;
+      let listItems = parentUL.getElementsByTagName("li");
+      for (let item of listItems) {
+          if (item.innerText.toLowerCase().includes(searchTerm)) {
+              item.style.display = "";
+          } else {
+              item.style.display = "none";
+          }
+      }
+    });
+    // Attach filter to dropdown
+    ddElement.insertBefore(textElement, ddElement.firstChild);
+  }
+  
+
 });
