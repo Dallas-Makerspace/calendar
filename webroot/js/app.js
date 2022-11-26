@@ -16,7 +16,7 @@ $(function() {
              $(this).popover('hide');
          }
      });
- });
+  });
 
   /**
    * Dependent Field Displays
@@ -176,20 +176,20 @@ $(function() {
       //$('#event-start-5').data('DateTimePicker').maxDate(e.date);
     });
 	
-	$('.payment-type-select').change(function(e) {
-		$('.event-cost, .event-eventbrite').addClass('hidden');
-		$('#cost').val(0);
-		$('#cost').trigger('change');
-		$('#eventbrite-link').val('');
-		$('#eventbrite-link').trigger('change');
-		
-		if ($(this).val() === 'paid') {
-			$('.event-cost').removeClass('hidden');
-		}
-		
-		if ($(this).val() === 'eventbrite') {
-			$('.event-eventbrite').removeClass('hidden');
-		}
-	});
+    $('.payment-type-select').change(function(e) {
+      $('.event-cost, .event-eventbrite').addClass('hidden');
+      $('#cost').val(0);
+      $('#cost').trigger('change');
+      $('#eventbrite-link').val('');
+      $('#eventbrite-link').trigger('change');
+      
+      if ($(this).val() === 'paid') {
+        $('.event-cost').removeClass('hidden');
+      }
+      
+      if ($(this).val() === 'eventbrite') {
+        $('.event-eventbrite').removeClass('hidden');
+      }
+    });
   }
 });
