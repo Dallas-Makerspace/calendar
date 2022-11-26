@@ -996,7 +996,7 @@ class EventsController extends AppController
 
                 try {
                     $rejection_reason = ($event->getSubject()->entity->rejection_reason ? $event->getSubject()->entity->rejection_reason : 'No additional information given.');
-                    $message = $contact->name . ",<br/><br/>The following even you submitted to the Dallas Makerspace Calendar has been rejected.<br/><br/>" . $event->getSubject()->entity->name . "<br/><br/>Reason: " . $rejection_reason . ".<br/><br/>Dallas Makerspace";
+                    $message = $contact->name . ",<br/><br/>The following event you submitted to the Dallas Makerspace Calendar has been rejected.<br/><br/>" . $event->getSubject()->entity->name . "<br/><br/>Reason: " . $rejection_reason . ".<br/><br/>Dallas Makerspace";
 
                     $email = new Email();
                     $email->transport('sparkpost');
