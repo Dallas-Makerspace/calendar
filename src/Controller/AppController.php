@@ -43,7 +43,6 @@ class AppController extends Controller
     public function initialize()
     {
         parent::initialize();
-
         $auth = [
             'Ad' => [
                 'config' => [
@@ -205,7 +204,6 @@ class AppController extends Controller
         $this->set($isAuthorized);
         $this->set($hasMenu);
         $this->set('isDevelopment', Configure::read("isDevelopment"));
-        $this->set('isMockAuth', Configure::check("MockActiveDirectory"));
 
         if (!array_key_exists('_serialize', $this->viewVars) &&
             in_array($this->response->getType(), ['application/json', 'application/xml'])

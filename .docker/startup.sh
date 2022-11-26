@@ -2,12 +2,12 @@
 
 rm -rf /var/www/html
 ln -s /var/www/webroot /var/www/html
-php /opt/composer/composer.phar install
+cp /var/www/.docker/php-dev.ini $PHP_INI_DIR/php.ini
 cp /var/www/.docker/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 mkdir -p /var/www/logs
 touch /var/log/xdebug.log
 touch /var/www/logs/queries.log
-
+ln -s /var/www/config/app.default.php /var/www/config/app.php && \
 chmod 666 /var/log/xdebug.log
 chmod 666 /var/www/logs/queries.log
 

@@ -8,7 +8,7 @@ RUN apt update -y && \
     apt install -y curl zip unzip git mariadb-client && \
     chmod +x /usr/local/bin/install-php-extensions && \
     sync && \
-    install-php-extensions ldap intl zip pdo_mysql
+    install-php-extensions ldap intl zip pdo_mysql openssl
 
 RUN a2enmod rewrite && \
     a2enmod expires && \
@@ -27,7 +27,6 @@ COPY .docker/environment.conf /etc/apache2/conf-enabled/
 
 RUN pecl install xdebug && \
     docker-php-ext-enable xdebug && \
-    mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" && \
     echo "TLS_REQCERT never" >> /etc/ldap.conf
 FROM base as production
 
