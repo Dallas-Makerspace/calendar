@@ -43,7 +43,7 @@ class EventsController extends AppController
     {
         parent::beforeFilter($event);
 
-        $this->Auth->allow(['calendar', 'cron', 'embed', 'feed', 'index', 'view']);
+        $this->Auth->allow(['calendar', 'cron', 'embed', 'feed', 'index', 'view', 'ics']);
         $this->Security->setConfig('unlockedActions', ['edit']);
 
         $this->Crud->mapAction('all', 'Crud.Index');
@@ -990,10 +990,12 @@ class EventsController extends AppController
                     ->where(['ad_username' => $event->getSubject()->entity->created_by])
                     ->first();
 
+
                 $this->Email->sendEventRejected(
                     $contact,
                     $event->getSubject()->entity, //Event
                 );
+
             }
         );
 
@@ -1065,12 +1067,77 @@ class EventsController extends AppController
                 $this->set('hasOpenSpaces', $this->Events->hasOpenSpaces($this->passedArgs[0]));
                 $this->set('openSpaces', $openSpaces);
                 $this->set('totalSpaces', $totalSpaces);
+
+                // Add to calendar links
+                $this->set('addToCalLinks', $this->getAddToCalLinks($event->getSubject()->entity));
             }
         );
 
         $this->Crud->on('beforeRender', [$this, '_applyAddress']);
 
         return $this->Crud->execute();
+    }
+
+    public function getAddToCalLinks(object $event) {
+        $start_date_iso8601 = $this->getISO8601Date($event->event_start);
+        $end_date_iso8601 = $this->getISO8601Date($event->event_end);
+        $start_date_c = urlencode($event->event_start->setTimezone('America/Chicago')->i18nFormat("yyyy-MM-dd'T'HH:mm:ss")); // 2020-04-19T13:30:00Z
+        $end_date_c = urlencode($event->event_end->setTimezone('America/Chicago')->i18nFormat("yyyy-MM-dd'T'HH:mm:ss"));
+        $title = urlencode($event->name);
+        $description = urlencode($event->short_description);
+        $address = '1825%20Monetary%20Ln%20%23104%20Carrollton%2C%20TX%2075006';
+        $gcal = [
+            "icon" => "gcal.svg",
+            "url" => "https://calendar.google.com/calendar/render?action=TEMPLATE&dates=$start_date_iso8601%2F$end_date_iso8601&details=$description&location=$address&text=$title",
+            "hint" => "Add to Google Calendar"
+        ];
+        $outlook = [
+            "icon" => "outlook.svg",
+            "url" => "https://outlook.live.com/calendar/0/deeplink/compose?allday=false&body=$description&enddt=$end_date_c&location=$address&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&startdt=$start_date_c&subject=$title",
+            "hint" => "Add to Outlook"
+        ];
+        $apple = [
+            "icon" => "apple.svg",
+            "url" => Router::url(['controller' => 'Events', 'action' => 'ics', $event->id], true),
+            "hint" => "Add to iPhone / mac"
+        ];
+        return [$gcal, $outlook, $apple];
+    }
+
+    public function getISO8601Date(\Cake\I18n\FrozenTime $start_date) {
+        return $start_date->i18nFormat("yyyyMMdd'T'HHmmss'Z'");
+    }
+
+    public function ics($id = null)
+    {
+        $this->autoRender = false;
+        $now = Time::now();
+        $event = $this->Events->find()
+            ->where(['id' => $id])->first();
+        $vcalendar = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\r\nCALSCALE:GREGORIAN\r\n";
+
+        $event_url = Router::url(['controller' => 'Events', 'action' => 'view', $event->id], true);
+
+        $vcalendar .= "BEGIN:VEVENT\r\n";
+        $vcalendar .= 'DTSTART:' . $this->__icsDate($event->event_start) . "\r\n";
+        $vcalendar .= 'DTEND:' . $this->__icsDate($event->event_end) . "\r\n";
+        $vcalendar .= 'DTSTAMP:' . $this->__icsDate($now) . "\r\n";
+        $vcalendar .= 'UID:dmsevtv3' . $event->id . "@calendar.dallasmakerspace.org\r\n";
+        $vcalendar .= 'SUMMARY:' . $this->__icsEscapeString($event->name) . "\r\n";
+        $vcalendar .= 'DESCRIPTION:' . $this->__icsEscapeString($event->short_description . ' Event details at ' . $event_url) . "\r\n";
+        $vcalendar .= 'LOCATION:' . $this->__icsEscapeString("1825 Monetary Ln #104 Carrollton, TX 75006") . "\r\n";
+        $vcalendar .= 'URL;VALUE=URI:' . $this->__icsEscapeString($event_url) . "\r\n";
+        $vcalendar .= "END:VEVENT\r\n";
+
+        $vcalendar .= 'END:VCALENDAR';
+
+        $filename = 'dmsevtv3_' . $event->id . '.ics';
+
+        $this->response = $this->response
+                ->withType('ics')
+                ->withDownload($filename)
+                ->withStringBody("$vcalendar");
+        
     }
 
     public function add()

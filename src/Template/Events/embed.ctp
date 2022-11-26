@@ -24,7 +24,7 @@
                         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             By Category <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu">
+                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu dropdown-filter">
                             <?php foreach ($categories as $key => $value): ?>
                                 <li><?= $this->Html->link(h($value), [
                                     '?' => array_merge($urlparams, ['category' => $key])
@@ -36,7 +36,7 @@
                         <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             By Tool <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu">
+                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu dropdown-filter">
                             <?php foreach ($tools as $key => $value): ?>
                                 <li><?= $this->Html->link(h($value), [
                                     '?' => array_merge($urlparams, ['tool' => $key])
