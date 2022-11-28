@@ -8,6 +8,7 @@ use Cake\Network\Response;
 use LdapRecord\Models\ActiveDirectory\Entry;
 use LdapRecord\Models\ActiveDirectory\User;
 use LdapRecord\Models\ActiveDirectory\Group;
+use LdapRecord\Models\ModelNotFoundException;
 use LdapRecord\Container;
 use LdapRecord\Connection;
 
@@ -118,7 +119,9 @@ class AdAuthenticate extends FormAuthenticate
             }
 
             return false;
-
+        } catch (ModelNotFoundException $ex) {
+            // Incase we don't find the user in AD
+            return false;
         } catch (Exception $ex) {
             throw new \RuntimeException('Failed to bind to LDAP server. Check Auth configuration settings.');
         }
