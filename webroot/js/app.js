@@ -217,6 +217,16 @@ $(function() {
     // Attach filter to dropdown
     ddElement.insertBefore(textElement, ddElement.firstChild);
   }
+
+  /**
+   * Disable submit button when a form is submitted
+   */
+  $("form").submit(function() {
+    // disable submit button
+    $(":submit", this).attr("disabled", "disabled");
+    // set text to "Working..."
+    $(":submit", this).text("Working...");
+  });
   
 
 });
