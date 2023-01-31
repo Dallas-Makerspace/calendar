@@ -13,7 +13,7 @@ class EmailComponent extends Component
     // Execute any other additional setup for your component.
     public function initialize(array $config)
     {
-        parent::initialize();
+        parent::initialize($config);
         $this->_config = $config;
     }
 
