@@ -266,3 +266,95 @@ footer {
   /* Filter text input should match the width of parent ul */
   width: 100%;
 }
+
+body.dark {
+    background-color: #2e2e2e;
+    color: #eFefef
+}
+
+.dark h1, h2, h3, h4, h5, h6 {
+    color: #eFefef
+}
+
+.dark a {
+    color: #5EABED;
+}
+
+.dark .panel-default {
+    border-color: #212121
+}
+
+.dark .panel {
+    background-color: #212121;
+}
+
+.dark .btn-secondary {
+    color: black;
+}
+
+.dark .event-list .panel-default>.panel-heading {
+    background-color: hsl(0deg 0% 19%);
+}
+
+.dark .event-list .date-break {
+    background-color: #232323;
+    color: #eFefef;
+}
+
+.dark .event-list {
+    border-color: #232323;
+}
+
+#day-night-slider > input[type=checkbox]{
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+
+#day-night-slider > label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 80px;
+    height: 30px;
+    background: #bada55;
+    border-radius: 100px;
+    position: relative;
+    font-weight: normal;
+}
+
+#day-night-slider > label:after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    color: black;
+    border-radius: 90px;
+    transition: 0.3s;
+}
+
+#day-night-slider > input:checked + label {
+    background: #232323;
+    color: #eFefef;
+}
+
+#day-night-slider > input:checked + label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+}
+
+#day-night-slider > label:active:after {
+    width: 80px;
+}
+
+#day-night-slider > label > span {
+    position: relative;
+    left: -20px;
+    top: 4px;
+}
+
+#day-night-slider > input:checked + label > span {
+    left: -32px;
+}

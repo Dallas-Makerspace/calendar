@@ -94,9 +94,9 @@ $(function() {
     // Digest configuration values from template
     var minLead = parseInt($('#config-mininum-booking-lead-time').text(), 10);
     var maxLead = parseInt($('#config-maximum-booking-lead-time').text(), 10);
-    
+
     if ($('#unlockedEdit').length) {
-      $('#event-start, #event-end, #event-start-2, #event-end-2, #event-start-3, #event-end-3, #event-start-4, #event-end-4, #event-start-5, #event-end-5').each(function () {        
+      $('#event-start, #event-end, #event-start-2, #event-end-2, #event-start-3, #event-end-3, #event-start-4, #event-end-4, #event-start-5, #event-end-5').each(function () {
         $(this).datetimepicker({
             useCurrent: false,
             //minDate: moment().add(minLead, 'days'),
@@ -111,7 +111,7 @@ $(function() {
       });
     }
     else {
-      $('#event-start, #event-end, #event-start-2, #event-end-2, #event-start-3, #event-end-3, #event-start-4, #event-end-4, #event-start-5, #event-end-5').each(function () {        
+      $('#event-start, #event-end, #event-start-2, #event-end-2, #event-start-3, #event-end-3, #event-start-4, #event-end-4, #event-start-5, #event-end-5').each(function () {
         $(this).datetimepicker({
             useCurrent: false,
             minDate: moment().add(minLead, 'days'),
@@ -125,7 +125,7 @@ $(function() {
           });
       });
     }
-    
+
     $('#event-start').on('dp.change', function(e) {
         if (e.oldDate === null) {
             new Date(e.date._d.setHours(12, 00, 00));
@@ -175,18 +175,18 @@ $(function() {
     $('#event-end-5').on('dp.change', function(e) {
       //$('#event-start-5').data('DateTimePicker').maxDate(e.date);
     });
-	
+
     $('.payment-type-select').change(function(e) {
       $('.event-cost, .event-eventbrite').addClass('hidden');
       $('#cost').val(0);
       $('#cost').trigger('change');
       $('#eventbrite-link').val('');
       $('#eventbrite-link').trigger('change');
-      
+
       if ($(this).val() === 'paid') {
         $('.event-cost').removeClass('hidden');
       }
-      
+
       if ($(this).val() === 'eventbrite') {
         $('.event-eventbrite').removeClass('hidden');
       }
@@ -217,6 +217,66 @@ $(function() {
     // Attach filter to dropdown
     ddElement.insertBefore(textElement, ddElement.firstChild);
   }
-  
 
+  function setCookie(key, value, expiry) {
+    var expires = new Date();
+    expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
+    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+  }
+
+  function getCookie(key) {
+    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return keyValue ? keyValue[2] : null;
+  }
+
+  function eraseCookie(key) {
+    var keyValue = getCookie(key);
+    setCookie(key, keyValue, '-1');
+  }
+
+  let sliderOpt = $('#day-night-slider > input');
+  if (sliderOpt.size() === 1) {
+      let slider = sliderOpt[0];
+      $(slider).change(function() {
+          if(this.checked) {
+            $('body').addClass("dark");
+            $('#day-night-slider > label > span')[0].innerHTML = "Night";
+            setCookie("lastChosenColorScheme", "dark", 30);
+          }else {
+            $('body').removeClass("dark");
+            $('#day-night-slider > label > span')[0].innerHTML = "Day";
+            setCookie("lastChosenColorScheme", "light", 30);
+          }
+      });
+
+      /*
+      Assuming I did this correctly at 2:30am... this should prefer user selection over OS, unless OS has changed. If nothing, prefer OS.
+       */
+
+      let oldDetectedCs = getCookie("lastDetectedColorScheme");
+      let oldChosenCs = getCookie("lastChosenColorScheme");
+      let darkMode;
+
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        if (oldDetectedCs === "dark") {
+          darkMode = oldChosenCs !== "light";
+        } else {
+          darkMode = true;
+          setCookie("lastDetectedColorScheme", "dark", 30);
+        }
+      } else {
+        if (oldDetectedCs === "light") {
+          darkMode = oldChosenCs === "dark";
+        }else {
+          darkMode = false;
+          setCookie("lastDetectedColorScheme", "light", 30);
+        }
+      }
+
+      setCookie("lastChosenColorScheme", darkMode ? "dark" : "light", 30);
+
+      if (darkMode) {
+        $(slider).prop('checked', true).change();
+      }
+  }
 });
