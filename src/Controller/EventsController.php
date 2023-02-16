@@ -900,7 +900,7 @@ class EventsController extends AppController
                 )
                     ->contain(['Honoraria']);
 
-                if (!$_GET['sort']) {
+                if (!isset($_GET['sort']) || !$_GET['sort']) {
                     $event->getSubject()->query->order(['event_start' => 'DESC']);
                 }
 
@@ -925,7 +925,7 @@ class EventsController extends AppController
                 )
                     ->contain(['Honoraria']);
 
-                if (!$_GET['sort']) {
+                if (!isset($_GET['sort']) || !$_GET['sort']) {
                     $event->getSubject()->query->order(['event_start' => 'DESC']);
                 }
 
@@ -1137,7 +1137,6 @@ class EventsController extends AppController
                 ->withType('ics')
                 ->withDownload($filename)
                 ->withStringBody("$vcalendar");
-        
     }
 
     public function add()
@@ -1607,14 +1606,7 @@ class EventsController extends AppController
 
     public function _beforeCreate(\Cake\Event\Event $event)
     {
-        if (!empty($event->getSubject()->entity->contact->w9['file']['name'])) {
-            $event->getSubject()->entity->contact->w9_on_file = true;
-        }
-
-        if ($event->getSubject()->entity->request_honorarium && $event->getSubject()->entity->honorarium->pay_contact && !$event->getSubject()->entity->contact->w9_on_file) {
-            $event->getSubject()->entity->honorarium->errors('pay_contact', ['A W-9 is required to be on file for honorarium.']);
-            //$event->stopPropagation();
-        }
+        $event->getSubject()->entity->contact->w9_on_file = true;
 
         $continuedEvents = $this->__constructContinuedEventsForCreate();
         $completeSave = true;

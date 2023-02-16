@@ -61,13 +61,6 @@ $this->Html->meta(
         ]) ?>
     </div>
     <br>
-    <div class="row">
-        <div class="col-sm-12 text-right">
-            <div id="day-night-slider">
-                <input type="checkbox" id="switch" /><label for="switch"><span>Day</span></label>
-            </div>
-        </div>
-    </div>
     <div class="page-header">
         <div class="row">
             <div class="col-sm-7">

@@ -218,21 +218,6 @@ $(function() {
     ddElement.insertBefore(textElement, ddElement.firstChild);
   }
 
-  function setCookie(key, value, expiry) {
-    var expires = new Date();
-    expires.setTime(expires.getTime() + (expiry * 24 * 60 * 60 * 1000));
-    document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
-  }
-
-  function getCookie(key) {
-    var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
-    return keyValue ? keyValue[2] : null;
-  }
-
-  function eraseCookie(key) {
-    var keyValue = getCookie(key);
-    setCookie(key, keyValue, '-1');
-  }
 
   let sliderOpt = $('#day-night-slider > input');
   if (sliderOpt.size() === 1) {
@@ -240,12 +225,12 @@ $(function() {
       $(slider).change(function() {
           if(this.checked) {
             $('body').addClass("dark");
-            $('#day-night-slider > label > span')[0].innerHTML = "Night";
-            setCookie("lastChosenColorScheme", "dark", 30);
+            $('#day-night-slider > label > span')[0].innerHTML = "Dark";
+              window.localStorage.setItem("lastChosenColorScheme", "dark");
           }else {
             $('body').removeClass("dark");
-            $('#day-night-slider > label > span')[0].innerHTML = "Day";
-            setCookie("lastChosenColorScheme", "light", 30);
+            $('#day-night-slider > label > span')[0].innerHTML = "Light";
+              window.localStorage.setItem("lastChosenColorScheme", "light");
           }
       });
 
@@ -253,8 +238,8 @@ $(function() {
       Assuming I did this correctly at 2:30am... this should prefer user selection over OS, unless OS has changed. If nothing, prefer OS.
        */
 
-      let oldDetectedCs = getCookie("lastDetectedColorScheme");
-      let oldChosenCs = getCookie("lastChosenColorScheme");
+      let oldDetectedCs = window.localStorage.getItem("lastDetectedColorScheme");
+      let oldChosenCs = window.localStorage.getItem("lastChosenColorScheme");
       let darkMode;
 
       if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -262,18 +247,18 @@ $(function() {
           darkMode = oldChosenCs !== "light";
         } else {
           darkMode = true;
-          setCookie("lastDetectedColorScheme", "dark", 30);
+          window.localStorage.setItem("lastDetectedColorScheme", "dark");
         }
       } else {
         if (oldDetectedCs === "light") {
           darkMode = oldChosenCs === "dark";
         }else {
           darkMode = false;
-          setCookie("lastDetectedColorScheme", "light", 30);
+          window.localStorage.setItem("lastDetectedColorScheme", "light");
         }
       }
 
-      setCookie("lastChosenColorScheme", darkMode ? "dark" : "light", 30);
+      window.localStorage.setItem("lastChosenColorScheme", darkMode ? "dark" : "light");
 
       if (darkMode) {
         $(slider).prop('checked', true).change();
