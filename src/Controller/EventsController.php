@@ -900,7 +900,7 @@ class EventsController extends AppController
                 )
                     ->contain(['Honoraria']);
 
-                if (!$_GET['sort']) {
+                if (!isset($_GET['sort']) || !$_GET['sort']) {
                     $event->getSubject()->query->order(['event_start' => 'DESC']);
                 }
 
@@ -925,7 +925,7 @@ class EventsController extends AppController
                 )
                     ->contain(['Honoraria']);
 
-                if (!$_GET['sort']) {
+                if (!isset($_GET['sort']) || !$_GET['sort']) {
                     $event->getSubject()->query->order(['event_start' => 'DESC']);
                 }
 
@@ -1137,7 +1137,7 @@ class EventsController extends AppController
                 ->withType('ics')
                 ->withDownload($filename)
                 ->withStringBody("$vcalendar");
-        
+
     }
 
     public function add()
