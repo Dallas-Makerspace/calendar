@@ -49,6 +49,7 @@ $this->Html->meta(
         ], [
             'escape' => false
         ]) ?>
+        &nbsp;
         <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> ATOM', [
             'action' => 'feed', 'feedtype' => "atom",
     		"category" => $this->request->getQuery("category"),
@@ -59,6 +60,7 @@ $this->Html->meta(
             'escape' => false
         ]) ?>
     </div>
+    <br>
     <div class="page-header">
         <div class="row">
             <div class="col-sm-7">
