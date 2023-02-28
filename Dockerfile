@@ -25,7 +25,7 @@ FROM base as develop
 
 COPY .docker/environment.conf /etc/apache2/conf-enabled/
 
-RUN pecl install xdebug && \
+RUN pecl install xdebug-3.1.6 && \
     docker-php-ext-enable xdebug && \
     echo "TLS_REQCERT never" >> /etc/ldap.conf
 FROM base as production

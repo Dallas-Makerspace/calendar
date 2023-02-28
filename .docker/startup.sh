@@ -14,8 +14,8 @@ chmod 666 /var/www/logs/queries.log
 cd /var/www
 php /opt/composer/composer.phar install
 php /var/www/bin/cake.php migrations migrate
-result=`mysql -N -h $DB_HOST -u $DB_USERNAME -p$DB_PASSWORD $DB_DATABASE -s -e "select count(*) from categories;"`
-if (( $result == 0 ))
+result=$(mysql -N -h $DB_HOST -u $DB_USERNAME -p$DB_PASSWORD $DB_DATABASE -s -e "select count(*) from categories;")
+if (( result == 0 ))
 then
 php /var/www/bin/cake.php migrations seed
 fi
