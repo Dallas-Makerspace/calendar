@@ -43,7 +43,7 @@
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
 </head>
-<body<?= $this->request->getParam('action') == 'embed' ? ' class="embed"' : '' ?>>
+<body<?= $this->request->getParam('action') == 'embed' ? ' class="embed"' : '' ?> class="dark">
     <?php if ($this->request->getParam('action') != 'embed'): ?>
         <?= $this->element('Header/default') ?>
     <?php endif; ?>
