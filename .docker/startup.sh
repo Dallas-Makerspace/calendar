@@ -10,6 +10,10 @@ touch /var/www/logs/queries.log
 ln -s /var/www/config/app.default.php /var/www/config/app.php && \
 chmod 666 /var/log/xdebug.log
 chmod 666 /var/www/logs/queries.log
+mkdir -p /var/log/apache2
+chmod 777 /var/log/apache2
+chmod 777 /var/log
+chmod 777 /var/www/vendor
 
 cd /var/www
 php /opt/composer/composer.phar install
