@@ -94,7 +94,7 @@ services:
         FWATCHDOG_VERSION: "0.7.1"
     volumes:
       - vendor:/var/www/vendor
-      - logs:/var/www/logs
+      - ./logs:/var/www/logs
       - .:/var/www
     links:
       - db
@@ -131,4 +131,3 @@ networks:
     main:
 volumes:
     vendor:
-    logs:
