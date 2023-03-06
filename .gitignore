@@ -3,7 +3,7 @@
 /bower_components
 /config/app.php
 /logs
-/xdebug.log
+xdebug.log
 /tmp
 /vendor
 /webroot/files
