@@ -95,6 +95,7 @@ services:
     volumes:
       - vendor:/var/www/vendor
       - ./logs:/var/www/logs
+      - ./logs/xdebug.log:/var/log/xdebug.log
       - .:/var/www
     links:
       - db
