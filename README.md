@@ -9,11 +9,12 @@ For an overview of how the calendar works, see [./docs/README.md](./docs/README.
 3. If you forget to use the recursive clone, make sure any submodules are up to date with `git submodule update --init`
 4. Create a local branch to hold your changes, you'll want to leave the master branch alone and keep it synced with the upstream repo.
 5. Install a version of [Docker Desktop](https://www.docker.com/products/docker-desktop/), or something like [Rancher Desktop](https://rancherdesktop.io/)
-6. After installation, you should be able to navigate to the root directory of this repository. Then type "docker compose up"
-7. After some time, the application will be availbe at http://localhost:8000
-8. Mail will be available at http://localhost:8025. PhpMyAdmin is at http://localhost:8081. Open LDAP is at http://localhost:8888
-9. The docker environment automatically maps your local filesystem into the server. Any changes you make in the PHP files will be reflected. You may need to rebuild the app container if you change dependencies.
-10. VS Code launch settings and xdebug files are included for convenience.
+6. (For *nix systems eg Linux, MacOS, etc): Run `./setup.sh` to create local directories with the correct permissions and check your docker installation.
+7. After installation, you should be able to navigate to the root directory of this repository. Then type `docker compose up`
+8. After some time, the application will be availbe at http://localhost:8000
+9. Mail will be available at http://localhost:8025. PhpMyAdmin is at http://localhost:8081. Open LDAP is at http://localhost:8888
+10. The docker environment automatically maps your local filesystem into the server. Any changes you make in the PHP files will be reflected. You may need to rebuild the app container if you change dependencies.
+11. VS Code launch settings and xdebug files are included for convenience.
 
 Ctrl+C will stop your containers
 `docker compose down` will reset your containers along with your data
