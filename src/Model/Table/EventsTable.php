@@ -276,6 +276,10 @@ class EventsTable extends Table
         $validator
             ->add('tools', 'custom', [
                 'rule' => function ($values, $context) {
+                    if (($key = array_search(84, $values['_ids'])) !== false) {
+                        // Janky as it gets. ID 84 is "001 - No Tool Reservation Required"
+                        unset($values['_ids'][$key]);
+                    }
                     if (empty($values['_ids'])) {
                         return true;
                     }
