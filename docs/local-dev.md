@@ -8,8 +8,8 @@ calendar system. Please add to it as you find 'gotchas' or tips.
 By moving to docker, your local development should run much more like
 production and dependencies (like setting up an LDAP endpoint) are handled
 automatically. `docker-compose.yml` (and it's cousin `docker-compose.prod.yml`)
-contain the definitions of our docker 'environment', allowing once
-docker-compose and docker are setup anyone to simply run `docker compose up`
+contain the definitions of our docker 'environment', allowing (once
+docker-compose and docker are setup) anyone to simply run `docker compose up`
 and start a local calendar system.
 
 The local folder is mapped (volume bind) through docker, so for most cases
