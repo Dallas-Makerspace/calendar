@@ -9,7 +9,7 @@ By moving to docker, your local development should run much more like
 production and dependencies (like setting up an LDAP endpoint) are handled
 automatically. `docker-compose.yml` (and it's cousin `docker-compose.prod.yml`)
 contain the definitions of our docker 'environment', allowing once
-docker-compose and docker are setup anyone to simply run `docker-compose up`
+docker-compose and docker are setup anyone to simply run `docker compose up`
 and start a local calendar system.
 
 The local folder is mapped (volume bind) through docker, so for most cases
@@ -50,16 +50,16 @@ please update this section?
 
 - I keep getting errors like `Error response from daemon: error while creating mount source path ... permission denied`
   - This seems to happen on *nix environments and you can either continue running
-    `docker-compose up` until all the local volumes are created (`logs/www`,
+    `docker compose up` until all the local volumes are created (`logs/www`,
     `logs/var`, `tmp`, `vendor`). *Or* you can run `./setup.sh` which will create
     those paths for you ahead of time.
 
-- I get an error from `docker-compose up` that `DEBUG` has an invalid value
+- I get an error from `docker compose up` that `DEBUG` has an invalid value
   - Please make sure you are running version 2+ of `docker-compose` (check with
-  `docker-compose -v`)
+  `docker compose -v`)
 
 - Docker won't start with errors like `Error response from daemon: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: exec: permission denied: unknown`
-  - The scripts in `.docker/` (`*.sh`) should be marked as executable (you can 
+  - The scripts in `.docker/` (`*.sh`) should be marked as executable (you can
     run `chmod +x .docker/*.sh` to fix)
 
 - How do we test with traefik locally?
