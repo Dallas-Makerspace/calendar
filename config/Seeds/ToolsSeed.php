@@ -20,7 +20,12 @@ class ToolsSeed extends AbstractSeed
     {
         date_default_timezone_set('UTC');
         $data = [
-            [
+            [ // Run this one first to ensure the ID isn't already taken
+                'id' => 84,
+                'name' => '001 - No Tool Reservation Required',
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s')
+            ], [
                 'name' => 'Sewing Machine',
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s')
