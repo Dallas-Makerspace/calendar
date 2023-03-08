@@ -96,7 +96,7 @@ services:
       - ./vendor:/var/www/vendor:rw
       - ./logs/www:/var/www/logs:rw
       - ./logs/var:/var/log/:rw
-      - .:/var/www
+      - .:/var/www:rw
     links:
       - db
     ports:
