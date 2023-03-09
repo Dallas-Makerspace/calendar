@@ -19,6 +19,13 @@ $(function() {
   });
 
   /**
+   * Helper function to clear tools selected for an event
+   */
+  $('#clear-tools').on('click', function(e) {
+    $("#tools-ids option").prop("selected", false);
+  });
+
+  /**
    * Dependent Field Displays
    */
   $('input, select').change(function() {
@@ -94,9 +101,9 @@ $(function() {
     // Digest configuration values from template
     var minLead = parseInt($('#config-mininum-booking-lead-time').text(), 10);
     var maxLead = parseInt($('#config-maximum-booking-lead-time').text(), 10);
-    
+
     if ($('#unlockedEdit').length) {
-      $('#event-start, #event-end, #event-start-2, #event-end-2, #event-start-3, #event-end-3, #event-start-4, #event-end-4, #event-start-5, #event-end-5').each(function () {        
+      $('#event-start, #event-end, #event-start-2, #event-end-2, #event-start-3, #event-end-3, #event-start-4, #event-end-4, #event-start-5, #event-end-5').each(function () {
         $(this).datetimepicker({
             useCurrent: false,
             //minDate: moment().add(minLead, 'days'),
@@ -111,7 +118,7 @@ $(function() {
       });
     }
     else {
-      $('#event-start, #event-end, #event-start-2, #event-end-2, #event-start-3, #event-end-3, #event-start-4, #event-end-4, #event-start-5, #event-end-5').each(function () {        
+      $('#event-start, #event-end, #event-start-2, #event-end-2, #event-start-3, #event-end-3, #event-start-4, #event-end-4, #event-start-5, #event-end-5').each(function () {
         $(this).datetimepicker({
             useCurrent: false,
             minDate: moment().add(minLead, 'days'),
@@ -125,7 +132,7 @@ $(function() {
           });
       });
     }
-    
+
     $('#event-start').on('dp.change', function(e) {
         if (e.oldDate === null) {
             new Date(e.date._d.setHours(12, 00, 00));
@@ -175,18 +182,18 @@ $(function() {
     $('#event-end-5').on('dp.change', function(e) {
       //$('#event-start-5').data('DateTimePicker').maxDate(e.date);
     });
-	
+
     $('.payment-type-select').change(function(e) {
       $('.event-cost, .event-eventbrite').addClass('hidden');
       $('#cost').val(0);
       $('#cost').trigger('change');
       $('#eventbrite-link').val('');
       $('#eventbrite-link').trigger('change');
-      
+
       if ($(this).val() === 'paid') {
         $('.event-cost').removeClass('hidden');
       }
-      
+
       if ($(this).val() === 'eventbrite') {
         $('.event-eventbrite').removeClass('hidden');
       }
@@ -217,6 +224,5 @@ $(function() {
     // Attach filter to dropdown
     ddElement.insertBefore(textElement, ddElement.firstChild);
   }
-  
 
 });

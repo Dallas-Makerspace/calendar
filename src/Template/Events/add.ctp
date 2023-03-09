@@ -320,7 +320,13 @@
                     ]) ?>
                     <?= $this->Form->input('tools._ids', [
                         'options' => $tools,
-                        'help' => 'If this event or class requires certain tools to be available for use during then select any that apply.',
+                        'help' => [
+                            $this->Form->button('Clear tool selection', [
+                                'type' => 'button',
+                                'id' => 'clear-tools',
+                            ]),
+                            '&nbsp;If this event or class requires certain tools to be available for use during then select any that apply.',
+                        ],
                         'style' => 'height: 150px'
                     ]) ?>
                 </div>
