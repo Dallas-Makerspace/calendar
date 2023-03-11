@@ -14,6 +14,7 @@ mkdir -p /var/log/apache2
 chmod 777 /var/log/apache2
 chmod 777 /var/log
 chmod 777 /var/www/vendor
+umask 0000
 
 cd /var/www
 php /opt/composer/composer.phar install
