@@ -184,6 +184,13 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>
+                    <div class="text-right" style="margin-top: 10px">
+                        <div id="dark-light-slider">
+                            <input type="checkbox" id="switch" checked /><label for="switch"><span>Dark</span></label>
+                        </div>
+                    </div>
+                </li>
+
                     <?php if ($authUser): ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account <span class="caret"></span></a>
@@ -211,13 +218,14 @@
                         </li>
 
                     <?php else: ?>
+                    <li>
                        <?= $this->Html->link( "DMS Login", [
                             'controller' => 'Users',
                             'action' => 'login',
                             '?' => ['redirect' => $this->request->getAttribute("here")]
                         ]) ?>
+                    </li>
                     <?php endif; ?>
-                </li>
             </ul>
         </div>
     </div>
