@@ -93,9 +93,10 @@ services:
       args:
         FWATCHDOG_VERSION: "0.7.1"
     volumes:
-      - vendor:/var/www/vendor
-      - logs:/var/www/logs
-      - .:/var/www
+      - ./vendor:/var/www/vendor:rw
+      - ./logs/www:/var/www/logs:rw
+      - ./logs/var:/var/log/:rw
+      - .:/var/www:rw
     links:
       - db
     ports:
@@ -129,6 +130,3 @@ services:
                 - app
 networks:
     main:
-volumes:
-    vendor:
-    logs:
