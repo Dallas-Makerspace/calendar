@@ -358,10 +358,12 @@
             <div class="alert alert-info">
                 <ul>
                     <li>When requesting honorarium remember that your event's start date must be at least <?= $config[3] ?> days away, otherwise your submission won't be accepted.</li>
-                    <li>If a person (you or the event Instructor, if set) will be receiving honorarium then a W-9 is required to be on file. If a W-9 is not on file and one is not attached to this submission then the submission won't be accepted. W-9s are transmitted securely over an encrypted connection with the server.</li>
                     <li>If honorarium will only be paid out to a committee then a W-9 is not required.</li>
-                    <li>Don't want to upload a W-9? You can mail it in instead, but won't be able to submit an event for honorarium until it has been received and processed.<br/>Mail W-9s to:<br/>Dallas Makerspace (W-9)<br/>P.O. Box 810663<br/>Dallas, TX 75381-0663</li>
-                    <li>Need a copy of the W-9 form? <?= $this->Html->link('Download a W-9 from IRS.gov', 'https://www.irs.gov/pub/irs-pdf/fw9.pdf', ['target' => '_blank']) ?>.
+                    <li>If a person (you or the event instructor, if set) will be receiving honorarium then a W-9 is required to be on file. </li>
+                    <li><b>If a W-9 is not on file, you (or the event instructor, if set), will not be paid and/or the event will not be approved!</b></li>
+                    <br>
+                    <li>You may download a copy of the below form, and must submit it to <a href="mailto:dm@jitasa.is">dm@jitasa.is</a> in order to receive an honorarium.</li>
+                    <li>Need a copy of the W-9 form? <?= $this->Html->link('Download a W-9 from IRS.gov', 'https://www.irs.gov/pub/irs-pdf/fw9.pdf', ['target' => '_blank']) ?>.</li>
                     <li><strong>Don't Forget!</strong> Class attendance must be marked within <?= $config[6] * 24 ?> hours of completion of the event.</li>
                 </ul>
             </div>
@@ -392,13 +394,6 @@
                         ],
                         'type' => 'select'
                     ]) ?>
-                </div>
-                <div class="col-sm-4">
-                    <?= $this->Form->input('contact.w9.file', [
-                        'label' => 'W-9',
-                        'required' => false,
-                        'type' => 'file'
-                    ]); ?>
                 </div>
                 <?= $this->Form->hidden('honorarium.paid', ['value' => 0]) ?>
             </div>

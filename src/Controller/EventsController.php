@@ -1607,14 +1607,8 @@ class EventsController extends AppController
 
     public function _beforeCreate(\Cake\Event\Event $event)
     {
-        if (!empty($event->getSubject()->entity->contact->w9['file']['name'])) {
-            $event->getSubject()->entity->contact->w9_on_file = true;
-        }
-
-        if ($event->getSubject()->entity->request_honorarium && $event->getSubject()->entity->honorarium->pay_contact && !$event->getSubject()->entity->contact->w9_on_file) {
-            $event->getSubject()->entity->honorarium->errors('pay_contact', ['A W-9 is required to be on file for honorarium.']);
-            //$event->stopPropagation();
-        }
+        // We are now assuming they have files a W9 with legal, not here - so this bypasses
+        $event->getSubject()->entity->contact->w9_on_file = true;
 
         $continuedEvents = $this->__constructContinuedEventsForCreate();
         $completeSave = true;

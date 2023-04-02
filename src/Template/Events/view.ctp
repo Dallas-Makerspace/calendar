@@ -256,18 +256,85 @@
                 </div>
             <?php endif; ?>
 
-            <?php if ($event->files): ?>
-                <h3>Attachments</h3>
-                <ul>
-                    <?php foreach ($event->files as $file): ?>
-						<?php if (!$file->private || $canManageEvents || $event->created_by == $authUsername): ?>
-                        	<li><a href="/<?= str_replace("webroot/", "", $file->dir) . $file->file ?>" target="_new"><?= h($file->file) ?></a></li>
-						<?php endif; ?>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
+
+            <?php
+            $imageEndings = ["png", "jpeg", "jpg", "gif", "webp", "svg"];
+            $images = [];
+            $otherFiles = [];
+
+            foreach ($event->files as $file) {
+                if ($file->private && !$canManageEvents && $event->created_by != $authUsername) {
+                    continue;
+                }
+
+                $exploded = explode(".", $file->file);
+                $imageEnding = ($exploded !== false && count($exploded) >= 2) ? $exploded[count($exploded) - 1] : '';
+                if (in_array($imageEnding, $imageEndings)) {
+                    $images[] = $file;
+                } else {
+                    $otherFiles[] = $file;
+                }
+            }
+            ?>
+
+            <?php if (count($otherFiles) > 0 || count($images) > 0) { ?>
+                <hr>
+
+                <?php if (count($otherFiles) > 0 ) { ?>
+                <h3>File Attachments</h3>
+                <div>
+                    <ul>
+                    <?php
+                    foreach ($otherFiles as $otherFile) { ?>
+                        <li><a href="/<?= str_replace("webroot/", "", $otherFile->dir) . $otherFile->file ?>"
+                               target="_new"><?= h($otherFile->file) ?></a></li>
+                    <?php } ?>
+                    </ul>
+                </div>
+                <?php } ?>
+
+                <?php if (count($images) > 0 ) { ?>
+                <h3>Image Attachments</h3>
+                <div>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <?php
+                        $index = 0;
+                        foreach ($images as $image) {
+                            $index++;
+                            ?>
+                            <li role="presentation" class="<?= $index == 1 ? "active" : ""; ?>">
+                                <a href="#<?= $index ?>"
+                                   aria-controls="<?= $index ?>"
+                                   role="tab"
+                                   data-toggle="tab">Image <?= $index ?></a>
+                            </li>
+                            <?php
+                        }
+                        ?>
+                    </ul>
+                    <div class="tab-content">
+                    <?php
+                    $index = 0;
+                    foreach ($images as $image) {
+                        $index++;
+                        ?>
+                        <div role="tabpanel" class="tab-pane <?= $index == 1 ? "active" : "" ?>" id="<?= $index ?>">
+                            <img class="img-responsive img-rounded" style="padding: 5px"
+                                 src="/<?= str_replace("webroot/", "", $image->dir) . $image->file ?>">
+                        </div>
+                        <?php
+                    }
+                    ?>
+                    </div>
+                </div>
+                <?php } ?>
+
+            <?php } ?>
         </div>
     </div>
+    <br/>
+    <hr>
+    <div>
 
     <?php if ($canManageEvents || $event->created_by == $authUsername): ?>
         <div class="page-header">

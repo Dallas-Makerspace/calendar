@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 rm -rf /var/www/html
 ln -s /var/www/webroot /var/www/html
