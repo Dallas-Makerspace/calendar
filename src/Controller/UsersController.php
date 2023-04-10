@@ -62,7 +62,7 @@ class UsersController extends AppController
             }
 
             $data = [
-                'name' => $user['displayname'],
+               'name' => $user['displayname'],
                 'ad_username' => $user['samaccountname'],
                 'email' => $user['mail'],
                 'phone' => $user['telephonenumber'],
@@ -90,6 +90,13 @@ class UsersController extends AppController
      */
     public function login()
     {
+        if (isset($this->request->data['username'])) {
+            if (preg_match('/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i', $this->request->data['username'])) {
+                $this->Flash->error(sprintf('Invalid username or password, try again. <br><i>(Be sure to use your DMS username, NOT your email or Talk username)</i>'), ['escape' => false]);
+                return;
+            }
+        }
+        
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
 
