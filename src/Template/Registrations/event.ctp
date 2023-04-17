@@ -17,7 +17,7 @@
             <?php if ($hasFreeSpaces || $hasPaidSpaces): ?>
                 <?php if ($event->members_only && !$authUser): ?>
                     <div class="alert alert-info">
-                        <p><strong>Notice!</strong> This event is for DMS Members only. If you are a DMS member please <?= $this->Html->link('log in', ['controller' => 'Users', 'action' => 'login', '?' => ['redirect' => $this->request->here]]) ?> before registering for this event.</p>
+                        <p><strong>Notice!</strong> This event is for DMS Members only. If you are a DMS member please <?= $this->Html->link('log in', ['controller' => 'Users', 'action' => 'login', '?' => ['redirect' => $this->request->getAttribute("here")]]) ?> before registering for this event.</p>
                         <p>For more information on DMS memberships <?= $this->Html->link('visit the DMS website', 'https://dallasmakerspace.org/') ?>.</p>
                     </div>
                 <?php elseif (!empty($event->requires_prerequisite) && !$meetsPreq): ?>
@@ -28,7 +28,7 @@
                 <?php else: ?>
                     <?php if (!$authUser): ?>
                         <div class="alert alert-info">
-                            <strong>DMS Member?</strong> Don't forget to <?= $this->Html->link('log in', ['controller' => 'Users', 'action' => 'login', '?' => ['redirect' => $this->request->here]]) ?> before signing up for this event.
+                            <strong>DMS Member?</strong> Don't forget to <?= $this->Html->link('log in', ['controller' => 'Users', 'action' => 'login', '?' => ['redirect' => $this->request->getAttribute("here")]]) ?> before signing up for this event.
                         </div>
                     <?php endif; ?>
 

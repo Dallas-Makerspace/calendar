@@ -92,6 +92,8 @@ class AppController extends Controller
         });
 
         $this->Crud->addListener('relatedModels', 'Crud.RelatedModels');
+
+        $this->loadComponent('Email');
     }
 
     public function customLog($description) {
