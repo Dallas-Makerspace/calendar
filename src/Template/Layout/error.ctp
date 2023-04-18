@@ -1,54 +1,51 @@
-<?php
-/**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         0.10.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
-
-$cakeDescription = 'CakePHP: the rapid development php framework';
-?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <?= $this->Html->charset() ?>
-    <title>
-        <?= $cakeDescription ?>:
-        <?= $this->fetch('title') ?>
-    </title>
-    <?= $this->Html->meta('icon') ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $this->fetch('title') ?> | <?= __('Dallas Makerspace Calendar') ?></title>
 
-    <?= $this->Html->css('app.css') ?>
+    <?php
+    echo $this->Html->charset();
+    echo $this->Html->meta('icon');
+    echo $this->Html->css([
+        'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700',
+        'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css',
+        'bootstrap/bootstrap.min.css',
+        'eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.css',
+        'app.css'
+    ]);
+    echo $this->Html->script([
+        'jquery/jquery.min.js',
+        'bootstrap/bootstrap.min.js',
+        'moment/moment.min.js',
+        'eonasdan-bootstrap-datetimepicker/bootstrap-datetimepicker.min.js',
+        'app.js'
+    ]);
 
-    <?= $this->fetch('meta') ?>
-    <?= $this->fetch('css') ?>
-    <?= $this->fetch('script') ?>
+    echo $this->fetch('meta');
+    echo $this->fetch('css');
+    ?>
+
 </head>
-<body>
-    <div id="container">
-        <div id="header">
-            <h1><?= $this->Html->link($cakeDescription, 'http://cakephp.org') ?></h1>
-        </div>
-        <div id="content">
-            <?= $this->Flash->render() ?>
+<body<?= $this->request->getParam('action') == 'embed' ? ' class="embed"' : '' ?>>
+<?php
+if ($this->request->getParam('action') != 'embed') {
+    echo $this->element('Header/default');
+}
+?>
 
-            <?= $this->fetch('content') ?>
-        </div>
-        <div id="footer">
-            <?= $this->Html->link(
-                    $this->Html->image('cake.power.gif', ['alt' => $cakeDescription, 'border' => '0']),
-                    'http://www.cakephp.org/',
-                    ['target' => '_blank', 'escape' => false]
-                )
-            ?>
-        </div>
-    </div>
+<div class="container<?= $this->request->getParam('action') == 'embed' ? '-fluid' : '' ?>">
+    <?= $this->Flash->render() ?>
+
+    <?= $this->fetch('content') ?>
+</div>
+
+<?php
+if ($this->request->getParam('action') != 'embed') {
+    echo $this->element('Footer/default');
+}
+
+echo $this->fetch('script');
+?>
 </body>
 </html>
