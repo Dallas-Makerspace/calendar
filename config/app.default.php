@@ -197,7 +197,7 @@ return [
             'className' => 'Smtp',
             'host' => env('EMAIL_HOST', 'localhost'),
             'port' => env('EMAIL_PORT', 25),
-            'timeout' => env('EMAIL_TIMEOUT', 30),
+            'timeout' => floatval(env('EMAIL_TIMEOUT', '30')),
             'username' => env('EMAIL_USERNAME', null),
             'password' => env('EMAIL_PASSWORD', null),
             'client' => null,
