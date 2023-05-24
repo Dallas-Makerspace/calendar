@@ -12,6 +12,15 @@
         <div id="navbar" class="collapse navbar-collapse">
             <?php $authUser = $this->request->getSession()->read('Auth.User'); ?>
             <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Popular Links <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="https://talk.dallasmakerspace.org">Talk</a></li>
+                        <li><a href="https://source.dallasmakerspace.org">Source</a></li>
+                        <li><a href="https://learn.dallasmakerspace.org">Learn</a></li>
+                    </ul>
+                </li>
                 <?php if (!($this->request->getParam('controller') == 'Events' && $this->request->getParam('action') == 'add')): ?>
                     <?php if ($canAddEvents): ?>
                         <li>
@@ -183,41 +192,41 @@
                 <?php endif; ?>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <?php if ($authUser): ?>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <?= $this->Html->link('Hosting Events', [
-                                        'controller' => 'Events',
-                                        'action' => 'submitted'
-                                    ]) ?>
-                                </li>
-                                <li>
-                                    <?= $this->Html->link('Attending Events', [
-                                        'controller' => 'Events',
-                                        'action' => 'attending'
-                                    ]) ?>
-                                </li>
-                                <li role="separator" class="divider"></li>
-                                <li>
-                                    <?= $this->Html->link('Logout', [
-                                        'controller' => 'Users',
-                                        'action' => 'logout'
-                                    ]) ?>
-                                </li>
-                            </ul>
-                        </li>
+                <?php if ($authUser): ?>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <?= $this->Html->link('Hosting Events', [
+                                    'controller' => 'Events',
+                                    'action' => 'submitted'
+                                ]) ?>
+                            </li>
+                            <li>
+                                <?= $this->Html->link('Attending Events', [
+                                    'controller' => 'Events',
+                                    'action' => 'attending'
+                                ]) ?>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <?= $this->Html->link('Logout', [
+                                    'controller' => 'Users',
+                                    'action' => 'logout'
+                                ]) ?>
+                            </li>
+                        </ul>
+                    </li>
 
-                    <?php else: ?>
-                       <?= $this->Html->link( "DMS Login", [
-                            'controller' => 'Users',
-                            'action' => 'login',
-                            '?' => ['redirect' => $this->request->getAttribute("here")]
-                        ]) ?>
-                    <?php endif; ?>
+                <?php else: ?>
+                <li>
+                   <?= $this->Html->link( "DMS Login", [
+                        'controller' => 'Users',
+                        'action' => 'login',
+                        '?' => ['redirect' => $this->request->getAttribute("here")]
+                    ]) ?>
                 </li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>
