@@ -84,6 +84,9 @@ class EmailComponent extends Component
             The following event you submitted to the Dallas Makerspace Calendar has been rejected.<br/><br/>
             <b>Event: </b>$event->name <br/>
             <b>Reason: </b>$rejectionReason <br/><br/>
+            Please do not reply to this email with questions regarding this event.  For further assistance use our <a
+                href="https://talk.dallasmakerspace.org">Talk Forum</a>
+            <br><br>
             Regards,<br/>
             Dallas Makerspace Team
         MSGBODY;
@@ -105,6 +108,9 @@ class EmailComponent extends Component
             An event that you RSVP'd for has been cancelled.<br/><br/>
             <b>Event: </b>$event->name <br/><br/>
             If you paid to register for this event then a refund has been submitted for processing.<br/><br/>
+            Please do not reply to this email with questions regarding this event.  For further assistance use our <a
+                href="https://talk.dallasmakerspace.org">Talk Forum</a>
+            <br><br>
             Regards,<br/>
             Dallas Makerspace Team
         MSGBODY;
@@ -129,6 +135,9 @@ class EmailComponent extends Component
             <b>Event: </b>$event->name <br/>
             <b>Time: </b>$formattedTime <br/><br/>
             Full event details are available at <a href="https://calendar.dallasmakerspace.org/events/view/$event->id">https://calendar.dallasmakerspace.org/events/view/$event->id</a>.<br/><br/>
+            Please do not reply to this email with questions regarding this event.  For further assistance use our <a
+                href="https://talk.dallasmakerspace.org">Talk Forum</a>
+            <br><br>
             Regards,<br/>
             Dallas Makerspace Team
         MSGBODY;
@@ -150,6 +159,9 @@ class EmailComponent extends Component
             Your registration for the following event was cancelled automatically by our system.<br/> <br/>
             <b>Event: </b>$event->name <br/> <br/>
             If you paid to register for this event then a refund has been submitted for processing.<br/><br/>
+            Please do not reply to this email with questions regarding this event.  For further assistance use our <a
+                href="https://talk.dallasmakerspace.org">Talk Forum</a>
+            <br><br>
             Regards,<br/>
             Dallas Makerspace Team
         MSGBODY;
@@ -176,7 +188,9 @@ class EmailComponent extends Component
             <b>Time: </b>$formattedTime <br/>
             <br/>
             If you need to review or cancel your RSVP you can do so <a
-                href="https://calendar.dallasmakerspace.org/registrations/view/$registration->id?edit_key=$registration->edit_key">here</a>.
+                href="https://calendar.dallasmakerspace.org/registrations/view/$registration->id?edit_key=$registration->edit_key">here</a>.<br><br>
+            Please do not reply to this email with questions regarding this event.  For further assistance use our <a
+                href="https://talk.dallasmakerspace.org">Talk Forum</a>
             <br/><br/>
             Regards,<br/>
             Dallas Makerspace Team
@@ -210,7 +224,9 @@ class EmailComponent extends Component
             <b>Time: </b>$formattedTime <br/>
             <br/>
             If you need to review or cancel your RSVP you can do so <a
-                href="https://calendar.dallasmakerspace.org/registrations/view/$registration->id?edit_key=$registration->edit_key">here</a>.
+                href="https://calendar.dallasmakerspace.org/registrations/view/$registration->id?edit_key=$registration->edit_key">here</a>.<br><br>
+            Please do not reply to this email with questions regarding this event.  For further assistance use our <a
+                href="https://talk.dallasmakerspace.org">Talk Forum</a>
             <br/><br/>
             Regards,<br/>
             Dallas Makerspace Team
@@ -244,7 +260,9 @@ class EmailComponent extends Component
             <b>Time: </b>$formattedTime <br/>
             <br/>
             If you need to review or cancel your RSVP you can do so <a
-                href="https://calendar.dallasmakerspace.org/registrations/view/$registration->id?edit_key=$registration->edit_key">here</a>.
+                href="https://calendar.dallasmakerspace.org/registrations/view/$registration->id?edit_key=$registration->edit_key">here</a>.<br><br>
+            Please do not reply to this email with questions regarding this event.  For further assistance use our <a
+                href="https://talk.dallasmakerspace.org">Talk Forum</a>
             <br/><br/>
             Regards,<br/>
             Dallas Makerspace Team
@@ -310,7 +328,9 @@ class EmailComponent extends Component
             <b>Time: </b>$formattedTime <br/>
             <br/>
             If you need to review or cancel your RSVP you can do so <a
-                href="https://calendar.dallasmakerspace.org/registrations/view/$registration->id?edit_key=$registration->edit_key">here</a>.
+                href="https://calendar.dallasmakerspace.org/registrations/view/$registration->id?edit_key=$registration->edit_key">here</a>.<br><br>
+            Please do not reply to this email with questions regarding this event.  For further assistance use our <a
+                href="https://talk.dallasmakerspace.org">Talk Forum</a>
             <br/><br/>
             Regards,<br/>
             Dallas Makerspace Team
@@ -342,7 +362,9 @@ class EmailComponent extends Component
             <b>Event: </b>$event->name<br/>
             <br/>
             If you paid to register for this event then a refund has been submitted for
-            processing.
+            processing.<br><br>
+            Please do not reply to this email with questions regarding this event.  For further assistance use our <a
+                href="https://talk.dallasmakerspace.org">Talk Forum</a>
             <br/><br/>
             Regards,<br/>
             Dallas Makerspace Team
@@ -368,7 +390,9 @@ class EmailComponent extends Component
             <b>Event: </b>$event->name <br/>
             <br/>
             If you paid to register for this event then a refund has been submitted
-            for processing.
+            for processing.<br><br>
+            Please do not reply to this email with questions regarding this event.  For further assistance use our <a
+                href="https://talk.dallasmakerspace.org">Talk Forum</a>
             <br/><br/>
             Regards,<br/>
             Dallas Makerspace Team
