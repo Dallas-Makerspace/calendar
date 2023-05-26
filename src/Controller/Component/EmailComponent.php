@@ -425,7 +425,7 @@ class EmailComponent extends Component
             $email = new Email();
             $email
                 ->setTransport('default')
-                ->setFrom(['admin@dallasmakerspace.org' => 'Dallas Makerspace'])
+                ->setFrom(noreply@dallasmakerspace.org' => 'Dallas Makerspace'])
                 ->setTo([$addr => $name])
                 ->setSubject($this->limitSubject($subject))
                 ->setEmailFormat('html')
