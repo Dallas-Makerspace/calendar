@@ -84,8 +84,7 @@
                                 </tr>
                                 <tr>
                                     <td><strong>Details</strong></td>
-                                    <td>Submitted on: <?= $event->created ?></td>
-                                    <td><?= $event->short_description ?></td>
+                                    <td><?= $event->short_description ?><br>Submitted on: <?= $event->created ?></td>
                                 </tr>
                                 <tr>
                                     <td></td>
