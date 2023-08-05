@@ -598,6 +598,7 @@ class EventsController extends AppController
                         'Events.name',
                         'Events.short_description',
                         'Events.status',
+                        'Events.created',
                         'Rooms.id',
                         'Rooms.name'
                         ]
