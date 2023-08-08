@@ -59,6 +59,8 @@ class EmailComponent extends Component
         $post = <<<POST
                 </div>
                 <div class="callout-center mt-20px">
+                    Please do not reply to this email with questions regarding this event, for further assistance use our <a href="https://talk.dallasmakerspace.org">Talk Forum</a>.
+                    <br><br/>
                     &copy; $currentYear Dallas Makerspace
                 </div>
             </div>
@@ -84,6 +86,55 @@ class EmailComponent extends Component
             The following event you submitted to the Dallas Makerspace Calendar has been rejected.<br/><br/>
             <b>Event: </b>$event->name <br/>
             <b>Reason: </b>$rejectionReason <br/><br/>
+            Regards,<br/>
+            Dallas Makerspace Team
+        MSGBODY;
+
+        $this->sendEmail($contact->name, $contact->email, $subject, $this->generateContainer($message));
+    }
+
+    /**
+     * @param Contact $contact The contact reference for the user who submitted the event.
+     * @param Event $event The event reference
+     * @return void
+     */
+    public function sendEventSubmitted(Contact $contact, Event $event)
+    {
+        $subject = 'DMS Event Submission: ' . $event->name;
+
+        $time = new Time($event->created);
+        $formattedTime = $time->i18nFormat('EEEE MMMM d, h:mma', 'America/Chicago');
+
+        $message = <<<MSGBODY
+            Hello $contact->name,<br/><br/>
+            You have submitted the following event to the DMS Calendar. <br />Please be aware that it may take a few days to get approved and be publicly visible. <br/><br/>
+            <b>Event: </b>$event->name <br/>
+            <b>Submission Time: </b>$formattedTime<br/><br/>
+            Regards,<br/>
+            Dallas Makerspace Team
+        MSGBODY;
+
+        $this->sendEmail($contact->name, $contact->email, $subject, $this->generateContainer($message));
+    }
+
+    /**
+     * @param Contact $contact The contact reference for the user who submitted the event.
+     * @param Event $event The event reference
+     * @return void
+     */
+    public function sendEventApproved(Contact $contact, Event $event)
+    {
+        $subject = 'DMS Event Approval: ' . $event->name;
+
+        $time = new Time($event->event_start);
+        $formattedTime = $time->i18nFormat('EEEE MMMM d, h:mma', 'America/Chicago');
+
+        $message = <<<MSGBODY
+            Hello $contact->name,<br/><br/>
+            The following event you submitted to the Dallas Makerspace Calendar has been approved.<br/><br/>
+            <b>Event: </b>$event->name <br/>
+            <b>Time: </b>$formattedTime <br/><br/>
+            Full event details are available at <a href="https://calendar.dallasmakerspace.org/events/view/$event->id">https://calendar.dallasmakerspace.org/events/view/$event->id</a>.<br/><br/>
             Regards,<br/>
             Dallas Makerspace Team
         MSGBODY;
