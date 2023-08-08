@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 
+use App\Controller\Component\EmailComponent;
+use App\Model\Entity\Contact;
 use LdapRecord\Models\ActiveDirectory\User;
 use LdapRecord\Models\ActiveDirectory\Group;
 use LdapRecord\Container;
@@ -23,6 +25,7 @@ use FeedIo\Feed;
  * Events Controller
  *
  * @property \App\Model\Table\EventsTable $Events
+ * @property EmailComponent $Email
  */
 class EventsController extends AppController
 {
@@ -953,6 +956,19 @@ class EventsController extends AppController
                     ->set(['status' => 'approved'])
                     ->where(['part_of_id' => $event->getSubject()->entity->id])
                     ->execute();
+
+                /** @var Contact $contact */
+                $contact = $this->Events->Contacts
+                    ->find()
+                    ->where(['ad_username' => $event->getSubject()->entity->created_by])
+                    ->first();
+
+                // Send an email to the submitter with some information
+                $this->Email->sendEventApproved(
+                    $contact,
+                    $event->getSubject()->entity, //Event
+                );
+
             }
         );
 
@@ -1564,6 +1580,18 @@ class EventsController extends AppController
                     $this->Events->Files->save($copied);
                 }
             }
+
+            /** @var Contact $contact */
+            $contact = $this->Events->Contacts
+                ->find()
+                ->where(['ad_username' => $event->getSubject()->entity->created_by])
+                ->first();
+
+            // Send an email to the submitter with some information
+            $this->Email->sendEventSubmitted(
+                $contact,
+                $event->getSubject()->entity, //Event
+            );
 
             $this->Flash->success(__('The event has been created. Your event will appear in 48 hours (non honorarium) or 72 hours (honorarium) unless there is an objection.'));
         } else {
