@@ -1343,7 +1343,7 @@ class EventsController extends AppController
                 $eventRef = $event->getSubject()->entity;
 
                 foreach ($registrations as $registration) {
-                    $this->Email->sendEventCancelled($eventRef, $registration);
+                    $this->Email->sendEventCancelled($registration, $eventRef);
 
                     if ($registration->phone && $registration->send_text) {
                         $this->__sendText($registration->phone, 'DMS Event Update: ' . $event->getSubject()->entity->name . ' has been cancelled.');
