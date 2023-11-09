@@ -337,6 +337,30 @@
     <div>
 
     <?php if ($canManageEvents || $event->created_by == $authUsername): ?>
+        <div>
+            <h3>Instructor Controls</h3>
+            <label>
+                Notify Instructor on Registrations?
+                <?php
+                    if ($event->notifyInstructorRegistrations){
+                        ?><input type="checkbox" disabled checked><?php
+                    } else {
+                        ?><input type="checkbox" disabled><?php
+                    }
+                ?>
+            </label>&emsp;
+            <label>
+                Notify Instructor on Cancellations?
+                <?php
+                if ($event->notifyInstructorCancellations){
+                    ?><input type="checkbox" disabled checked><?php
+                } else {
+                    ?><input type="checkbox" disabled><?php
+                }
+                ?>
+            </label>
+        </div>
+
         <div class="page-header">
             <h3>Registered Attendees</h3>
         </div>

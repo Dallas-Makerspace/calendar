@@ -46,6 +46,8 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Honorarium[] $honoraria
  * @property \App\Model\Entity\Category[] $categories
  * @property \App\Model\Entity\Tool[] $tools
+ * @property bool $notifyInstructorRegistrations
+ * @property bool $notifyInstructorCancellations
  */
 class Event extends Entity
 {

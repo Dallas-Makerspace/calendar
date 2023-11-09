@@ -353,6 +353,25 @@
             </div>
         </fieldset>
 
+        <fieldset>
+            <legend>Instructor Controls</legend>
+            <div class="row">
+                <div class="col-sm-6">
+                    <?= $this->Form->input('notifyInstructorRegistrations', [
+                        'type' => 'checkbox',
+                        'value' => 1
+                    ]) ?>
+                </div>
+                <div class="col-sm-6">
+                    <?= $this->Form->input('notifyInstructorCancellations', [
+                        'type' => 'checkbox',
+                        'value' => 1
+                    ]) ?>
+                </div>
+            </div>
+            <br>
+        </fieldset>
+
         <fieldset data-depends-on-field="categories-ids-1" data-hidden-on-field="categories-ids-2">
             <legend>Honorarium</legend>
             <div class="alert alert-info">
