@@ -28,6 +28,62 @@ class EmailComponent extends Component
     }
 
     /**
+     * @param Contact $contact The contact reference for the user who submitted the event.
+     * @param Event $event The event reference
+     * @return void
+     */
+    public function sendEventRejected(Contact $contact, Event $event)
+    {
+        $rejectionReason = ($event->rejection_reason ? $event->rejection_reason : 'No additional information given.');
+        $subject = 'DMS Event Rejection: ' . $event->name;
+
+        $message = <<<MSGBODY
+            Hello $contact->name,<br/><br/>
+            The following event you submitted to the Dallas Makerspace Calendar has been rejected.<br/><br/>
+            <b>Event: </b>$event->name <br/>
+            <b>Reason: </b>$rejectionReason <br/><br/>
+            Regards,<br/>
+            Dallas Makerspace Team
+        MSGBODY;
+
+        $this->sendEmail($contact->name, $contact->email, $subject, $this->generateContainer($message));
+    }
+
+    /**
+     * @param string $name Name of the person
+     * @param string $addr Email address of the person
+     * @param string $subject Email subject
+     * @param string $body Email body
+     * @return void
+     */
+    private function sendEmail(string $name, string $addr, string $subject, string $body)
+    {
+        try {
+            $email = new Email();
+            $email
+                ->setTransport('default')
+                ->setFrom(['admin@dallasmakerspace.org' => 'Dallas Makerspace'])
+                ->setTo([$addr => $name])
+                ->setSubject($this->limitSubject($subject))
+                ->setEmailFormat('html')
+                ->send($body);
+        } catch (Throwable $th) {
+            $this->log($th);
+        }
+    }
+
+    /**
+     * @param string $subject The subject line text
+     * @param int $length Mac length
+     * @return string
+     * @noinspection PhpSameParameterValueInspection
+     */
+    private function limitSubject(string $subject = "", int $length = 60): string
+    {
+        return strlen($subject) > $length ? substr($subject, 0, $length - 3) . "..." : $subject;
+    }
+
+    /**
      * @param string $body the inner content body
      * @return string combined all-in-one message to email
      */
@@ -69,28 +125,6 @@ class EmailComponent extends Component
         POST;
 
         return $pre . $body . $post;
-    }
-
-    /**
-     * @param Contact $contact The contact reference for the user who submitted the event.
-     * @param Event $event The event reference
-     * @return void
-     */
-    public function sendEventRejected(Contact $contact, Event $event)
-    {
-        $rejectionReason = ($event->rejection_reason ? $event->rejection_reason : 'No additional information given.');
-        $subject = 'DMS Event Rejection: ' . $event->name;
-
-        $message = <<<MSGBODY
-            Hello $contact->name,<br/><br/>
-            The following event you submitted to the Dallas Makerspace Calendar has been rejected.<br/><br/>
-            <b>Event: </b>$event->name <br/>
-            <b>Reason: </b>$rejectionReason <br/><br/>
-            Regards,<br/>
-            Dallas Makerspace Team
-        MSGBODY;
-
-        $this->sendEmail($contact->name, $contact->email, $subject, $this->generateContainer($message));
     }
 
     /**
@@ -346,6 +380,71 @@ class EmailComponent extends Component
      * @param Event $event Event ref
      * @return void
      */
+    public function sendRegistrationToInstructor(Registration $registration, Event $event)
+    {
+        $subject = 'DMS New Registration: ' . $event->name;
+        $time = new Time($event->event_start);
+        $formattedTime = $time->i18nFormat('EEEE MMMM d, h:mma', 'America/Chicago');
+        $userName = $event->contact->name;
+
+        $message = <<<MSGBODY
+            Hello $userName,<br/>
+            <br/>
+            Someone has registered for  your event.<br/>
+            <br/>
+            <b>Event: </b>$event->name<br/>
+            <b>Time: </b>$formattedTime<br/><br/>
+            <b>Attendee: </b>$registration->name <br/>
+            <b>Attendee Email: </b><a href="mailto:$registration->email">$registration->email</a><br/>
+            <br/>
+            View your event at <a
+                href="https://calendar.dallasmakerspace.org/events/view/$event->id">https://calendar.dallasmakerspace.org/events/view/$event->id</a>
+            <br/><br/>
+            Regards,<br/>
+            Dallas Makerspace Team
+        MSGBODY;
+
+        $this->sendEmail($event->contact->name, $event->contact->email, $subject, $this->generateContainer($message));
+    }
+
+    /**
+     * @param Registration $registration Registration ref, contains user info to notify and the like.
+     * @param Event $event Event ref
+     * @return void
+     */
+    public function sendCancellationToInstructor(Registration $registration, Event $event)
+    {
+        $subject = 'DMS Cancelled Registration: ' . $event->name;
+        $time = new Time($event->event_start);
+        $formattedTime = $time->i18nFormat('EEEE MMMM d, h:mma', 'America/Chicago');
+        $userName = $event->contact->name;
+
+        $message = <<<MSGBODY
+            Hello $userName,<br/>
+            <br/>
+            Someone has cancelled their attendance to your event.<br/>
+            <br/>
+            <b>Event: </b>$event->name<br/>
+            <b>Time: </b>$formattedTime<br/><br/>
+            <b>Attendee: </b>$registration->name <br/>
+            <b>Attendee Email: </b><a href="mailto:$registration->email">$registration->email</a><br/>
+            <br/>
+            View your event at <a
+                href="https://calendar.dallasmakerspace.org/events/view/$event->id">https://calendar.dallasmakerspace.org/events/view/$event->id</a>
+            <br/><br/>
+            Regards,<br/>
+            Dallas Makerspace Team
+        MSGBODY;
+
+        $this->sendEmail($event->contact->name, $event->contact->email, $subject, $this->generateContainer($message));
+    }
+
+
+    /**
+     * @param Registration $registration Registration ref, contains user info to notify and the like.
+     * @param Event $event Event ref
+     * @return void
+     */
     public function sendRegistrationApproved(Registration $registration, Event $event)
     {
         $subject = 'DMS Event Update: Attendance approved for ' . $event->name;
@@ -428,37 +527,4 @@ class EmailComponent extends Component
         $this->sendEmail($registration->name, $registration->email, $subject, $this->generateContainer($message));
     }
 
-    /**
-     * @param string $subject The subject line text
-     * @param int $length Mac length
-     * @return string
-     * @noinspection PhpSameParameterValueInspection
-     */
-    private function limitSubject(string $subject = "", int $length = 60): string
-    {
-        return strlen($subject) > $length ? substr($subject, 0, $length - 3) . "..." : $subject;
-    }
-
-    /**
-     * @param string $name Name of the person
-     * @param string $addr Email address of the person
-     * @param string $subject Email subject
-     * @param string $body Email body
-     * @return void
-     */
-    private function sendEmail(string $name, string $addr, string $subject, string $body)
-    {
-        try {
-            $email = new Email();
-            $email
-                ->setTransport('default')
-                ->setFrom(['admin@dallasmakerspace.org' => 'Dallas Makerspace'])
-                ->setTo([$addr => $name])
-                ->setSubject($this->limitSubject($subject))
-                ->setEmailFormat('html')
-                ->send($body);
-        } catch (Throwable $th) {
-            $this->log($th);
-        }
-    }
 }

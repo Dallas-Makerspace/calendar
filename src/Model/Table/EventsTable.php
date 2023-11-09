@@ -385,6 +385,12 @@ class EventsTable extends Table
         $validator
             ->allowEmpty('reminder_notification');
 
+        $validator
+            ->boolean('notify_instructor_of_registers');
+
+        $validator
+            ->boolean('notify_instructor_of_cancels');
+
         return $validator;
     }
 

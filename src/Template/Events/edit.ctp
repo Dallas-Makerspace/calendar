@@ -261,7 +261,7 @@
 								'required' => true
 		                    ]) ?>
 						<?php endif; ?>
-						
+
 						<?php if (!$event->eventbrite_link): ?>
                         	<?= $this->Form->input('cost', [
                             	'append' => '.00',
@@ -471,6 +471,18 @@
             </div>
         </fieldset>
 
+        <fieldset>
+            <legend>Instructor Controls</legend>
+            <?= $this->Form->input('notifyInstructorRegistrations', [
+                'type' => 'checkbox',
+            ]) ?>
+
+            <?= $this->Form->input('notifyInstructorCancellations', [
+                'type' => 'checkbox',
+            ]) ?>
+            <br>
+        </fieldset>
+
         <?php if (isset($event->honorarium)): ?>
             <fieldset>
                 <legend>Honorarium</legend>
@@ -507,7 +519,7 @@
         ) ?>
         <?= $this->Form->end() ?>
         <?= $this->fetch('postLink'); ?>
-        
+
         <div id="config-mininum-booking-lead-time" class="hidden"><?= $config[4] ?></div>
         <div id="config-maximum-booking-lead-time" class="hidden"><?= $config[5] ?></div>
     <?php endif; ?>
