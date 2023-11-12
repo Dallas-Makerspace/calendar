@@ -91,7 +91,7 @@ class AdAuthenticate extends FormAuthenticate
     {
         try
         {
-            $user = User::findByOrFail($this->config['username_field'], $username);
+            $user = User::findByOrFail($this->config['username_field'], trim($username));
             /*$user = $this->connection->query()
                 ->where($this->config['username_field'], '=',$username)
                 ->firstOrFail();*/
