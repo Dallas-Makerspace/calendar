@@ -1,3 +1,4 @@
+version: "3"
 services:
   traefik:
     image: "traefik:latest"
@@ -108,7 +109,7 @@ services:
     entrypoint: ['/var/www/.docker/wait-for-it.sh', "db:3306", "-s", "-t", "120", "--" ]
     command: '/var/www/.docker/startup.sh'
     environment:
-      DEBUG: true
+      DEBUG: 'true'
       DB_HOST: 'db' # Leave this as 'db' to utilize MySQL container(s)
       DB_USERNAME: 'calendar'
       DB_PASSWORD: 'calendar'
@@ -117,13 +118,13 @@ services:
       EMAIL_HOST: 'mail'
       EMAIL_PORT: 1025
       EMAIL_TIMEOUT: 30
-      EMAIL_TLS: false
+      EMAIL_TLS: 'false'
       AD_SERVER: 'openldap'
       AD_BASE: 'dc=dms,dc=local'
       AD_SUFFIX: '@dms.local'
       AD_BIND_UN: 'cn=admin,dc=dms,dc=local'
       AD_BIND_PW: 'Adm1n!'
-      AD_USE_TLS: true
+      AD_USE_TLS: 'true'
     networks:
         main:
             aliases:
