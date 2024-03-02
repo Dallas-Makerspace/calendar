@@ -210,6 +210,15 @@
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
+                                <?= $this->Html->link('Prerequisites (AD groups)', 'https://whoami.dallasmakerspace.org/', ['target' => '_blank']) ?>
+                            </li>
+                            <?php if ($authUser['ssologin']): ?>
+                                <li>
+                                    <?= $this->Html->link('SSO Profile', $authUser['ssoprofile'], ['target' => '_blank']) ?>
+                                </li>
+                            <?php endif; ?>
+                            <li role="separator" class="divider"></li>
+                            <li>
                                 <?= $this->Html->link('Logout', [
                                     'controller' => 'Users',
                                     'action' => 'logout'
