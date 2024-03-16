@@ -24,7 +24,8 @@
 		"phpunit/phpunit": "~6",
 		"sparkpost/sparkpost": "^2.1",
 		"dallasmakerspace/cakephp-sparkpost-plugin": "^v1.0",
-		"directorytree/ldaprecord": "2.*"
+		"directorytree/ldaprecord": "2.*",
+		"jumbojett/openid-connect-php": "1.*"
 	},
 	"require-dev" : {
 		"cakephp/debug_kit" : "^3.23",

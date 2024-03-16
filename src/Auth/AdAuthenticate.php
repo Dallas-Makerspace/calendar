@@ -99,6 +99,7 @@ class AdAuthenticate extends FormAuthenticate
             if ( $this->connection->auth()->attempt($user->getDn(), $password))
             {
                 $results = [];
+                $results['ssologin'] = false;
                 $attributes = $user->getAttributes();
                 foreach ($attributes as $key => $value){
                     if(is_array($value) && count($value) == 1)
