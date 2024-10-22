@@ -237,6 +237,8 @@
                             </span>
                         <?php endforeach; ?>
                 </div>
+            <?php elseif ($event->status == 'pending'): ?>
+                <div class="alert alert-info">This event is pending approval. Please check back later.</div>
             <?php else: ?>
                 <div class="alert alert-info">Registration for the event is closed.</div>
             <?php endif; ?>
