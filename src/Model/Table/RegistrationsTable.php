@@ -62,14 +62,17 @@ class RegistrationsTable extends Table
             ->requirePresence('name', 'create')
             ->notEmpty('name');
 
-        $validator
-            ->email('email')
+         $validator
+            ->add('email', 'validFormat', [
+                'rule' => 'email',
+                'message' => 'The provided email is not valid.'
+            ])
             ->requirePresence('email', 'create')
             ->notEmpty('email')
             ->add('email', ['unique' => [
                 'rule' => ['validateUnique', ['scope' => 'event_id']],
                 'provider' => 'table',
-                'message' => 'This email address is already associated with a registration for this event.'
+                'message' => 'The email address is already associated with a registration for this event.'
             ]]);
 
         $validator
