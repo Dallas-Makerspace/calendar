@@ -133,7 +133,6 @@ class AppController extends Controller
         $this->customLog('Viewed ' . $_SERVER[ 'REQUEST_URI' ]);
 
         $isAuthorized = [
-            'canAddEvents' => 0,
             'canManageCategories' => 0,
             'canManageCommittees' => 0,
             'canManageConfigs' => 0,
@@ -151,10 +150,6 @@ class AppController extends Controller
 
         if ($this->Auth->user()) {
             $authorizations = [
-                'Members' => [
-                    'canAddEvents',
-                    'canManageOwnEvents'
-                ],
                 'Calendar Admins' => [
                     'canManageCategories',
                     'canManageCommittees',

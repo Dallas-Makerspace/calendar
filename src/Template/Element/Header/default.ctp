@@ -22,7 +22,7 @@
                     </ul>
                 </li>
                 <?php if (!($this->request->getParam('controller') == 'Events' && $this->request->getParam('action') == 'add')): ?>
-                    <?php if ($canAddEvents): ?>
+                    <?php if ($authUser): ?>
                         <li>
                             <?= $this->Html->link('Submit Event', [
                                 'controller' => 'Events',
