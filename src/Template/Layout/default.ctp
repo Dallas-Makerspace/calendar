@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $this->fetch('title') ?> |<?= __('Dallas Makerspace Calendar') ?></title>
+    <title><?= $this->fetch('title') ?> | <?= __('Dallas Makerspace Calendar') ?></title>
     <?php
     echo $this->Html->charset();
     echo $this->Html->meta('icon');

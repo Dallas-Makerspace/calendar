@@ -1,4 +1,7 @@
-<?php use Cake\I18n\Time; ?>
+<?php 
+  use Cake\I18n\Time; 
+  $this->assign('title', $event->name);
+?>
 <div class="events view">
     <?= $this->Flash->render() ?>
     <div class="page-header">
