@@ -37,6 +37,14 @@ services:
         main:
           aliases:
             - openldap
+  keycloak:
+    extends:
+        file: ./dms-ad-openldap/docker-compose.yml
+        service: keycloak
+    networks:
+      main:
+        aliases:
+          - keycloak
   phpldapadmin:
     extends:
       file: ./dms-ad-openldap/docker-compose.yml
@@ -101,6 +109,8 @@ services:
       - db
     ports:
       - "8000:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     labels:
       - traefik.enable=true
       - traefik.http.routers.app.tls=true

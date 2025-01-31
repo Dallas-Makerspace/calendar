@@ -16,6 +16,8 @@
         </fieldset>
         <?= $this->Form->button(__('Login')); ?>
       <?= $this->Form->end() ?>
+      <br />
+      <?= $this->Html->link(__('SSO Login'), ['action' => 'ssoLogin']); ?>
       <p class="small" style="margin-top:15px">Forgot your password? Primary account holders can <?= $this->Html->link(__('change passwords in WHMCS'), 'https://accounts.dallasmakerspace.org/accounts/pwreset.php') ?>. Family members must have their primary account holder or an admin reset their password from <?= $this->Html->link(__('Maker Manager'), 'https://accounts.dallasmakerspace.org/makermanager') ?>.</p>
     </div>
   </section>
