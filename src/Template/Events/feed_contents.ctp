@@ -3,7 +3,8 @@
                                     <td><strong>When</strong></td>
                                     <td>
                                     <?php
-                                            $startdate = $this->Time->fromString($event->event_start, 'America/Chicago')->format('Ymd');
+                                    /** @var \App\Model\Entity\Event $event */
+                                    $startdate = $this->Time->fromString($event->event_start, 'America/Chicago')->format('Ymd');
                                             $enddate = $this->Time->fromString($event->event_end, 'America/Chicago')->format('Ymd');
                                             if ($startdate == $enddate) {
                                                 $secondFormat = "h:mma";
@@ -54,17 +55,7 @@
                                     <td><strong>Cost</strong></td>
                                     <td>$<?= number_format($event->cost, 2) ?></td>
                                 </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <?= str_replace('"', "'", $this->Html->link('More Info and RSVP »', [
-                                            'action' => 'view',
-                                            $event->id
-                                        ])) ?>
-                                    </td>
-                                </tr>
                             </table>
                             <p>
 								<?= nl2br(h($event->long_description)) ?>
 							</p>
-							
