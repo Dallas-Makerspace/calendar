@@ -430,11 +430,19 @@ class EventsController extends AppController
 
             // create new feed
             $feed = new Feed();
-
+            $feed->setPublicId(Router::url([
+                'controller' => 'events',
+                'action' => 'feed/atom',
+                '_ssl' => true,
             // Set the feed channel elements
 
-            $feed->setTitle('Dallas Makerspace Calendar' . $title_addon);
+            $feed->setLink(Router::url([
+                'controller' => 'events',
+                'action' => 'feed/atom',
+                '_ssl' => true,
+            ]));
             $feed->setDescription('Events and Classes available at the Dallas Makerspace' . $description_addon);
+                
 
             // add each event/class in feed
             /** @var \App\Model\Entity\Event $event */
@@ -450,16 +458,21 @@ class EventsController extends AppController
                 $feed_event->setLink($url);
                 $feed_event->setLastModified(new \DateTime($event->modified));
                 $feed_event->setDescription($desc_html);
-                $feed_event->setPublicId($url, false);
+                $feed_event->setPublicId($url);
 
                 $feed_author = $feed_event->newAuthor();
                 $feed_author->setName($event->contact->name);
-                $feed_author->setUri("");
-                $feed_author->setEmail("");
+                $feed_author->setUri("infra@dallasmakerspace.org");
+                $feed_author->setEmail("infra@dallasmakerspace.org");
                 $feed_event->setAuthor($feed_author);
 
-
-//                $feed_media = $feed_event->newMedia();
+                foreach ($event->categories as $category) {
+                    $feed_category = $feed_event->newCategory();
+                    $feed_category->setTerm($category->name);
+                    $feed_category->setScheme("event:category");
+                    $feed_category->setLabel($category->name);
+                    $feed_event->addCategory($feed_category);
+                }
 
                 $imageEndings = ["png", "jpeg", "jpg", "gif", "webp", "svg"];
 

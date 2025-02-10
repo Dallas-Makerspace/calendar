@@ -221,7 +221,7 @@ return [
      */
     'Email' => [
         'default' => [
-            'transport' => 'default',
+            'transport' => 'sparkpost',
             'from' => 'admin@dallasmakerspace.org',
         ],
     ],

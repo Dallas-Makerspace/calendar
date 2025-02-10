@@ -61,3 +61,5 @@ services:
     - TWILIO_AUTHTOKEN=${TWILIO_AUTHTOKEN}
     - TWILIO_PHONENUM=${TWILIO_PHONENUM}
     - SERVERNAME=${SERVERNAME}
+    volumes:
+      - ./files:/var/www/webroot/files #Mount in uploaded files

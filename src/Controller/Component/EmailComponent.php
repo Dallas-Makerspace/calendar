@@ -49,6 +49,7 @@ class EmailComponent extends Component
         $this->sendEmail($contact->name, $contact->email, $subject, $this->generateContainer($message));
     }
 
+
     /**
      * @param string $name Name of the person
      * @param string $addr Email address of the person
@@ -61,7 +62,7 @@ class EmailComponent extends Component
         try {
             $email = new Email();
             $email
-                ->setTransport('default')
+                ->setTransport('sparkpost')
                 ->setFrom(['admin@dallasmakerspace.org' => 'Dallas Makerspace'])
                 ->setTo([$addr => $name])
                 ->setSubject($this->limitSubject($subject))
@@ -71,6 +72,7 @@ class EmailComponent extends Component
             $this->log($th);
         }
     }
+
 
     /**
      * @param string $subject The subject line text
@@ -526,5 +528,4 @@ class EmailComponent extends Component
 
         $this->sendEmail($registration->name, $registration->email, $subject, $this->generateContainer($message));
     }
-
 }

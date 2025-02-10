@@ -359,13 +359,15 @@
                 <div class="col-sm-6">
                     <?= $this->Form->input('notifyInstructorRegistrations', [
                         'type' => 'checkbox',
-                        'value' => 1
+                        'value' => 1,
+                        'help' => "If you (the instructor) wants to receive emails when someone signs up.",
                     ]) ?>
                 </div>
                 <div class="col-sm-6">
                     <?= $this->Form->input('notifyInstructorCancellations', [
                         'type' => 'checkbox',
-                        'value' => 1
+                        'value' => 1,
+                        'help' => "If you (the instructor) wants to receive emails when someone signs up.",
                     ]) ?>
                 </div>
             </div>
