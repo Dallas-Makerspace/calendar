@@ -475,10 +475,12 @@
             <legend>Instructor Controls</legend>
             <?= $this->Form->input('notifyInstructorRegistrations', [
                 'type' => 'checkbox',
+                'help' => "If you (the instructor) wants to receive emails when someone signs up.",
             ]) ?>
 
             <?= $this->Form->input('notifyInstructorCancellations', [
                 'type' => 'checkbox',
+                'help' => "If you (the instructor) wants to receive emails when someone signs up.",
             ]) ?>
             <br>
         </fieldset>
