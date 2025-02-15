@@ -434,8 +434,9 @@ class EventsController extends AppController
                 'controller' => 'events',
                 'action' => 'feed/atom',
                 '_ssl' => true,
+            ]));
+            
             // Set the feed channel elements
-
             $feed->setLink(Router::url([
                 'controller' => 'events',
                 'action' => 'feed/atom',
