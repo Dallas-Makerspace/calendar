@@ -436,7 +436,7 @@
                             'help' => "If you require any teardown time for your event it will be made available immediately following the event's end time.",
                             'label' => 'Teardown Time',
                             'options' => [
-                                0 => 'No setup time required',
+                                0 => 'No teardown time required',
                                 15 => '15 minutes',
                                 30 => '30 minutes',
                                 45 => '45 minutes',
