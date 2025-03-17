@@ -1,8 +1,12 @@
 <?php
 namespace App\Controller;
 
+use App\Auth\OpenIDConnectService;
 use App\Controller\AppController;
+
+use Cake\Log\Log;
 use Cake\Event\Event;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -19,8 +23,10 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
 
-        // Allow users to logout
+        // Allow users to logout and use SSO to login
         $this->Auth->allow(['logout']);
+        $this->Auth->allow(['ssoLogin']);
+        $this->Auth->allow(['oidcCallback']);
     }
 
     /**
@@ -122,5 +128,48 @@ class UsersController extends AppController
     public function logout()
     {
         return $this->redirect($this->Auth->logout());
+    }
+
+    /**
+     * SSO Login method
+     *
+     * @return \Cake\Network\Response|void Redirects to keycloak for SSO login.
+     */
+    public function ssoLogin()
+    {
+        Log::debug('SSO Login');
+        $oidcService = new OpenIDConnectService();
+        $oidcService->authenticate();
+    }
+
+    /**
+     * OIDC Callback method, read userInfo returned by OIDC and populate auth user array
+     */
+    public function oidcCallback()
+    {
+        Log::debug('OIDC Callback');
+        try {
+            $oidcService = new OpenIDConnectService();
+
+            // Ensure the user is authenticated
+            if ($oidcService->authenticateCallback($this->getRequest())) {
+                $user = $oidcService->getUserData();
+                if (!$user) {
+                    throw new Exception('Failed to retrieve user information');
+                }
+
+                $this->Auth->setUser($user);
+
+                // TODO(mandarl): Add logic to redirect to authDest
+
+                Log::info('OIDC Callback: User authenticated ' . $user['samaccountname']);
+                return $this->redirect(['controller' => '/', 'action' => 'index']);
+            }
+        } catch (Exception $e) {
+            // Handle exceptions (e.g., user not found)
+            Log::error('Authentication failed: ' . $e->getMessage());
+            $this->Flash->error('Authentication failed: ' . $e->getMessage());
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
     }
 }

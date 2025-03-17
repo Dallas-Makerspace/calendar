@@ -14,6 +14,7 @@
  */
 namespace App\Controller;
 
+use App\Auth\OpenIDConnectService;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -133,7 +134,6 @@ class AppController extends Controller
         $this->customLog('Viewed ' . $_SERVER[ 'REQUEST_URI' ]);
 
         $isAuthorized = [
-            'canAddEvents' => 0,
             'canManageCategories' => 0,
             'canManageCommittees' => 0,
             'canManageConfigs' => 0,
@@ -151,10 +151,6 @@ class AppController extends Controller
 
         if ($this->Auth->user()) {
             $authorizations = [
-                'Members' => [
-                    'canAddEvents',
-                    'canManageOwnEvents'
-                ],
                 'Calendar Admins' => [
                     'canManageCategories',
                     'canManageCommittees',
@@ -236,6 +232,24 @@ class AppController extends Controller
     public function isAuthorized($user = null)
     {
         return $this->inAdminstrativeGroup($user, 'Calendar Admins');
+    }
+
+    /**
+     * Check if the current user is a member of a specified group.
+     *
+     * @param string $group The AD group to check user membership against.
+     * @param bool $forceRefreshGroups Fetch user groups from auth source even if they are already set.
+     * @return bool True if $user is authorized, otherwise false
+     */
+    public function currentUserInGroup($group, $forceRefreshGroups = false)
+    {
+        $user = $this->Auth->user();
+        if ($forceRefreshGroups) {
+            $oidc = new OpenIDConnectService();
+            $groups = $oidc->updateGroups($this->getRequest()->getSession());
+            $user['groups'] = $groups;
+        }
+        return $this->inAdminstrativeGroup($user, $group);
     }
 
     /**

@@ -1,4 +1,7 @@
-<?php use Cake\I18n\Time; ?>
+<?php 
+  use Cake\I18n\Time; 
+  $this->assign('title', $event->name);
+?>
 <div class="events view">
     <?= $this->Flash->render() ?>
     <div class="page-header">
@@ -237,6 +240,8 @@
                             </span>
                         <?php endforeach; ?>
                 </div>
+            <?php elseif ($event->status == 'pending'): ?>
+                <div class="alert alert-info">This event is pending approval. Please check back later.</div>
             <?php else: ?>
                 <div class="alert alert-info">Registration for the event is closed.</div>
             <?php endif; ?>

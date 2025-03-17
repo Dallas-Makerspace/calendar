@@ -86,7 +86,11 @@ class RegistrationsController extends AppController
             $this->set('authUser', $this->Auth->user());
 
             if (!empty($eventInfo->requires_prerequisite)) {
-                $this->set('meetsPreq', parent::inAdminstrativeGroup($this->Auth->user(), $eventInfo->requires_prerequisite->ad_group));
+                if ($this->Auth->user()['ssologin']) {
+                    $this->set('meetsPreq', parent::currentUserInGroup($eventInfo->requires_prerequisite->ad_group, /* $forceRefreshGroups= */ true));
+                } else {
+                    $this->set('meetsPreq', parent::inAdminstrativeGroup($this->Auth->user(), $eventInfo->requires_prerequisite->ad_group));
+                }
             }
 
             $paidSpacesAvailable = $this->Events->hasPaidSpaces($this->passedArgs[0]);
@@ -104,7 +108,16 @@ class RegistrationsController extends AppController
         $this->Crud->on('beforeSave', function (Event $event) {
             $this->Events = TableRegistry::get('Events');
             $registration = $event->getSubject()->entity;
-            if ($registration->type == 'paid') {
+            if ($registration->errors()) {
+                $errors = $registration->errors();
+                // Concatenate all error messages into a single string
+                $errMessage = '';
+                foreach ($errors as $error) {
+                    $errMessage .= implode(' \n', $error);
+                }
+                $this->Flash->error($errMessage);
+                $event->stopPropagation();
+            } elseif ($registration->type == 'paid') {
                 if (!$this->Events->hasPaidSpaces($registration->event_id)) {
                     $this->Flash->error('This event no longer has any paid spaces available. You have not been charged.');
                     $registration->errors('type', ['This event no longer has any paid spaces available.']);

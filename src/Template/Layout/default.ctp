@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $this->fetch('title') ?> |<?= __('Dallas Makerspace Calendar') ?></title>
+    <title><?= $this->fetch('title') ?> | <?= __('Dallas Makerspace Calendar') ?></title>
     <?php
     echo $this->Html->charset();
     echo $this->Html->meta('icon');
@@ -44,6 +44,17 @@ if ($this->request->getParam('action') != 'embed') {
 
 echo $this->fetch('script');
 ?>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TSBVKCC0GS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TSBVKCC0GS');
+</script>
 
 </body>
 </html>

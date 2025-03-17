@@ -221,7 +221,7 @@ return [
      */
     'Email' => [
         'default' => [
-            'transport' => 'default',
+            'transport' => 'sparkpost',
             'from' => 'admin@dallasmakerspace.org',
         ],
     ],
@@ -354,5 +354,19 @@ return [
         'use_tls' => filter_var(env('AD_USE_TLS', true), FILTER_VALIDATE_BOOLEAN),
         'base_dn' => env('AD_BASE','DC=dev,DC=com'),
         'domain_controllers' => [env('AD_SERVER','dms.local')]
+    ],
+
+    /**
+     * OpenIDConnect configuration
+     * See details here:
+     * @link https://github.com/jumbojett/OpenID-Connect-PHP
+     */
+    'OIDC' => [
+        'client_id' => env('OIDC_CLIENT_ID', 'calendar'),
+        'client_secret' => env('OIDC_CLIENT_SECRET','dummy-secret-for-dev-mode'),
+        'redirect_uri' => env('SERVERNAME', 'http://localhost:8000') . '/users/oidc-callback',
+        'url_authorize' => env('OIDC_URL_AUTHORIZE','http://keycloak:8080/realms/DMS/'),
+        'url_access_token' => env('OIDC_URL_ACCESS_TOKEN','http://keycloak:8080/token'),
+        'url_resource_owner_details' => env('OIDC_URL_RESOURCE_OWNER','http://keycloak:8080/realms/DMS/protocol/openid-connect/userinfo')
     ],
 ];

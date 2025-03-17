@@ -41,10 +41,12 @@
                         'default' => ($authUser ? $authUser['mail'] : '')
                     ]) ?>
                     <?= $this->Form->input('phone', [
-                        'default' => ($authUser ? $authUser['telephonenumber'] : '')
+                        'default' => ($authUser ? $authUser['telephonenumber'] : ''),
+                        'help' => 'DMS does not send messages to this number, but the teacher will see it and may reach out in the case of a class delay/etc.'
                     ]) ?>
-                    <?= $this->Form->input('send_text', ['label' => 'Receive text message alerts and updates regarding this event.']) ?>
-
+                    <div style="display: none">
+                        <?= $this->Form->input('send_text', ['label' => 'Receive text message alerts and updates regarding this event.']) ?>
+                    </div>
                     <?php if ($event->advisories): ?>
                         <div class="alert alert-warning">
                             <h4 style="margin-top: 10px"><strong>Special Considerations and Warnings</strong></h4>

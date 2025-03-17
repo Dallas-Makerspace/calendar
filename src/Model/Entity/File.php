@@ -7,6 +7,7 @@ use Cake\ORM\Entity;
  * File Entity.
  *
  * @property int $id
+ * @property boolean $private
  * @property string $file
  * @property string $dir
  * @property string $type

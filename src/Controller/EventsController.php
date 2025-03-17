@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Controller\Component\EmailComponent;
 use App\Model\Entity\Contact;
+use App\Model\Entity\File;
 use LdapRecord\Models\ActiveDirectory\User;
 use LdapRecord\Models\ActiveDirectory\Group;
 use LdapRecord\Container;
@@ -225,8 +226,104 @@ class EventsController extends AppController
         return $this->Crud->execute();
     }
 
+    public function eventsJson()
+    {
+        $this->autoRender = false;
+
+        $today = new Time('America/Chicago');
+        $today->startOfDay()->timezone('UTC');
+        $now = Time::now();
+        $events = $this->Events->find('all')
+            ->select(
+                [
+                    'Events.id',
+                    'Events.event_start',
+                    'Events.event_end',
+                    'Events.name',
+                    'Events.cost',
+                    'Events.room_id',
+                    'Events.short_description',
+                    'Events.long_description',
+                    'Rooms.name',
+                    'Contacts.name',
+                    'Events.modified'
+                ]
+            )
+            ->where(
+                [
+                    'Events.event_start >=' => $today,
+                    'Events.status' => 'approved'
+                ]
+            )
+            ->contain(['Rooms', 'Contacts', 'Categories', 'Files'])
+            ->order(['event_start' => 'ASC']);
+
+
+        $output = [];
+        /** @var \App\Model\Entity\Event $event */
+        foreach ($events as $event) {
+            $initialTotalSpaces = $this->Events->getTotalSpaces($event->id);
+            if ($initialTotalSpaces === true) {
+                $initialTotalSpaces = -1;
+            }
+            $initialFilledSpaces = $this->Events->getFilledSpaces($event->id);
+            if ($initialFilledSpaces === true) {
+                $initialFilledSpaces = -1;
+            }
+
+            $evtObj = [
+                "id" => $event->id,
+                "name" => $event->name,
+                "cost" => "\${$event->cost}.00",
+                "eventStart" => $event->event_start,
+                "eventEnd" => $event->event_end,
+                "room" => $event->room->name,
+                "contact" => $event->contact->name,
+                "shortDescription" => $event->short_description,
+                "longDescription" => $event->long_description,
+                "totalSpaces" => $initialTotalSpaces,
+                "filledSpaces" => $initialFilledSpaces,
+            ];
+
+
+            $imageEndings = ["png", "jpeg", "jpg", "gif", "webp", "svg"];
+
+            /** @var File $file */
+            foreach ($event->files as $file) {
+                if ($file->private) {
+                    continue;
+                }
+
+                $exploded = explode(".", $file->file);
+                $imageEnding = ($exploded !== false && count($exploded) >= 2) ? $exploded[count($exploded) - 1] : '';
+                $filePayload = [
+                    "url" => Configure::read('App.fullBaseUrl') . '/' . str_replace("webroot/", "", $file->dir) . rawurlencode($file->file),
+                    "type" => $file->type,
+                    "length" => filesize(ROOT . DS . $file->dir . $file->file),
+                ];
+                if (in_array($imageEnding, $imageEndings)) {
+                    $evtObj["images"][] = $filePayload;
+                } else {
+                    $evtObj["files"][] = $filePayload;
+                }
+            }
+
+            $output[] = (object)$evtObj;
+        }
+
+        return json_encode($output, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    }
+
     public function feed($feedtype = "vcal")
     {
+        if ($feedtype === "newJson") {
+            $this->response = $this->response
+                ->withStringBody($this->eventsJson())
+                ->withType('application/json')
+                ->withAddedHeader("Access-Control-Allow-Origin", "*");
+            return $this->response;
+        }
+
         // TODO: Accept arguments like calendar view and include location
         $this->autoRender = false;
 
@@ -255,7 +352,7 @@ class EventsController extends AppController
                 'Events.status' => 'approved'
                 ]
             )
-            ->contain(['Rooms', 'Contacts', 'Categories'])
+            ->contain(['Rooms', 'Contacts', 'Categories', 'Files'])
             ->order(['event_start' => 'ASC']);
 
         // This allows us to use the applyQueryFilters method for the feed
@@ -333,14 +430,23 @@ class EventsController extends AppController
 
             // create new feed
             $feed = new Feed();
-
+            $feed->setPublicId(Router::url([
+                'controller' => 'events',
+                'action' => 'feed/atom',
+                '_ssl' => true,
+            ]));
+            
             // Set the feed channel elements
-
-            $feed->setTitle('Dallas Makerspace Calendar' . $title_addon);
-            $feed->setLink(Router::url('/', true));
-            $feed->setDescription('Events and Classes avaliable at the Dallas Makerspace' . $description_addon);
+            $feed->setLink(Router::url([
+                'controller' => 'events',
+                'action' => 'feed/atom',
+                '_ssl' => true,
+            ]));
+            $feed->setDescription('Events and Classes available at the Dallas Makerspace' . $description_addon);
+                
 
             // add each event/class in feed
+            /** @var \App\Model\Entity\Event $event */
             foreach ($events as $event) {
                 $view = new View($this->request);
                 $view->set('event', $event);
@@ -353,13 +459,42 @@ class EventsController extends AppController
                 $feed_event->setLink($url);
                 $feed_event->setLastModified(new \DateTime($event->modified));
                 $feed_event->setDescription($desc_html);
-                $feed_event->setPublicId($url, false);
+                $feed_event->setPublicId($url);
 
                 $feed_author = $feed_event->newAuthor();
-                $feed_author->getName($event->contact->name);
-                $feed_author->setUri("");
-                $feed_author->setEmail("");
+                $feed_author->setName($event->contact->name);
+                $feed_author->setUri("infra@dallasmakerspace.org");
+                $feed_author->setEmail("infra@dallasmakerspace.org");
                 $feed_event->setAuthor($feed_author);
+
+                foreach ($event->categories as $category) {
+                    $feed_category = $feed_event->newCategory();
+                    $feed_category->setTerm($category->name);
+                    $feed_category->setScheme("event:category");
+                    $feed_category->setLabel($category->name);
+                    $feed_event->addCategory($feed_category);
+                }
+
+                $imageEndings = ["png", "jpeg", "jpg", "gif", "webp", "svg"];
+
+                /** @var File $file */
+                foreach ($event->files as $file) {
+                    if ($file->private) {
+                        continue;
+                    }
+
+                    $exploded = explode(".", $file->file);
+                    $imageEnding = ($exploded !== false && count($exploded) >= 2) ? $exploded[count($exploded) - 1] : '';
+                    if (in_array($imageEnding, $imageEndings)) {
+                        $media = $feed_event->newMedia();
+                        $media->setUrl(Configure::read('App.fullBaseUrl') . '/' . str_replace("webroot/", "", $file->dir) . rawurlencode($file->file));
+                        $media->setType($file->type);
+                        $media->setLength(filesize(ROOT . DS . $file->dir . $file->file));
+                        $feed_event->addMedia($media);
+                    }
+                }
+
+                //  str_replace("webroot/", "", $image->dir) . $image->file
 
                 foreach ($event->categories as $category) {
                     $feed_category = $feed_event->newCategory();
@@ -375,21 +510,33 @@ class EventsController extends AppController
             $feedIo = Factory::create()->getFeedIo();
 
             if ($feedtype === "atom") {
+                $feed->setPublicId(Router::url(['controller' => 'events', 'action' => 'feed/atom', '_ssl' => true,]));
+                $feed->setLink(Router::url(['controller' => 'events', 'action' => 'feed/atom', '_ssl' => true,]));
+
                 $this->response = $this->response
                     ->withStringBody($feedIo->format($feed, 'atom'))
-                    ->withType('application/atom+xml');
+                    ->withType('text/xml');
             } elseif ($feedtype === "json") {
+                $feed->setPublicId(Router::url(['controller' => 'events', 'action' => 'feed/json', '_ssl' => true,]));
+                $feed->setLink(Router::url(['controller' => 'events', 'action' => 'feed/json', '_ssl' => true,]));
+
                 $this->response = $this->response
                     ->withStringBody($feedIo->format($feed, 'json'))
                     ->withType('application/json');
             } elseif ($feedtype === "rss") {
+                $feed->setPublicId(Router::url(['controller' => 'events', 'action' => 'feed/rss', '_ssl' => true,]));
+                $feed->setLink(Router::url(['controller' => 'events', 'action' => 'feed/rss', '_ssl' => true,]));
+
                 $this->response = $this->response
                     ->withStringBody($feedIo->format($feed, 'rss'))
-                    ->withType('application/rss+xml');
+                    ->withType('text/xml');
             } else { // Default to RSS
+                $feed->setPublicId(Router::url(['controller' => 'events', 'action' => 'feed/rss', '_ssl' => true,]));
+                $feed->setLink(Router::url(['controller' => 'events', 'action' => 'feed/rss', '_ssl' => true,]));
+
                 $this->response = $this->response
                     ->withStringBody($feedIo->format($feed, 'rss'))
-                    ->withType('application/rss+xml');
+                    ->withType('text/xml');
             }
         }
 
