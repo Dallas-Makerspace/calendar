@@ -1264,7 +1264,7 @@ class EventsController extends AppController
         ];
         $apple = [
             "icon" => "apple.svg",
-            "url" => $event_url,
+            "url" => Router::url(['controller' => 'Events', 'action' => 'view', 'id' => $event->id], true);,
             "hint" => "Add to iPhone / mac"
         ];
         return [$gcal, $outlook, $apple];
