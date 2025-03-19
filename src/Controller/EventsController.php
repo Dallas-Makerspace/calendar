@@ -435,7 +435,7 @@ class EventsController extends AppController
                 'action' => 'feed/atom',
                 '_ssl' => true,
             ]));
-            
+
             // Set the feed channel elements
             $feed->setLink(Router::url([
                 'controller' => 'events',
@@ -443,7 +443,7 @@ class EventsController extends AppController
                 '_ssl' => true,
             ]));
             $feed->setDescription('Events and Classes available at the Dallas Makerspace' . $description_addon);
-                
+
 
             // add each event/class in feed
             /** @var \App\Model\Entity\Event $event */
@@ -1249,7 +1249,8 @@ class EventsController extends AppController
         $start_date_c = urlencode($event->event_start->setTimezone('America/Chicago')->i18nFormat("yyyy-MM-dd'T'HH:mm:ss")); // 2020-04-19T13:30:00Z
         $end_date_c = urlencode($event->event_end->setTimezone('America/Chicago')->i18nFormat("yyyy-MM-dd'T'HH:mm:ss"));
         $title = urlencode($event->name);
-        $description = urlencode($event->short_description);
+        $event_url = Router::url(['controller' => 'Events', 'action' => 'view', 'id' => $event->id], true);
+        $description = urlencode($event->short_description. "\r\n\r\n" . $event_url);
         $address = '1825%20Monetary%20Ln%20%23104%20Carrollton%2C%20TX%2075006';
         $gcal = [
             "icon" => "gcal.svg",
