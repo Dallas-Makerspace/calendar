@@ -14,22 +14,6 @@ $this->Html->meta(
 	], true),
     ['type' => 'rss', 'block' => 'meta']
 );
-
-// set link tag in head
-$this->Html->meta(
-    'Events',
-    $this->Url->build([
-    	"controller" => "Events",
-    	"action" => "feed",
-    	"feedtype" => "atom",
-    	"category" => $this->request->getQuery("category"),
-    	"type" => $this->request->getQuery("type"),
-        "tool" => $this->request->getQuery("tool"),
-        "room" => $this->request->getQuery("room"),
-	], true),
-    ['type' => 'atom', 'block' => 'meta']
-);
-
 ?>
 <div class="events index">
     <?= $this->Flash->render() ?>
@@ -50,15 +34,6 @@ $this->Html->meta(
             'escape' => false
         ]) ?>
         &nbsp;
-        <?= $this->Html->link('<i class="fa fa-rss" aria-hidden="true"></i> ATOM', [
-            'action' => 'feed', 'feedtype' => "atom",
-    		"category" => $this->request->getQuery("category"),
-    		"type" => $this->request->getQuery("type"),
-            "tool" => $this->request->getQuery("tool"),
-            "room" => $this->request->getQuery("room"),
-        ], [
-            'escape' => false
-        ]) ?>
     </div>
     <br>
     <div class="page-header">
