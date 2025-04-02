@@ -68,7 +68,7 @@ class OpenIDConnectService
         // Map user data from userInfo (oidc) to user array
         $user = [];
         $user['ssologin'] = true;
-        $user['ssoprofile'] = Configure::read('OIDC.url_authorize') . '/account';
+        $user['ssoprofile'] = Configure::read('OIDC.url_authorize') . 'account';
         $user['samaccountname'] = $userInfo->preferred_username;
         $user['name'] = $userInfo->name;
         $user['email'] = $userInfo->email;

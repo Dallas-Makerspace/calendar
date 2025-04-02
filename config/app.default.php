@@ -364,7 +364,7 @@ return [
     'OIDC' => [
         'client_id' => env('OIDC_CLIENT_ID', 'calendar'),
         'client_secret' => env('OIDC_CLIENT_SECRET','dummy-secret-for-dev-mode'),
-        'redirect_uri' => env('SERVERNAME', 'http://localhost:8000') . '/users/oidc-callback',
+        'redirect_uri' => env('BASE_URL', 'http://localhost:8000') . '/users/oidc-callback',
         'url_authorize' => env('OIDC_URL_AUTHORIZE','http://keycloak:8080/realms/DMS/'),
         'url_access_token' => env('OIDC_URL_ACCESS_TOKEN','http://keycloak:8080/token'),
         'url_resource_owner_details' => env('OIDC_URL_RESOURCE_OWNER','http://keycloak:8080/realms/DMS/protocol/openid-connect/userinfo')
