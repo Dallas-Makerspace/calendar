@@ -429,6 +429,75 @@
             "time": "2020-10-29T04:00:42+00:00"
         },
         {
+            "name": "carbonphp/carbon-doctrine-types",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CarbonPHP/carbon-doctrine-types.git",
+                "reference": "99f76ffa36cce3b70a4a6abce41dba15ca2e84cb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon-doctrine-types/zipball/99f76ffa36cce3b70a4a6abce41dba15ca2e84cb",
+                "reference": "99f76ffa36cce3b70a4a6abce41dba15ca2e84cb",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0"
+            },
+            "conflict": {
+                "doctrine/dbal": "<3.7.0 || >=4.0.0"
+            },
+            "require-dev": {
+                "doctrine/dbal": "^3.7.0",
+                "nesbot/carbon": "^2.71.0 || ^3.0.0",
+                "phpunit/phpunit": "^10.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Carbon\\Doctrine\\": "src/Carbon/Doctrine/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "KyleKatarn",
+                    "email": "kylekatarnls@gmail.com"
+                }
+            ],
+            "description": "Types to use Carbon in Doctrine",
+            "keywords": [
+                "carbon",
+                "date",
+                "datetime",
+                "doctrine",
+                "time"
+            ],
+            "support": {
+                "issues": "https://github.com/CarbonPHP/carbon-doctrine-types/issues",
+                "source": "https://github.com/CarbonPHP/carbon-doctrine-types/tree/2.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kylekatarnls",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/Carbon",
+                    "type": "open_collective"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/nesbot/carbon",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2023-12-11T17:09:12+00:00"
+        },
+        {
             "name": "clue/stream-filter",
             "version": "v1.6.0",
             "source": {
@@ -1848,31 +1917,36 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.59.1",
+            "version": "2.73.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "a9000603ea337c8df16cc41f8b6be95a65f4d0f5"
+                "url": "https://github.com/CarbonPHP/carbon.git",
+                "reference": "9228ce90e1035ff2f0db84b40ec2e023ed802075"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/a9000603ea337c8df16cc41f8b6be95a65f4d0f5",
-                "reference": "a9000603ea337c8df16cc41f8b6be95a65f4d0f5",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/9228ce90e1035ff2f0db84b40ec2e023ed802075",
+                "reference": "9228ce90e1035ff2f0db84b40ec2e023ed802075",
                 "shasum": ""
             },
             "require": {
+                "carbonphp/carbon-doctrine-types": "*",
                 "ext-json": "*",
                 "php": "^7.1.8 || ^8.0",
+                "psr/clock": "^1.0",
                 "symfony/polyfill-mbstring": "^1.0",
                 "symfony/polyfill-php80": "^1.16",
                 "symfony/translation": "^3.4 || ^4.0 || ^5.0 || ^6.0"
             },
+            "provide": {
+                "psr/clock-implementation": "1.0"
+            },
             "require-dev": {
-                "doctrine/dbal": "^2.0 || ^3.0",
-                "doctrine/orm": "^2.7",
+                "doctrine/dbal": "^2.0 || ^3.1.4 || ^4.0",
+                "doctrine/orm": "^2.7 || ^3.0",
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "kylekatarnls/multi-tester": "^2.0",
-                "ondrejmirtes/better-reflection": "*",
+                "ondrejmirtes/better-reflection": "<6",
                 "phpmd/phpmd": "^2.9",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.12.99 || ^1.7.14",
@@ -1885,10 +1959,6 @@
             ],
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-3.x": "3.x-dev",
-                    "dev-master": "2.x-dev"
-                },
                 "laravel": {
                     "providers": [
                         "Carbon\\Laravel\\ServiceProvider"
@@ -1898,6 +1968,10 @@
                     "includes": [
                         "extension.neon"
                     ]
+                },
+                "branch-alias": {
+                    "dev-2.x": "2.x-dev",
+                    "dev-master": "3.x-dev"
                 }
             },
             "autoload": {
@@ -1946,7 +2020,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-29T21:43:55+00:00"
+            "time": "2025-01-08T20:10:23+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -3464,6 +3538,54 @@
             },
             "abandoned": true,
             "time": "2018-08-09T05:50:03+00:00"
+        },
+        {
+            "name": "psr/clock",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/clock.git",
+                "reference": "e41a24703d4560fd0acb709162f73b8adfc3aa0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/clock/zipball/e41a24703d4560fd0acb709162f73b8adfc3aa0d",
+                "reference": "e41a24703d4560fd0acb709162f73b8adfc3aa0d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0 || ^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Clock\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for reading the clock.",
+            "homepage": "https://github.com/php-fig/clock",
+            "keywords": [
+                "clock",
+                "now",
+                "psr",
+                "psr-20",
+                "time"
+            ],
+            "support": {
+                "issues": "https://github.com/php-fig/clock/issues",
+                "source": "https://github.com/php-fig/clock/tree/1.0.0"
+            },
+            "time": "2022-11-25T14:36:26+00:00"
         },
         {
             "name": "psr/container",
@@ -5782,16 +5904,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v5.4.9",
+            "version": "v5.4.45",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "1639abc1177d26bcd4320e535e664cef067ab0ca"
+                "reference": "98f26acc99341ca4bab345fb14d7b1d7cb825bed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/1639abc1177d26bcd4320e535e664cef067ab0ca",
-                "reference": "1639abc1177d26bcd4320e535e664cef067ab0ca",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/98f26acc99341ca4bab345fb14d7b1d7cb825bed",
+                "reference": "98f26acc99341ca4bab345fb14d7b1d7cb825bed",
                 "shasum": ""
             },
             "require": {
@@ -5859,7 +5981,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v5.4.9"
+                "source": "https://github.com/symfony/translation/tree/v5.4.45"
             },
             "funding": [
                 {
@@ -5875,7 +5997,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-06T12:33:37+00:00"
+            "time": "2024-09-25T14:11:13+00:00"
         },
         {
             "name": "symfony/translation-contracts",
