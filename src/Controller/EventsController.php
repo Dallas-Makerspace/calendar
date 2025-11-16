@@ -509,15 +509,6 @@ class EventsController extends AppController
 
             $feedIo = Factory::create()->getFeedIo();
 
-            // ATOM feed commented out due to memory leak issues (INFRA-347)
-            // if ($feedtype === "atom") {
-            //     $feed->setPublicId(Router::url(['controller' => 'events', 'action' => 'feed/atom', '_ssl' => true,]));
-            //     $feed->setLink(Router::url(['controller' => 'events', 'action' => 'feed/atom', '_ssl' => true,]));
-
-            //     $this->response = $this->response
-            //         ->withStringBody($feedIo->format($feed, 'atom'))
-            //         ->withType('text/xml');
-            // } else
             if ($feedtype === "json") {
                 $feed->setPublicId(Router::url(['controller' => 'events', 'action' => 'feed/json', '_ssl' => true,]));
                 $feed->setLink(Router::url(['controller' => 'events', 'action' => 'feed/json', '_ssl' => true,]));
