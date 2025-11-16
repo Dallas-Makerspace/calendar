@@ -322,6 +322,7 @@ return [
      */
     'Session' => [
         'defaults' => 'php',
+        'timeout' => 86400, // 60 days in minutes
     ],
 
     /**
