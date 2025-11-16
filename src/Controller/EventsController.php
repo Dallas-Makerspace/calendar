@@ -509,14 +509,7 @@ class EventsController extends AppController
 
             $feedIo = Factory::create()->getFeedIo();
 
-            if ($feedtype === "atom") {
-                $feed->setPublicId(Router::url(['controller' => 'events', 'action' => 'feed/atom', '_ssl' => true,]));
-                $feed->setLink(Router::url(['controller' => 'events', 'action' => 'feed/atom', '_ssl' => true,]));
-
-                $this->response = $this->response
-                    ->withStringBody($feedIo->format($feed, 'atom'))
-                    ->withType('text/xml');
-            } elseif ($feedtype === "json") {
+            if ($feedtype === "json") {
                 $feed->setPublicId(Router::url(['controller' => 'events', 'action' => 'feed/json', '_ssl' => true,]));
                 $feed->setLink(Router::url(['controller' => 'events', 'action' => 'feed/json', '_ssl' => true,]));
 
