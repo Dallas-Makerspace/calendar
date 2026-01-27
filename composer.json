@@ -21,7 +21,7 @@
 		"debril/feed-io": "^3.1",
 		"cakephp/cakephp-codesniffer": "^3.0",
 		"squizlabs/php_codesniffer": "*",
-		"phpunit/phpunit": "~6",
+		"phpunit/phpunit": "~8",
 		"sparkpost/sparkpost": "^2.1",
 		"dallasmakerspace/cakephp-sparkpost-plugin": "^v1.0",
 		"directorytree/ldaprecord": "2.*",
