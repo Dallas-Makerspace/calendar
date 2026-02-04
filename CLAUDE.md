@@ -8,7 +8,16 @@ DMS Calendar is a CakePHP 3.10 application used by Dallas Makerspace for managin
 
 ## Development Commands
 
-### Docker Development (Primary Method)
+### VS Code Dev Container (Recommended)
+
+The fastest way to develop is using VS Code with Dev Containers:
+1. Open the project in VS Code
+2. Click "Reopen in Container" when prompted (or use Command Palette → "Dev Containers: Reopen in Container")
+3. VS Code will automatically set up the environment with all dependencies, extensions, and Xdebug
+
+See `.devcontainer/README.md` for detailed information.
+
+### Docker Development (Manual)
 
 Start the development environment:
 ```bash

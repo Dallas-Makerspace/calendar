@@ -1,0 +1,84 @@
+{
+	"name": "DMS Calendar",
+	"dockerComposeFile": [
+		"../docker-compose.yml",
+		"docker-compose.devcontainer.yml"
+	],
+	"service": "app",
+	"workspaceFolder": "/var/www",
+	"shutdownAction": "stopCompose",
+
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {}
+	},
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"bmewburn.vscode-intelephense-client",
+				"xdebug.php-debug",
+				"mehedidracula.php-namespace-resolver",
+				"neilbrayfield.php-docblocker",
+				"whatwedo.twig",
+				"mblode.twig-language-2",
+				"eamodio.gitlens",
+				"editorconfig.editorconfig",
+				"ms-azuretools.vscode-docker"
+			],
+			"settings": {
+				"php.validate.executablePath": "/usr/local/bin/php",
+				"php.suggest.basic": true,
+				"intelephense.environment.phpVersion": "7.4.0",
+				"intelephense.diagnostics.undefinedTypes": false,
+				"intelephense.diagnostics.undefinedFunctions": false,
+				"intelephense.diagnostics.undefinedConstants": false,
+				"intelephense.diagnostics.undefinedClassConstants": false,
+				"intelephense.diagnostics.undefinedMethods": false,
+				"intelephense.diagnostics.undefinedProperties": false,
+				"files.associations": {
+					"*.ctp": "php"
+				},
+				"editor.formatOnSave": false,
+				"editor.insertSpaces": true,
+				"editor.tabSize": 4,
+				"terminal.integrated.defaultProfile.linux": "bash"
+			}
+		}
+	},
+
+	"forwardPorts": [
+		8000,
+		8025,
+		8081,
+		8888,
+		53306
+	],
+
+	"portsAttributes": {
+		"8000": {
+			"label": "Calendar Application",
+			"onAutoForward": "notify"
+		},
+		"8025": {
+			"label": "MailHog",
+			"onAutoForward": "silent"
+		},
+		"8081": {
+			"label": "phpMyAdmin",
+			"onAutoForward": "silent"
+		},
+		"8888": {
+			"label": "phpLDAPadmin",
+			"onAutoForward": "silent"
+		},
+		"53306": {
+			"label": "MariaDB",
+			"onAutoForward": "silent"
+		}
+	},
+
+	"postCreateCommand": "composer --version && php -v",
+
+	"remoteUser": "root"
+}
