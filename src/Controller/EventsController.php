@@ -1724,6 +1724,11 @@ class EventsController extends AppController
                 foreach ($event->getSubject()->entity->files_to_copy as $copyFile) {
                     $copying = $this->Events->Files->get($copyFile['id']);
 
+                    $filePath = ROOT . DS . $copying->dir . $copying->file;
+                    if (!file_exists($filePath)) {
+                        continue;
+                    }
+
                     $copied = $this->Events->Files->newEntity();
                     $copied->file = $copying->file;
                     $copied->dir = $copying->dir;
