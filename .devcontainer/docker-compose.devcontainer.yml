@@ -1,0 +1,8 @@
+services:
+  app:
+    # Override entrypoint/command so the container stays running for devcontainer attach
+    # The startup script (composer install, migrations, apache) is handled by post-create instead
+    entrypoint: ["/bin/sh", "-c", "while sleep 1000; do :; done"]
+    command: []
+    environment:
+      COMPOSER_HOME: /var/www/.composer

@@ -1,0 +1,33 @@
+{
+  "name": "DMS Calendar",
+  "dockerComposeFile": ["../docker-compose.yml", "docker-compose.devcontainer.yml"],
+  "service": "app",
+  "workspaceFolder": "/var/www",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [8000, 8025, 8081, 8899],
+  "portsAttributes": {
+    "8000": { "label": "App" },
+    "8025": { "label": "MailHog" },
+    "8081": { "label": "phpMyAdmin" },
+    "8899": { "label": "Traefik Dashboard" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "xdebug.php-debug",
+        "EditorTeam.PhpCS",
+        "recca0120.vscode-phpunit"
+      ],
+      "settings": {
+        "php.validate.executablePath": "/usr/local/bin/php",
+        "php.executablePath": "/usr/local/bin/php",
+        "intelephense.environment.phpVersion": "7.4.0",
+        "[php]": {
+          "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+        }
+      }
+    }
+  },
+  "postCreateCommand": "bash /var/www/.devcontainer/post-create.sh"
+}

@@ -13,3 +13,6 @@
 config/Migrations/schema-dump-default.lock
 /html
 .vscode/settings.json
+.devcontainer/.onCreateCommandMarker
+.devcontainer/.postCreateCommandMarker
+.devcontainer/.updateContentCommandMarker
