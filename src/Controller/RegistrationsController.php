@@ -86,11 +86,7 @@ class RegistrationsController extends AppController
             $this->set('authUser', $this->Auth->user());
 
             if (!empty($eventInfo->requires_prerequisite)) {
-                if ($this->Auth->user()['ssologin']) {
-                    $this->set('meetsPreq', parent::currentUserInGroup($eventInfo->requires_prerequisite->ad_group, /* $forceRefreshGroups= */ true));
-                } else {
-                    $this->set('meetsPreq', parent::inAdminstrativeGroup($this->Auth->user(), $eventInfo->requires_prerequisite->ad_group));
-                }
+                $this->set('meetsPreq', parent::currentUserInGroup($eventInfo->requires_prerequisite->ad_group, /* $forceRefreshGroups= */ true));
             }
 
             $paidSpacesAvailable = $this->Events->hasPaidSpaces($this->passedArgs[0]);
