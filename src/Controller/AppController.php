@@ -18,7 +18,10 @@ use App\Auth\OpenIDConnectService;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
+use LdapRecord\Container;
+use LdapRecord\Models\ActiveDirectory\User as AdUser;
 
 /**
  * Application Controller
@@ -244,12 +247,65 @@ class AppController extends Controller
     public function currentUserInGroup($group, $forceRefreshGroups = false)
     {
         $user = $this->Auth->user();
-        if ($forceRefreshGroups) {
+        if ($this->inAdminstrativeGroup($user, $group)) {
+            return true;
+        }
+        if (!$forceRefreshGroups) {
+            return false;
+        }
+        if (!empty($user['ssologin'])) {
             $oidc = new OpenIDConnectService();
             $groups = $oidc->updateGroups($this->getRequest()->getSession());
-            $user['groups'] = $groups;
+        } else {
+            $groups = $this->_refreshAdGroups($user);
         }
+        if ($groups === null) {
+            return false;
+        }
+        $user['groups'] = $groups;
         return $this->inAdminstrativeGroup($user, $group);
+    }
+
+    /**
+     * Re-query Active Directory for a user's current group memberships using
+     * the service-account bind (the user's password is not available
+     * post-login). Returns null on failure so callers can fall back to the
+     * cached check.
+     *
+     * @param array $user The auth session user.
+     * @return array|null Group cn values, or null if the lookup failed.
+     */
+    private function _refreshAdGroups($user)
+    {
+        if (empty($user['samaccountname'])) {
+            return null;
+        }
+        try {
+            $cfg = Configure::read('ActiveDirectory');
+            $connection = new \LdapRecord\Connection([
+                'hosts' => $cfg['domain_controllers'],
+                'base_dn' => $cfg['base_dn'],
+                'username' => $cfg['admin_username'],
+                'password' => $cfg['admin_password'],
+                'use_tls' => $cfg['use_tls'],
+                'version' => 3,
+                'options' => [
+                    LDAP_OPT_X_TLS_REQUIRE_CERT => LDAP_OPT_X_TLS_NEVER,
+                ],
+            ]);
+            $connection->connect();
+            Container::addConnection($connection);
+
+            $adUser = AdUser::findByOrFail($cfg['username_field'], $user['samaccountname']);
+            $groups = [];
+            foreach ($adUser->groups()->get() as $g) {
+                $groups[] = $g->cn[0];
+            }
+            return $groups;
+        } catch (\Exception $e) {
+            Log::warning('AD group refresh failed for ' . $user['samaccountname'] . ': ' . $e->getMessage());
+            return null;
+        }
     }
 
     /**
