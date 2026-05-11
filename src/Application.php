@@ -14,6 +14,7 @@
  */
 namespace App;
 
+use App\Middleware\RequestEntityTooLargeMiddleware;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -82,6 +83,10 @@ class Application extends BaseApplication
             // pass null as cacheConfig, example: `new RoutingMiddleware($this)`
             // you might want to disable this cache in case your routing is extremely simple
             ->add(new RoutingMiddleware($this, '_cake_routes_'))
+
+            // Reject over-sized requests with a clear 413 before the CSRF
+            // middleware mistakes the truncated body for a token mismatch.
+            ->add(new RequestEntityTooLargeMiddleware())
 
             // Add csrf middleware.
             ->add(new CsrfProtectionMiddleware([

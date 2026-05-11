@@ -38,9 +38,11 @@ if (Configure::read('debug')) {
 }
 ?>
 <h1><?= h($message) ?></h1>
-<h4>
-    <?= sprintf(__d('cake', 'The requested address \'%s\' was not found on this server.'), "<strong style='user-select: all!important'>$url</strong>") ?>
-</h4>
+<?php if (isset($error) && method_exists($error, 'getCode') && $error->getCode() === 404): ?>
+    <h4>
+        <?= sprintf(__d('cake', 'The requested address \'%s\' was not found on this server.'), "<strong style='user-select: all!important'>$url</strong>") ?>
+    </h4>
+<?php endif; ?>
 <br>
 <hr>
 <br>
