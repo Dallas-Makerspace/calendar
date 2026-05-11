@@ -15,7 +15,7 @@ var kiosk = GetURLParameter('kiosk');
 if (kiosk) {
     const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
 
-    $("div.container div.events.index").prepend("<div id='kiosk-clock' style='float: left;font-size: 30px;'></div>");
+    $("div.container div.events.index").prepend("<div id='kiosk-clock' style='font-size: 30px; padding-top: 20px;'></div>");
 
     jQuery(function($) {
         setInterval(function() {
