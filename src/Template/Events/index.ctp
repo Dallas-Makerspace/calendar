@@ -17,6 +17,7 @@ $this->Html->meta(
 ?>
 <div class="events index">
     <?= $this->Flash->render() ?>
+    <?php if (!$this->request->getQuery('kiosk')): ?>
     <div class="text-right">
         <?= $this->Html->link('<i class="fa fa-calendar" aria-hidden="true"></i> Calendar View', [
             'action' => 'calendar'
@@ -36,6 +37,7 @@ $this->Html->meta(
         &nbsp;
     </div>
     <br>
+    <?php endif; ?>
     <div class="page-header">
         <div class="row">
             <div class="col-sm-7">

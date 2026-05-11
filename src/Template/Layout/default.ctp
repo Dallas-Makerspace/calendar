@@ -25,10 +25,17 @@
     echo $this->fetch('css');
     ?>
 </head>
-<body<?= $this->request->getParam('action') == 'embed' ? ' class="embed"' : '' ?>>
+<?php $isKiosk = (bool)$this->request->getQuery('kiosk'); ?>
+<body<?php
+    if ($this->request->getParam('action') == 'embed') {
+        echo ' class="embed"';
+    } elseif ($isKiosk) {
+        echo ' class="kiosk"';
+    }
+?>>
 
 <?php
-if ($this->request->getParam('action') != 'embed') {
+if ($this->request->getParam('action') != 'embed' && !$isKiosk) {
     echo $this->element('Header/default');
 }
 ?>
@@ -38,7 +45,7 @@ if ($this->request->getParam('action') != 'embed') {
 </div>
 
 <?php
-if ($this->request->getParam('action') != 'embed') {
+if ($this->request->getParam('action') != 'embed' && !$isKiosk) {
     echo $this->element('Footer/default');
 }
 
