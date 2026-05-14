@@ -294,12 +294,17 @@ class EventsController extends AppController
                     continue;
                 }
 
+                $filePath = ROOT . DS . $file->dir . $file->file;
+                if (!file_exists($filePath)) {
+                    continue;
+                }
+
                 $exploded = explode(".", $file->file);
                 $imageEnding = ($exploded !== false && count($exploded) >= 2) ? $exploded[count($exploded) - 1] : '';
                 $filePayload = [
                     "url" => Configure::read('App.fullBaseUrl') . '/' . str_replace("webroot/", "", $file->dir) . rawurlencode($file->file),
                     "type" => $file->type,
-                    "length" => filesize(ROOT . DS . $file->dir . $file->file),
+                    "length" => filesize($filePath),
                 ];
                 if (in_array($imageEnding, $imageEndings)) {
                     $evtObj["images"][] = $filePayload;
@@ -483,13 +488,18 @@ class EventsController extends AppController
                         continue;
                     }
 
+                    $filePath = ROOT . DS . $file->dir . $file->file;
+                    if (!file_exists($filePath)) {
+                        continue;
+                    }
+
                     $exploded = explode(".", $file->file);
                     $imageEnding = ($exploded !== false && count($exploded) >= 2) ? $exploded[count($exploded) - 1] : '';
                     if (in_array($imageEnding, $imageEndings)) {
                         $media = $feed_event->newMedia();
                         $media->setUrl(Configure::read('App.fullBaseUrl') . '/' . str_replace("webroot/", "", $file->dir) . rawurlencode($file->file));
                         $media->setType($file->type);
-                        $media->setLength(filesize(ROOT . DS . $file->dir . $file->file));
+                        $media->setLength(filesize($filePath));
                         $feed_event->addMedia($media);
                     }
                 }
@@ -1713,6 +1723,11 @@ class EventsController extends AppController
             if (isset($event->getSubject()->entity->files_to_copy)) {
                 foreach ($event->getSubject()->entity->files_to_copy as $copyFile) {
                     $copying = $this->Events->Files->get($copyFile['id']);
+
+                    $filePath = ROOT . DS . $copying->dir . $copying->file;
+                    if (!file_exists($filePath)) {
+                        continue;
+                    }
 
                     $copied = $this->Events->Files->newEntity();
                     $copied->file = $copying->file;
