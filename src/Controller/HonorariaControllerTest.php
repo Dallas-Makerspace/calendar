@@ -16,7 +16,7 @@ class HonorariaControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-		'app.honorarias',
+		'app.honoraria',
 		'app.events',
 		'app.committees'
 	];
