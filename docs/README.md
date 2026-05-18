@@ -45,3 +45,21 @@ More details on the rest can be found at [CakePHP](https://book.cakephp.org/) - 
 
 **Warning:** check [composer.json](../composer.json) to ensure you're looking at docs for the right version of CakePHP.
 
+
+## Tests
+
+Tests live alongside the code in [src/](../src/), not under `tests/TestCase/`. [phpunit.xml.dist](../phpunit.xml.dist) is configured to discover anything matching `*Test.php` in `./src`. Run the suite under Docker:
+
+```
+docker compose exec -w /var/www app vendor/bin/phpunit --no-coverage
+```
+
+### Test datasource
+
+[tests/bootstrap.php](../tests/bootstrap.php) registers a dedicated `test` connection by reading the `default` config from [config/app.default.php](../config/app.default.php) and appending `-test` to the database name. Fixtures `TRUNCATE` the tables they manage, so the suite is careful never to run against your dev database — only against the derived `<dbname>-test` schema on the same host.
+
+**Production guardrail:** the bootstrap refuses to start if the resolved `default` host isn't on a small allowlist (`localhost`, `127.0.0.1`, `::1`, `db` — the docker-compose service name in [docker-compose.yml](../docker-compose.yml)). This stops `vendor/bin/phpunit` from doing any damage if `DB_HOST` is misconfigured to point at the prod RDS instance. If you legitimately need to run tests against another host, edit the allowlist in `tests/bootstrap.php`.
+
+### CI
+
+[.github/workflows/test.yml](../.github/workflows/test.yml) runs the full PHPUnit suite on every push and pull request against a MariaDB 10.11 service container. CI uses `DB_HOST=127.0.0.1`, which is on the allowlist above.
