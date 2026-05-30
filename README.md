@@ -4,6 +4,24 @@
 
 For an overview of how the calendar works, see [./docs/README.md](./docs/README.md).
 
+### Option 1: VS Code Dev Container (Recommended)
+
+The fastest way to get started is using VS Code with Dev Containers:
+
+1. Fork this repo in Github.
+2. Clone your forked version using the recursive clone flag:
+   ```bash
+   git clone --recursive <your-fork-url>
+   ```
+3. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) or [Rancher Desktop](https://rancherdesktop.io/)
+4. Install [Visual Studio Code](https://code.visualstudio.com/) and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+5. Open the project in VS Code and click "Reopen in Container" when prompted
+6. The development environment will automatically set up with all dependencies, Xdebug, and VS Code extensions
+
+See [.devcontainer/README.md](.devcontainer/README.md) for more details.
+
+### Option 2: Manual Docker Setup
+
 1. Fork this repo in Github.
 2. Clone your forked version to your development computer using whatever tool works best for you (CLI/GUI/IDE/etc). Make sure to use the recursive clone flag.
 3. If you forget to use the recursive clone, make sure any submodules are up to date with `git submodule update --init`

@@ -8,6 +8,7 @@
 /webroot/files
 /.idea
 /.vscode
+/.claude
 /protected
 /webroot/google*.html
 config/Migrations/schema-dump-default.lock

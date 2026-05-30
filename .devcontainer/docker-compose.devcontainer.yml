@@ -1,0 +1,29 @@
+services:
+  app:
+    # Override the command to keep the container running for devcontainer
+    # The startup script will still run via entrypoint
+    command: sleep infinity
+
+    # Add user configuration for better file permissions
+    user: root
+
+    # Add Git safe directory configuration
+    environment:
+      - DEBUG=true
+      - DB_HOST=db
+      - DB_USERNAME=calendar
+      - DB_PASSWORD=calendar
+      - DB_DATABASE=dms-calendar
+      - DB_SEED=DatabaseSeed
+      - EMAIL_HOST=mail
+      - EMAIL_PORT=1025
+      - EMAIL_TIMEOUT=30
+      - EMAIL_TLS=false
+      - AD_SERVER=openldap
+      - AD_BASE=dc=dms,dc=local
+      - AD_SUFFIX=@dms.local
+      - AD_BIND_UN=cn=admin,dc=dms,dc=local
+      - AD_BIND_PW=Adm1n!
+      - AD_USE_TLS=true
+      - XDEBUG_MODE=develop,debug
+      - XDEBUG_CONFIG=client_host=host.docker.internal
