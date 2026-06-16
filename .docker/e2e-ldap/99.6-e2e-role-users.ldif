@@ -1,0 +1,36 @@
+# Playwright authorization test users (password = password)
+# Loaded after dms-ad-openldap bootstrap LDIF on fresh LDAP volumes.
+
+dn: cn=honorariumadmin,ou=Members,dc=dms,dc=local
+cn: honorariumadmin
+displayName: Honorarium Admin
+employeeID: 0000000005
+memberOf: CN=Members,OU=Security,OU=Groups,DC=dms,DC=local
+memberOf: CN=Honorarium Admins,OU=Applications,OU=Groups,DC=dms,DC=local
+objectcategory: cn=Person,cn=Schema,cn=Configuration,dc=dms,dc=local
+objectclass: user
+objectclass: top
+sAMAccountName: honorariumadmin
+sn: honorariumadmin
+mail: honorariumadmin@dms.local
+userPassword: {SSHA}EadtUhuwl73vtXqj5ns6I5BdRqabRDs=
+userPrincipalName: honorariumadmin@dms.local
+UserAccountControl: 512
+telephonenumber: 555-555-5555
+
+dn: cn=financialadmin,ou=Members,dc=dms,dc=local
+cn: financialadmin
+displayName: Financial Admin
+employeeID: 0000000006
+memberOf: CN=Members,OU=Security,OU=Groups,DC=dms,DC=local
+memberOf: CN=Financial Reporting,OU=Security,OU=Groups,DC=dms,DC=local
+objectcategory: cn=Person,cn=Schema,cn=Configuration,dc=dms,dc=local
+objectclass: user
+objectclass: top
+sAMAccountName: financialadmin
+sn: financialadmin
+mail: financialadmin@dms.local
+userPassword: {SSHA}EadtUhuwl73vtXqj5ns6I5BdRqabRDs=
+userPrincipalName: financialadmin@dms.local
+UserAccountControl: 512
+telephonenumber: 555-555-5555

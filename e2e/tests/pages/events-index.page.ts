@@ -1,7 +1,13 @@
 import type { Locator, Page } from '@playwright/test';
 
+import { HeaderComponent } from '../components/header.component';
+
 export class EventsIndexPage {
-  constructor(private readonly page: Page) {}
+  readonly header: HeaderComponent;
+
+  constructor(private readonly page: Page) {
+    this.header = new HeaderComponent(page.getByRole('navigation'));
+  }
 
   get heading(): Locator {
     return this.page.getByRole('heading', { name: 'Upcoming Classes and Events' });
@@ -11,7 +17,7 @@ export class EventsIndexPage {
     return this.page.getByRole('link', { name: 'Calendar View' });
   }
 
-  async goto() {
+  async navigateViaUrl() {
     await this.page.goto('/');
   }
 

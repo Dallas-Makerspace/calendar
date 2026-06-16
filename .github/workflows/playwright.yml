@@ -29,6 +29,8 @@ jobs:
           ./setup.sh
 
       - name: Start application stack
+        env:
+          DEBUG: false
         run: docker compose up -d --build
 
       - name: Wait for application
@@ -37,14 +39,34 @@ jobs:
           for i in $(seq 1 60); do
             if curl -sf http://localhost:8000/ > /dev/null; then
               echo "Application is ready."
-              exit 0
+              break
             fi
             echo "Attempt ${i}/60: application not ready yet."
             sleep 10
           done
-          echo "Application failed to become ready in time."
-          docker compose ps
-          docker compose logs app --tail 200
+          if ! curl -sf http://localhost:8000/ > /dev/null; then
+            echo "Application failed to become ready in time."
+            docker compose ps
+            docker compose logs app --tail 200
+            exit 1
+          fi
+
+      - name: Wait for LDAP
+        run: |
+          echo "Waiting for LDAP user lookup ..."
+          for i in $(seq 1 30); do
+            if docker compose exec -T ldap ldapsearch -x -LLL \
+              -H ldap://localhost -b "dc=dms,dc=local" \
+              -D "cn=admin,dc=dms,dc=local" -w 'Adm1n!' \
+              "(sAMAccountName=user1)" dn 2>/dev/null | grep -q "user1"; then
+              echo "LDAP is ready."
+              exit 0
+            fi
+            echo "Attempt ${i}/30: LDAP not ready yet."
+            sleep 5
+          done
+          echo "LDAP failed to become ready in time."
+          docker compose logs ldap --tail 100
           exit 1
 
       - name: Run Playwright tests

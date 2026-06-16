@@ -1,0 +1,11 @@
+dn: CN=Honorarium Admins,OU=Applications,OU=Groups,DC=dms,DC=local
+changetype: modify
+add: member
+member: cn=honorariumadmin,ou=Members,dc=dms,dc=local
+-
+
+dn: CN=Financial Reporting,OU=Security,OU=Groups,DC=dms,DC=local
+changetype: modify
+add: member
+member: cn=financialadmin,ou=Members,dc=dms,dc=local
+-

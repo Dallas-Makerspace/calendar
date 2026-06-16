@@ -1,5 +1,7 @@
 # Writing Playwright tests for DMS Calendar
 
+**Implementation plan:** [plan/README.md](plan/README.md) — test checklist with one checkbox per test section.
+
 Guide for authoring end-to-end tests in this repo. Based on [Playwright documentation](https://playwright.dev/docs/intro), the [Page Object Model pattern](https://playwright.dev/docs/pom), and common community guidance on POM + fixtures.
 
 ---
@@ -22,7 +24,7 @@ await page.getByLabel('Username').fill('user1');
 
 // ✅ Spec file
 const loginPage = new LoginPage(page);
-await loginPage.goto();
+await loginPage.navigateViaUrl();
 await loginPage.loginAsMember(testUsers.member.username, testUsers.member.password);
 await expect(eventsIndex.heading).toBeVisible();
 ```
@@ -75,12 +77,33 @@ Codegen and prototyping are fine — but **move every locator into a page object
 
 ### Test accounts
 
-Defined in `tests/data/test-users.ts` (sourced from `dms-ad-openldap/03-users.ldif`):
+Defined in `tests/data/test-users.ts` (base users from `dms-ad-openldap/03-users.ldif`; role-only users from `.docker/e2e-ldap/`):
 
 | Key | Username | Password | Notes |
 | --- | --- | --- | --- |
 | `testUsers.member` | `user1` | `password` | Regular member |
-| `testUsers.admin` | `user2` | `password` | Admin-capable |
+| `testUsers.admin` | `user2` | `password` | Full admin (all admin AD groups) |
+| `testUsers.honorariumAdmin` | `honorariumadmin` | `password` | Honorarium Admins only |
+| `testUsers.financialAdmin` | `financialadmin` | `password` | Financial Reporting only |
+
+### Test data
+
+| File | Use for |
+| --- | --- |
+| `tests/data/test-users.ts` | LDAP usernames/passwords — always shared |
+| `tests/data/reference-data.ts` | Domain values referenced by **two or more** spec files |
+| Inline in the spec | Values used by a **single** test — keep them in that test |
+
+**Rule:** Do not add data to `reference-data.ts` unless a second spec needs the same value. Put test-specific names, emails, and seed references as `const` declarations at the top of the test (or inline) so readers see everything in one place.
+
+```typescript
+test('admin manages categories', async ({ page }) => {
+  const categoryName = 'Test Category E2E';
+  // ...
+});
+```
+
+Never put locators or page object logic in `tests/data/`.
 
 ---
 
@@ -89,12 +112,17 @@ Defined in `tests/data/test-users.ts` (sourced from `dms-ad-openldap/03-users.ld
 ```
 e2e/
 ├── PLAYWRIGHT.md
+├── plan/                        # E2E implementation checklist (one checkbox per test)
+│   ├── README.md
+│   ├── layer-*.md
+│   └── appendices/
 ├── playwright.config.ts
 ├── package.json
 ├── tests/
 │   ├── *.spec.ts              # orchestration + assertions only
 │   ├── data/
-│   │   └── test-users.ts      # credentials, IDs — no locators
+│   │   ├── test-users.ts      # LDAP credentials — shared across specs
+│   │   └── reference-data.ts  # values shared by 2+ specs only
 │   ├── pages/
 │   │   ├── login.page.ts
 │   │   └── events-index.page.ts
@@ -108,7 +136,7 @@ e2e/
 | --- | --- | --- |
 | **Page object** | `tests/pages/` | One class per logical page (`LoginPage`, `EventsIndexPage`) |
 | **Component object** | `tests/components/` | UI shared across pages (navbar, dialogs) |
-| **Test data** | `tests/data/` | Static values reused across specs |
+| **Test data** | `tests/data/` | Credentials and values reused across specs |
 | **Fixture** | `fixtures/` | Setup/teardown (auth state, shared sessions) |
 | **Spec** | `tests/*.spec.ts` | User journey; **no locators** |
 
@@ -120,7 +148,7 @@ e2e/
 | --- | --- |
 | **Locators** | Private getter properties; public getters only when specs need them for `expect` |
 | **Actions** | Public methods for user intent: `loginAsMember()`, `openCalendarView()` |
-| **Navigation** | `goto()` on the page object; never `page.goto()` in specs |
+| **Navigation** | `navigateViaMenu()` or `navigateViaUrl()` on page objects — never `page.goto()` in specs |
 | **Cross-page flows** | Methods return the **destination page object** (`loginAsMember()` → `EventsIndexPage`) |
 | **Assertions** | In **specs**, against locators exposed by page objects (`expect(loginPage.heading)`) |
 | **State** | Page objects are stateless — no cached DOM text or step tracking |
@@ -223,7 +251,7 @@ import { EventsIndexPage } from './pages/events-index.page';
 test('homepage displays upcoming events', async ({ page }) => {
   const eventsIndex = new EventsIndexPage(page);
 
-  await eventsIndex.goto();
+  await eventsIndex.navigateViaUrl();
   await expect(eventsIndex.heading).toBeVisible();
 });
 ```
@@ -241,7 +269,7 @@ test('member can log in with LDAP credentials', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const eventsIndex = new EventsIndexPage(page);
 
-  await loginPage.goto();
+  await loginPage.navigateViaUrl();
   await expect(loginPage.heading).toBeVisible();
 
   await loginPage.loginAsMember(
@@ -257,13 +285,15 @@ test('member can log in with LDAP credentials', async ({ page }) => {
 
 ## Adding a new test (checklist)
 
-1. **Define the user goal** — e.g. “Member opens calendar view from home.”
+1. **Pick a test** from [plan/README.md](plan/README.md) and check it off when done.
+2. **Define the user goal** — e.g. “Member opens calendar view from home.”
 2. **Identify pages touched** — list each screen in the flow.
 3. **Create or extend page objects first** — add locators and actions for every new interaction.
-4. **Add test data** if needed (`tests/data/`) — never hardcode credentials in specs.
+4. **Add test data** — inline values in the spec when used by one test; add to `tests/data/` only when shared (see [Test data](#test-data))
 5. **Write the spec** — page object methods + `expect` on page object locators only.
 6. **Run locally** — `npm test`, then `--headed` or `--debug` on failure.
-7. **Push** — CI runs via `.github/workflows/playwright.yml`.
+7. **Mark done** — `[x]` on the test line in `plan/layer-*.md`.
+8. **Push** — CI runs via `.github/workflows/playwright.yml`.
 
 ### Spec template
 
@@ -275,7 +305,7 @@ test.describe('Feature area', () => {
   test('role can do thing', async ({ page }) => {
     const somePage = new SomePage(page);
 
-    await somePage.goto();
+    await somePage.navigateViaMenu();
     await somePage.doSomething();
 
     await expect(somePage.resultLocator).toBeVisible();
@@ -288,6 +318,7 @@ test.describe('Feature area', () => {
 - **Page files:** `events-calendar.page.ts` → `EventsCalendarPage`
 - **Spec files:** `events-calendar.spec.ts`
 - **Tests:** `'guest can browse upcoming events'`, `'admin can open honoraria pending list'`
+- **Do not** prefix `test` or `test.describe` titles with plan section numbers (e.g. `1.1`, `§2.4`). Section IDs belong in [plan/](plan/README.md) checkboxes and the spec-file mapping table — spec titles should read as plain user-facing behavior.
 
 ---
 
@@ -302,7 +333,7 @@ test.beforeEach(async ({ page }) => {
   const loginPage = new LoginPage(page);
   const eventsIndex = new EventsIndexPage(page);
 
-  await loginPage.goto();
+  await loginPage.navigateViaUrl();
   await loginPage.loginAsMember(
     testUsers.member.username,
     testUsers.member.password,
@@ -329,7 +360,7 @@ setup('authenticate as member', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const eventsIndex = new EventsIndexPage(page);
 
-  await loginPage.goto();
+  await loginPage.navigateViaUrl();
   await loginPage.loginAsMember(
     testUsers.member.username,
     testUsers.member.password,
@@ -357,7 +388,7 @@ export const test = base.extend<{ memberSession: void }>({
     const loginPage = new LoginPage(page);
     const eventsIndex = new EventsIndexPage(page);
 
-    await loginPage.goto();
+    await loginPage.navigateViaUrl();
     await loginPage.loginAsMember(
       testUsers.member.username,
       testUsers.member.password,
@@ -369,6 +400,20 @@ export const test = base.extend<{ memberSession: void }>({
 
 export { expect } from '@playwright/test';
 ```
+
+---
+
+## Navigation
+
+Prefer **menu clicks** via `navigateViaMenu()` when the nav exposes a path; use `navigateViaUrl()` for direct URLs (login, homepage, pages with no nav link, access-denial tests).
+
+| Method | Use when |
+| --- | --- |
+| `navigateViaMenu()` | Header menus, top-level links |
+| `navigateViaUrl()` | No menu link (`/logs`, `/honoraria`), cold-start entry (`/`, `/users/login`), access denial, or no list link to target |
+| `HeaderComponent.goHome()` | Return to `/` via the brand link |
+
+Implementation detail: both methods live on page objects; `page.goto()` is only used inside page object methods, never in specs.
 
 ---
 
@@ -389,7 +434,15 @@ Never use `page.waitForTimeout()`. Playwright auto-waits on actions and `expect`
 
 ### Test isolation
 
-Each test gets a fresh browser context. Do not depend on another test’s server-side mutations unless you control seed data.
+Each test gets a fresh browser context. Tests must also be **self-contained on the server**:
+
+- Create every entity the test needs; delete it (or restore global settings) before the test ends.
+- Do not use `test.describe.configure({ mode: 'serial' })` to share mutable state between tests.
+- Exception: serialize tests in the same file when they POST the same singleton form (Super Calendar Admin settings) and concurrent saves would race.
+- Do not leave CRUD rows, config edits, or toggles for a later test or layer — later specs create their own data.
+- Pre-test “remove leftovers” loops are only for recovering from an **interrupted run of the same test** (fail-fast, no `try/finally` restore on failure).
+
+Shared LDAP users and seed rows shipped with the app (e.g. `Fiber Arts`, `Conference Room`) are fine; mutable test fixtures are not.
 
 ### No third-party assertions
 
@@ -443,10 +496,14 @@ Use codegen to **find** locators, then paste them into the appropriate page obje
 | --- | --- |
 | `page.getByRole(...)` in a spec | Add locator to page object |
 | `readonly foo: Locator` public fields | Private/public getter properties |
-| `page.goto(...)` in a spec | `somePage.goto()` |
+| `page.goto(...)` in a spec | `somePage.navigateViaMenu()` or `somePage.navigateViaUrl()` |
 | Inline / one-off tests without POM | Create page object first |
 | CSS / `#id` in page objects | `getByRole`, `getByLabel` |
 | Credentials in spec files | `tests/data/test-users.ts` |
+| Single-test CRUD names in `reference-data.ts` | Inline `const` in the spec |
+| `serial` describe to pass state between tests | Self-contained setup + teardown in each test |
+| `serial` without a singleton-form race reason | Only serialize when concurrent POSTs to one form would clobber fields |
+| Leave test entities for a later layer | Create and delete inside the same test |
 | `waitForTimeout()` | `expect(locator).toBeVisible()` |
 | Giant page object for whole app | Split by page + components |
 | Committing `playwright/.auth/*.json` | `.gitignore` |

@@ -111,6 +111,17 @@ class AdAuthenticate extends FormAuthenticate
                         $results[$key] = $value;
                     }
                 }
+
+                // Test OpenLDAP accepts a password bind even when userAccountControl is disabled;
+                // production AD rejects that bind, so this check only closes the test gap and
+                // should not change behavior where AD already blocks disabled accounts.
+                $userAccountControl = $results['useraccountcontrol']
+                    ?? $results['UserAccountControl']
+                    ?? null;
+                if ($userAccountControl !== null && ((int) $userAccountControl & 2)) {
+                    return false;
+                }
+
                 $groups = $user->groups()->get();
                 $results['groups'] = [];
                 foreach ($groups as $g) {
