@@ -1,0 +1,65 @@
+name: Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: dms-calendar
+          MARIADB_USER: calendar
+          MARIADB_PASSWORD: calendar
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    env:
+      DB_HOST: 127.0.0.1
+      DB_USERNAME: calendar
+      DB_PASSWORD: calendar
+      DB_DATABASE: dms-calendar
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, intl, pdo_mysql
+          tools: composer:v2
+          coverage: none
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php74-${{ hashFiles('composer.lock') }}
+          restore-keys: ${{ runner.os }}-php74-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Configure application
+        run: ln -s app.default.php config/app.php
+
+      - name: Create test database
+        run: |
+          mysql -h 127.0.0.1 -uroot -proot -e "CREATE DATABASE \`dms-calendar-test\`;"
+          mysql -h 127.0.0.1 -uroot -proot -e "GRANT ALL PRIVILEGES ON \`dms-calendar-test\`.* TO 'calendar'@'%';"
+          mysql -h 127.0.0.1 -uroot -proot -e "FLUSH PRIVILEGES;"
+
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit --no-coverage

@@ -17,7 +17,7 @@ class CommitteesControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
 		'app.committees',
-		'app.honorarias'
+		'app.honoraria'
 	];
 
     /**

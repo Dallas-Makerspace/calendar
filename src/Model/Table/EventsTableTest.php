@@ -28,7 +28,7 @@ class EventsTableTest extends TestCase
 		'app.rooms',
 		'app.contacts',
 		'app.prerequisites',
-		'app.honorarias',
+		'app.honoraria',
 		'app.categories',
 		'app.tools',
 		'app.files',

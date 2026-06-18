@@ -20,7 +20,7 @@ class EventsControllerTest extends IntegrationTestCase
 		'app.rooms',
 		'app.contacts',
 		'app.prerequisites',
-		'app.honorarias',
+		'app.honoraria',
 		'app.categories',
 		'app.tools',
 		'app.files',

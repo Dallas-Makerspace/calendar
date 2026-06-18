@@ -14,7 +14,7 @@
     <!-- Add any additional test suites you want to run here -->
     <testsuites>
         <testsuite name="App Test Suite">
-            <directory>./tests/TestCase</directory>
+            <directory suffix="Test.php">./src</directory>
         </testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>

@@ -19,7 +19,7 @@ class ContactsControllerTest extends IntegrationTestCase
 		'app.contacts',
 		'app.w9s',
 		'app.events',
-		'app.honorarias'
+		'app.honoraria'
 	];
 
     /**
