@@ -24,6 +24,7 @@ RUN mkdir /opt/composer && \
 FROM base as develop
 
 COPY .docker/environment.conf /etc/apache2/conf-enabled/
+COPY .docker/logformat.conf /etc/apache2/conf-enabled/
 
 RUN pecl install xdebug-3.1.6 && \
     docker-php-ext-enable xdebug && \
@@ -37,6 +38,7 @@ COPY ./webroot ./html
 RUN mkdir logs && \
     chown www-data.www-data logs && \
     cp ./.docker/environment.conf /etc/apache2/conf-enabled/ && \
+    cp ./.docker/logformat.conf /etc/apache2/conf-enabled/ && \
     cp ./config/app.default.php ./config/app.php && \
     mkdir ./tmp && chown www-data.www-data ./tmp && chmod 767 ./tmp && \
     rm -rf ./html && ln -s /var/www/webroot /var/www/html && \
