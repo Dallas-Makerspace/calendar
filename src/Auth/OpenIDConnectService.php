@@ -98,6 +98,7 @@ class OpenIDConnectService
                 }
             }
         }
+        return $result;
     }
 
     /**
