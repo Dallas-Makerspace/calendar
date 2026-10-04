@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class EventsFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -65,6 +64,7 @@ class EventsFixture extends TestFixture
     {
         $this->records = [
             [
+                // fulfills-only reference to prerequisite 1
                 'id' => 1,
                 'name' => 'Lorem ipsum dolor sit amet',
                 'short_description' => 'Lorem ipsum dolor sit amet',
@@ -89,7 +89,7 @@ class EventsFixture extends TestFixture
                 'room_id' => 1,
                 'contact_id' => 1,
                 'fulfills_prerequisite_id' => 1,
-                'requires_prerequisite_id' => 1,
+                'requires_prerequisite_id' => null,
                 'part_of_id' => 1,
                 'copy_of_id' => 1,
                 'rejected_by' => 'Lorem ipsum dolor sit amet',
@@ -98,7 +98,44 @@ class EventsFixture extends TestFixture
                 'cancel_notification' => 1,
                 'reminder_notification' => 1,
                 'created' => '2018-11-05 02:11:23',
-                'modified' => '2018-11-05 02:11:23'
+                'modified' => '2018-11-05 02:11:23',
+            ],
+            [
+                // requires-only reference to prerequisite 1
+                'id' => 2,
+                'name' => 'Sit amet laser workshop',
+                'short_description' => 'Sit amet laser workshop',
+                'long_description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+                'advisories' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+                'event_start' => '2018-11-06 02:11:23',
+                'event_end' => '2018-11-06 02:11:23',
+                'booking_start' => '2018-11-06 02:11:23',
+                'booking_end' => '2018-11-06 02:11:23',
+                'cost' => 1.5,
+                'eventbrite_link' => 'Lorem ipsum dolor sit amet',
+                'free_spaces' => 1,
+                'paid_spaces' => 1,
+                'members_only' => 1,
+                'age_restriction' => 1,
+                'attendees_require_approval' => 1,
+                'attendee_cancellation' => '2018-11-06 02:11:23',
+                'extend_registration' => 1,
+                'class_number' => 1,
+                'sponsored' => 1,
+                'status' => 'Lorem ipsum dolor ',
+                'room_id' => 1,
+                'contact_id' => 1,
+                'fulfills_prerequisite_id' => null,
+                'requires_prerequisite_id' => 1,
+                'part_of_id' => 1,
+                'copy_of_id' => 1,
+                'rejected_by' => 'Lorem ipsum dolor sit amet',
+                'rejection_reason' => 'Lorem ipsum dolor sit amet',
+                'created_by' => 'Lorem ipsum dolor sit amet',
+                'cancel_notification' => 1,
+                'reminder_notification' => 1,
+                'created' => '2018-11-06 02:11:23',
+                'modified' => '2018-11-06 02:11:23',
             ],
         ];
         parent::init();
