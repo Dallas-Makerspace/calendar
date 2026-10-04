@@ -377,6 +377,15 @@ return [
     ],
 
     /**
+     * Directory stub for tests. When `Directory.stubGroups` is an array,
+     * `DirectoryService::groupExists()` answers from the stub instead of
+     * touching LDAP. Tests set this per-case; null (default) = real LDAP.
+     */
+    'Directory' => [
+        'stubGroups' => null,
+    ],
+
+    /**
      * AD configuration
      */
     'ActiveDirectory' => [

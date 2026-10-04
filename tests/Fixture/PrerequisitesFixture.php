@@ -9,7 +9,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class PrerequisitesFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -40,7 +39,14 @@ class PrerequisitesFixture extends TestFixture
                 'name' => 'Lorem ipsum dolor sit amet',
                 'ad_group' => 'Lorem ipsum dolor sit amet',
                 'created' => '2018-11-05 02:11:23',
-                'modified' => '2018-11-05 02:11:23'
+                'modified' => '2018-11-05 02:11:23',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Unreferenced Prerequisite',
+                'ad_group' => 'Unreferenced Prerequisite',
+                'created' => '2018-11-06 02:11:23',
+                'modified' => '2018-11-06 02:11:23',
             ],
         ];
         parent::init();

@@ -97,6 +97,14 @@ Router::scope('/', function (RouteBuilder $routes) {
 });
 
 /**
+ * Versioned JSON APIs.
+ */
+Router::prefix('api/v1', function (RouteBuilder $routes) {
+    $routes->setExtensions(['json']);
+    $routes->resources('Prerequisites', ['only' => ['index', 'view', 'create', 'update', 'delete']]);
+});
+
+/**
  * Load all plugin routes.  See the Plugin documentation on
  * how to customize the loading of plugin routes.
  */

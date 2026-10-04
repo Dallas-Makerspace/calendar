@@ -14,10 +14,10 @@
  */
 namespace App;
 
+use App\Error\Middleware\ApiAwareErrorHandlerMiddleware;
 use App\Middleware\RequestEntityTooLargeMiddleware;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
-use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\CsrfProtectionMiddleware;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -72,8 +72,9 @@ class Application extends BaseApplication
     {
         $middlewareQueue
             // Catch any exceptions in the lower layers,
-            // and make an error page/response
-            ->add(ErrorHandlerMiddleware::class)
+            // and make an error page/response. /api/* requests get the
+            // v1 JSON error envelope instead of the HTML error page.
+            ->add(ApiAwareErrorHandlerMiddleware::class)
 
             // Handle plugin/theme assets like CakePHP normally does.
             ->add(AssetMiddleware::class)
@@ -88,10 +89,16 @@ class Application extends BaseApplication
             // middleware mistakes the truncated body for a token mismatch.
             ->add(new RequestEntityTooLargeMiddleware())
 
-            // Add csrf middleware.
-            ->add(new CsrfProtectionMiddleware([
-                'httpOnly' => true
-            ]));
+            // Add csrf middleware. API requests authenticate with Bearer
+            // tokens, not cookies, so /api/* is whitelisted.
+            ->add((function () {
+                $csrf = new CsrfProtectionMiddleware(['httpOnly' => true]);
+                $csrf->whitelistCallback(function ($request) {
+                    return strpos($request->getUri()->getPath(), '/api/') === 0;
+                });
+
+                return $csrf;
+            })());
 
         return $middlewareQueue;
     }

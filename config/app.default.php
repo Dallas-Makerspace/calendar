@@ -249,6 +249,28 @@ return [
             'quoteIdentifiers' => false,
             'url' => env('DATABASE_URL', null),
         ],
+
+        /*
+         * The test connection is used by the phpunit suite. The fixture
+         * manager aliases the `default` connection to `test` while fixtures
+         * are loaded, so tests never touch the development database.
+         */
+        'test' => [
+            'className' => 'Cake\Database\Connection',
+            'driver' => 'Cake\Database\Driver\Mysql',
+            'persistent' => false,
+            'host' => env('DB_HOST', 'localhost'),
+            'username' => env('DB_USERNAME', 'mysql'),
+            'password' => env('DB_PASSWORD', 'mysql'),
+            'database' => env('DB_TEST_DATABASE', 'test_dms_calendar'),
+            'encoding' => 'utf8',
+            'timezone' => 'UTC',
+            'flags' => [],
+            'cacheMetadata' => true,
+            'log' => false,
+            'quoteIdentifiers' => false,
+            //'url' => env('DATABASE_TEST_URL', null),
+        ],
     ],
 
     /**
