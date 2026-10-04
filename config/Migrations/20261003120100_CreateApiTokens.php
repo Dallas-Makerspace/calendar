@@ -3,6 +3,11 @@ use Migrations\AbstractMigration;
 
 class CreateApiTokens extends AbstractMigration
 {
+    /**
+     * Create the api_tokens table.
+     *
+     * @return void
+     */
     public function up()
     {
         $this->table('api_tokens')
@@ -11,7 +16,7 @@ class CreateApiTokens extends AbstractMigration
                 'limit' => 100,
                 'null' => false,
             ])
-            ->addColumn('token_hash', 'string', [
+            ->addColumn('token_hash', 'char', [
                 'default' => null,
                 'limit' => 64,
                 'null' => false,
@@ -53,6 +58,11 @@ class CreateApiTokens extends AbstractMigration
             ->create();
     }
 
+    /**
+     * Drop the api_tokens table.
+     *
+     * @return void
+     */
     public function down()
     {
         $this->dropTable('api_tokens');

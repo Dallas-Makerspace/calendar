@@ -2,9 +2,8 @@
 namespace App\Controller\Api;
 
 use App\Error\ApiException;
-use App\Error\ApiExceptionRenderer;
 use Cake\Controller\Controller;
-use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
@@ -19,6 +18,8 @@ use Cake\ORM\TableRegistry;
  *   API token; both funnel into the same Calendar Admins authorization check.
  * - The v1 success/error JSON envelopes and the apiLog() audit pattern.
  * - `?page=` / `?per_page=` pagination helpers (default 50, max 200).
+ * - Shared resource helpers: requestAttributes() (JSON body parsing),
+ *   throwValidationErrors() (422 from entity errors), iso8601().
  */
 class ApiAppController extends Controller
 {
@@ -46,7 +47,6 @@ class ApiAppController extends Controller
     {
         parent::initialize();
         $this->loadComponent('RequestHandler');
-        Configure::write('Error.exceptionRenderer', ApiExceptionRenderer::class);
     }
 
     /**
@@ -159,6 +159,9 @@ class ApiAppController extends Controller
         }
 
         $principal = 'token:' . $row->name;
+        // Record usage before the scope check so the audit trail has no blind
+        // spot for valid tokens that fail authorization (403).
+        $tokens->touchLastUsed($row->id);
         if (!$tokens->hasScope($row, 'admin')) {
             // Valid token, but without the admin scope: resolve an identity
             // with no groups so the authorization check answers 403.
@@ -168,8 +171,6 @@ class ApiAppController extends Controller
                 'groups' => [],
             ];
         }
-
-        $tokens->touchLastUsed($row->id);
 
         return [
             'principal' => $principal,
@@ -283,5 +284,89 @@ class ApiAppController extends Controller
         $perPage = min(max($perPage, 1), $maxPerPage);
 
         return [$page, $perPage];
+    }
+
+    /**
+     * Read the request attributes.
+     *
+     * Canonical shape is JSON:API-lite (`data.attributes`); a flat object is
+     * also accepted for curl-friendliness. There is no BodyParserMiddleware in
+     * the app stack, so the JSON body is decoded here.
+     *
+     * @return array
+     * @throws \App\Error\ApiException On malformed JSON (400).
+     */
+    protected function requestAttributes()
+    {
+        $data = $this->request->getData();
+        if (empty($data)) {
+            $raw = trim((string)$this->request->getBody());
+            if ($raw !== '') {
+                $decoded = json_decode($raw, true);
+                if (!is_array($decoded)) {
+                    throw new ApiException(
+                        400,
+                        'Bad Request',
+                        'Malformed JSON in request body.'
+                    );
+                }
+                $data = $decoded;
+            }
+        }
+        if (isset($data['data']['attributes']) && is_array($data['data']['attributes'])) {
+            return $data['data']['attributes'];
+        }
+
+        return is_array($data) ? $data : [];
+    }
+
+    /**
+     * Throw a 422 ApiException from an entity's validation/rules errors.
+     *
+     * @param \Cake\Datasource\EntityInterface $entity The failed entity.
+     * @return void
+     * @throws \App\Error\ApiException Always.
+     */
+    protected function throwValidationErrors(EntityInterface $entity)
+    {
+        $errors = [];
+        foreach ($entity->getErrors() as $field => $fieldErrors) {
+            foreach ((array)$fieldErrors as $message) {
+                if (is_array($message)) {
+                    $message = implode(' ', $message);
+                }
+                $errors[] = [
+                    'status' => '422',
+                    'title' => 'Validation failed',
+                    'detail' => (string)$message,
+                    'source' => ['pointer' => '/data/attributes/' . $field],
+                ];
+            }
+        }
+        if (empty($errors)) {
+            $errors[] = [
+                'status' => '422',
+                'title' => 'Validation failed',
+                'detail' => 'The record could not be saved.',
+            ];
+        }
+        throw ApiException::withErrors(422, $errors);
+    }
+
+    /**
+     * Format a datetime as ISO-8601 UTC.
+     *
+     * @param \Cake\I18n\Time|null $time The datetime.
+     * @return string|null
+     */
+    protected function iso8601($time)
+    {
+        if (!$time) {
+            return null;
+        }
+        $utc = clone $time;
+        $utc->setTimezone(new \DateTimeZone('UTC'));
+
+        return $utc->format('c');
     }
 }

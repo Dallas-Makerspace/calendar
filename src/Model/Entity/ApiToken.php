@@ -25,8 +25,13 @@ class ApiToken extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false,
+        'name' => true,
+        'token_hash' => true,
+        'scopes' => true,
+        'created_by' => true,
+        'last_used_at' => true,
+        'expires_at' => true,
+        'revoked' => true,
     ];
 
     /**

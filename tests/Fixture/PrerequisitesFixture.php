@@ -21,7 +21,9 @@ class PrerequisitesFixture extends TestFixture
 		'ad_group' => ['type' => 'string', 'length' => 100, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
 		'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
 		'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
-		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []]],
+		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
+			'uq_prerequisites_name' => ['type' => 'unique', 'columns' => ['name'], 'length' => []],
+			'uq_prerequisites_ad_group' => ['type' => 'unique', 'columns' => ['ad_group'], 'length' => []]],
 		'_options' => ['engine' => 'InnoDB', 'collation' => 'utf8_general_ci']
 	];
     // @codingStandardsIgnoreEnd

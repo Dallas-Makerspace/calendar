@@ -1,6 +1,10 @@
 # Prerequisites Management API — v1 Design
 
-Status: design only (branch `feature/prerequisites-api`). No implementation yet.
+Status: **implemented** (branch `feature/prerequisites-api`). The checklist in
+§9 items 1–9 is built, with the fix-pass refinements noted inline
+(case-insensitive duplicate pre-check in the migration, MissingRouteException →
+404 in the renderer, model-rule-only AD check, duplicate-race 422, delete-race
+409 re-check, locked-down entity mass assignment).
 
 Scope (confirmed): the API manages **prerequisite records** (the `name` ↔ `ad_group`
 mapping in the `prerequisites` table). It does **not** create, rename, or delete
@@ -56,7 +60,10 @@ Router::prefix('api/v1', function (RouteBuilder $routes) {
   to `App\Controller\Api\V1\PrerequisitesController`. Note `view` is included
   even though the HTML controller disables it — the API is a record API.
 - `DashedRoute` default + prefix inflects `Prerequisites` → `/api/v1/prerequisites`.
-- JSON is the only served type (`setExtensions(['json'])`); anything else → 406.
+- JSON is the only served type (`setExtensions(['json'])`). An unknown
+  extension (e.g. `/api/v1/prerequisites.xml`) matches no route → 404 via the
+  renderer's `MissingRouteException` mapping; a non-JSON `Accept` header →
+  406 (`ApiAppController::assertAcceptsJson()`).
 - Versioning strategy: URL-prefix versioning. Additive, backwards-compatible
   changes land in `v1`. A breaking change gets a new `Api\V2` namespace and
   route prefix; `v1` keeps working. The contract in §7 is frozen for `v1`.
@@ -91,9 +98,13 @@ in production):
   The base middleware resolves the renderer class from its construction-time
   config, so the `Configure` value written by `ApiAppController::initialize()`
   would never apply to exceptions caught by the middleware.
-- `CsrfProtectionMiddleware` whitelists `/api/*` via `whitelistCallback()`.
-  Machine clients authenticate with Bearer tokens, not cookies, so the CSRF
-  check would otherwise reject every API POST/PUT/PATCH/DELETE with 403.
+- `CsrfProtectionMiddleware` exempts `/api/*` via `whitelistCallback()` **only
+  for requests carrying an `Authorization` header** (machine clients). API
+  requests authenticated by the admin session cookie keep CSRF enforcement —
+  a blanket `/api/*` exemption would let a malicious page fire API mutations
+  with an admin's session cookie. (The middleware ordering keeps
+  `ApiAwareErrorHandlerMiddleware` outermost, so CSRF failures on `/api/*`
+  still render as the JSON error envelope.)
 - There is no `BodyParserMiddleware` in the app stack, so the v1 controller
   decodes the JSON request body itself and answers 400 on malformed JSON.
 
@@ -147,18 +158,32 @@ required, non-empty. Additions:
   Migration adds unique indexes on both (collation `utf8_general_ci` makes them
   case-insensitive, matching AD's case-insensitive `cn`). Rationale: one display
   label maps to one AD group; a duplicate `ad_group` would make event-close
-  membership writes ambiguous.
+  membership writes ambiguous. The migration pre-checks for case-insensitive
+  duplicates and aborts with the offending values before adding the indexes
+  (dedupe first, then re-run). **Note:** these `isUnique` rules also apply to
+  the existing HTML `PrerequisitesController` saves (Crud add/edit), which
+  previously had no uniqueness rules — this is intentional. A check-then-insert
+  race between the rule and the INSERT surfaces as a duplicate-key error, which
+  the API maps to 422 with the same detail text.
 - **`ad_group` must exist in AD (read-only).** New service
   `src/Service/DirectoryService.php` with `groupExists(string $cn): bool`,
   using the existing service-account bind pattern (same config keys as
   `AppController::_refreshAdGroups()` / `EventsController` event close):
   query `cn = $cn AND objectclass = group`, return whether a record is found.
-  Wire it as a custom validation rule so failures surface as 422 with
-  `source.pointer = /data/attributes/ad_group` and detail like
-  `"ad_group 'Laser Basics' was not found in Active Directory"`. Fail closed:
-  if LDAP is unreachable, the write is rejected with 503 and a clear message —
-  never accept an unverified `ad_group`, since a bad value silently breaks
-  event-close membership writes and the `func-dms-prereq` function downstream.
+  Wired as the single source of truth in `PrerequisitesTable::buildRules()` —
+  there is deliberately no controller-level pre-check (it would double the LDAP
+  binds and could disagree with the rule). Rule semantics: throws
+  `DirectoryUnavailableException` when LDAP is unreachable (the API catches it
+  around `save()` → 503, fail closed), returns an error string when the group
+  genuinely does not exist (→ 422 with `source.pointer =
+  /data/attributes/ad_group` and detail like `"ad_group 'Laser Basics' was not
+  found in Active Directory"`), and skips blank values so
+  `validationDefault()`'s `notEmpty` reports them as 422. **Note:** like the
+  uniqueness rules, this AD-existence rule also runs on the existing HTML
+  `PrerequisitesController` saves. Fail closed: if LDAP is unreachable, the
+  write is rejected with 503 and a clear message — never accept an unverified
+  `ad_group`, since a bad value silently breaks event-close membership writes
+  and the `func-dms-prereq` function downstream.
 - **Delete guard.** `PrerequisitesTable::buildRules()` delete rule (or an explicit
   check in the controller): if any `events` row references the id via
   `fulfills_prerequisite_id` or `requires_prerequisite_id`, reject with
@@ -235,6 +260,10 @@ AD-existence validation.
   "detail": "Cannot delete prerequisite 'Laser Basics': it is referenced by 3 event(s), e.g. 'Laser Basics 101'. Remove the references first.",
   "source": { "pointer": "/data/id" } } ] }
 ```
+(On a delete race — an event reference appearing between the controller's
+pre-check and the actual delete — the `addDelete` model rule blocks the delete
+and the API re-checks references, still answering 409; only a genuinely
+unreferenced failure is 500.)
 
 ## 8. Test strategy
 

@@ -3,9 +3,8 @@ namespace App\Controller\Api\V1;
 
 use App\Controller\Api\ApiAppController;
 use App\Error\ApiException;
-use App\Service\DirectoryService;
+use App\Model\Entity\Prerequisite;
 use App\Service\DirectoryUnavailableException;
-use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 /**
@@ -73,12 +72,9 @@ class PrerequisitesController extends ApiAppController
     public function add()
     {
         $attributes = $this->requestAttributes();
-        if (array_key_exists('ad_group', $attributes)) {
-            $this->assertAdGroupExists((string)$attributes['ad_group']);
-        }
 
         $prerequisite = $this->Prerequisites->newEntity($attributes);
-        if (!$this->Prerequisites->save($prerequisite)) {
+        if (!$this->savePrerequisite($prerequisite)) {
             $this->throwValidationErrors($prerequisite);
         }
 
@@ -106,15 +102,8 @@ class PrerequisitesController extends ApiAppController
         $prerequisite = $this->getPrerequisite($id);
         $attributes = $this->requestAttributes();
 
-        if (
-            array_key_exists('ad_group', $attributes)
-            && (string)$attributes['ad_group'] !== (string)$prerequisite->ad_group
-        ) {
-            $this->assertAdGroupExists((string)$attributes['ad_group']);
-        }
-
         $prerequisite = $this->Prerequisites->patchEntity($prerequisite, $attributes);
-        if (!$this->Prerequisites->save($prerequisite)) {
+        if (!$this->savePrerequisite($prerequisite)) {
             $this->throwValidationErrors($prerequisite);
         }
 
@@ -147,6 +136,17 @@ class PrerequisitesController extends ApiAppController
         }
 
         if (!$this->Prerequisites->delete($prerequisite)) {
+            // An event reference may have appeared between the check above
+            // and the delete (the addDelete model rule then blocks it).
+            $references = $this->Prerequisites->eventReferences((int)$prerequisite->id);
+            if ($references['count'] > 0) {
+                $this->apiError(
+                    409,
+                    'Prerequisite in use',
+                    $this->Prerequisites->referenceErrorMessage($prerequisite, $references),
+                    '/data/id'
+                );
+            }
             $this->apiError(
                 500,
                 'Internal Server Error',
@@ -160,10 +160,84 @@ class PrerequisitesController extends ApiAppController
             $prerequisite->ad_group
         ));
 
-        $this->autoRender = false;
         $this->response = $this->response->withStatus(204);
 
         return $this->response;
+    }
+
+    /**
+     * Save a prerequisite, translating infrastructure failures into API errors.
+     *
+     * The AD-existence model rule binds to LDAP during save() and throws
+     * DirectoryUnavailableException when AD is unreachable (fail closed →
+     * 503). A duplicate that slips past the isUnique rules between check and
+     * INSERT surfaces as a duplicate-key PDOException (SQLSTATE 23000) → 422
+     * with the same detail text the rules would have produced.
+     *
+     * @param \App\Model\Entity\Prerequisite $prerequisite The entity to save.
+     * @return bool True when the save succeeded, false on rule failures.
+     * @throws \App\Error\ApiException On 503 (AD down) or 422 (duplicate race).
+     */
+    protected function savePrerequisite(Prerequisite $prerequisite)
+    {
+        try {
+            return (bool)$this->Prerequisites->save($prerequisite);
+        } catch (DirectoryUnavailableException $e) {
+            throw new ApiException(
+                503,
+                'Service Unavailable',
+                'Active Directory is unreachable; ad_group could not be verified. ' .
+                'Please try again later.'
+            );
+        } catch (\PDOException $e) {
+            if ((string)$e->getCode() === '23000') {
+                $this->throwDuplicateConflict($prerequisite);
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Throw a 422 ApiException identifying which unique field lost a
+     * check-then-insert race.
+     *
+     * @param \App\Model\Entity\Prerequisite $prerequisite The failed entity.
+     * @return void
+     * @throws \App\Error\ApiException Always.
+     */
+    protected function throwDuplicateConflict(Prerequisite $prerequisite)
+    {
+        $errors = [];
+        $excludeSelf = $prerequisite->id ? ['id !=' => $prerequisite->id] : [];
+        $fieldMessages = [
+            'name' => 'This name is already in use.',
+            'ad_group' => 'This AD group is already mapped to another prerequisite.',
+        ];
+        foreach ($fieldMessages as $field => $message) {
+            $value = $prerequisite->get($field);
+            if ($value === null || $value === '') {
+                continue;
+            }
+            $conditions = array_merge($excludeSelf, [$field => $value]);
+            if ($this->Prerequisites->exists($conditions)) {
+                $errors[] = [
+                    'status' => '422',
+                    'title' => 'Validation failed',
+                    'detail' => $message,
+                    'source' => ['pointer' => '/data/attributes/' . $field],
+                ];
+            }
+        }
+        if (empty($errors)) {
+            // An integrity violation we cannot attribute to a field: keep it
+            // honest instead of inventing a duplicate detail.
+            throw new ApiException(
+                500,
+                'Internal Server Error',
+                'The record could not be saved.'
+            );
+        }
+        throw ApiException::withErrors(422, $errors);
     }
 
     /**
@@ -187,102 +261,6 @@ class PrerequisitesController extends ApiAppController
     }
 
     /**
-     * Read the request attributes.
-     *
-     * Canonical shape is JSON:API-lite (`data.attributes`); a flat object is
-     * also accepted for curl-friendliness. There is no BodyParserMiddleware in
-     * the app stack, so the JSON body is decoded here.
-     *
-     * @return array
-     * @throws \App\Error\ApiException On malformed JSON (400).
-     */
-    protected function requestAttributes()
-    {
-        $data = $this->request->getData();
-        if (empty($data)) {
-            $raw = trim((string)$this->request->getBody());
-            if ($raw !== '') {
-                $decoded = json_decode($raw, true);
-                if (!is_array($decoded)) {
-                    throw new ApiException(
-                        400,
-                        'Bad Request',
-                        'Malformed JSON in request body.'
-                    );
-                }
-                $data = $decoded;
-            }
-        }
-        if (isset($data['data']['attributes']) && is_array($data['data']['attributes'])) {
-            return $data['data']['attributes'];
-        }
-
-        return is_array($data) ? $data : [];
-    }
-
-    /**
-     * Verify an ad_group exists in AD: 422 when unknown, 503 when AD is down.
-     *
-     * @param string $cn The group cn.
-     * @return void
-     * @throws \App\Error\ApiException
-     */
-    protected function assertAdGroupExists($cn)
-    {
-        try {
-            $exists = DirectoryService::groupExists($cn);
-        } catch (DirectoryUnavailableException $e) {
-            throw new ApiException(
-                503,
-                'Service Unavailable',
-                'Active Directory is unreachable; ad_group could not be verified. ' .
-                'Please try again later.'
-            );
-        }
-        if (!$exists) {
-            throw new ApiException(
-                422,
-                'Validation failed',
-                sprintf("ad_group '%s' was not found in Active Directory", $cn),
-                '/data/attributes/ad_group'
-            );
-        }
-    }
-
-    /**
-     * Throw a 422 ApiException from an entity's validation/rules errors.
-     *
-     * @param \Cake\Datasource\EntityInterface $entity The failed entity.
-     * @return void
-     * @throws \App\Error\ApiException Always.
-     */
-    protected function throwValidationErrors(EntityInterface $entity)
-    {
-        $errors = [];
-        foreach ($entity->getErrors() as $field => $fieldErrors) {
-            foreach ((array)$fieldErrors as $message) {
-                if (is_array($message)) {
-                    $message = implode(' ', $message);
-                }
-                $errors[] = [
-                    'status' => '422',
-                    'title' => 'Validation failed',
-                    'detail' => (string)$message,
-                    'source' => ['pointer' => '/data/attributes/' . $field],
-                ];
-            }
-        }
-        if (empty($errors)) {
-            $errors[] = [
-                'status' => '422',
-                'title' => 'Validation failed',
-                'detail' => 'The record could not be saved.',
-            ];
-        }
-        throw ApiException::withErrors(422, $errors);
-    }
-
-    /**
      * Serialize a prerequisite to the v1 JSON shape (snake_case, ISO-8601 UTC).
      *
      * @param \App\Model\Entity\Prerequisite $prerequisite The entity.
@@ -297,22 +275,5 @@ class PrerequisitesController extends ApiAppController
             'created' => $this->iso8601($prerequisite->created),
             'modified' => $this->iso8601($prerequisite->modified),
         ];
-    }
-
-    /**
-     * Format a datetime as ISO-8601 UTC.
-     *
-     * @param \Cake\I18n\Time|null $time The datetime.
-     * @return string|null
-     */
-    protected function iso8601($time)
-    {
-        if (!$time) {
-            return null;
-        }
-        $utc = clone $time;
-        $utc->setTimezone(new \DateTimeZone('UTC'));
-
-        return $utc->format('c');
     }
 }

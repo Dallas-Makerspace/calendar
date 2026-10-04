@@ -89,12 +89,21 @@ class Application extends BaseApplication
             // middleware mistakes the truncated body for a token mismatch.
             ->add(new RequestEntityTooLargeMiddleware())
 
-            // Add csrf middleware. API requests authenticate with Bearer
-            // tokens, not cookies, so /api/* is whitelisted.
+            // Add csrf middleware. Cookie-authenticated API requests (an admin's
+            // browser session) stay under CSRF protection: a malicious page
+            // could otherwise fire API mutations with the admin's session
+            // cookie. The exemption below applies only to requests carrying an
+            // Authorization header (machine clients), which cannot be forged
+            // cross-site without CORS permission; those clients never send
+            // cookies and would otherwise 403 on every mutation.
             ->add((function () {
                 $csrf = new CsrfProtectionMiddleware(['httpOnly' => true]);
                 $csrf->whitelistCallback(function ($request) {
-                    return strpos($request->getUri()->getPath(), '/api/') === 0;
+                    if (strpos($request->getUri()->getPath(), '/api/') !== 0) {
+                        return false;
+                    }
+
+                    return trim($request->getHeaderLine('Authorization')) !== '';
                 });
 
                 return $csrf;

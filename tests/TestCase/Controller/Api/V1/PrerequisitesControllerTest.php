@@ -27,11 +27,23 @@ class PrerequisitesControllerTest extends IntegrationTestCase
     ];
 
     /**
+     * @var string|array|null Backup of Directory.stubGroups around each test.
+     */
+    protected $stubGroupsBackup;
+
+    /**
+     * @var mixed Backup of ActiveDirectory.domain_controllers around each test.
+     */
+    protected $domainControllersBackup;
+
+    /**
      * @return void
      */
     public function setUp()
     {
         parent::setUp();
+        $this->stubGroupsBackup = Configure::read('Directory.stubGroups');
+        $this->domainControllersBackup = Configure::read('ActiveDirectory.domain_controllers');
         Configure::write('Directory.stubGroups', [
             'Laser Basics',
             'Kiln Basics',
@@ -39,7 +51,18 @@ class PrerequisitesControllerTest extends IntegrationTestCase
             'DMS-Woodshop-Basics',
             'Test Prerequisite',
             'Unreferenced Prerequisite',
+            'Lorem ipsum dolor sit amet',
         ]);
+    }
+
+    /**
+     * @return void
+     */
+    public function tearDown()
+    {
+        Configure::write('Directory.stubGroups', $this->stubGroupsBackup);
+        Configure::write('ActiveDirectory.domain_controllers', $this->domainControllersBackup);
+        parent::tearDown();
     }
 
     /**
@@ -112,6 +135,19 @@ class PrerequisitesControllerTest extends IntegrationTestCase
     {
         $this->jsonRequestHeaders();
         $this->patch($url, is_string($body) ? $body : json_encode($body));
+    }
+
+    /**
+     * PUT a JSON body, preserving any headers set earlier (e.g. auth).
+     *
+     * @param string $url The URL.
+     * @param mixed $body Array to encode, or a raw string.
+     * @return void
+     */
+    protected function putJson($url, $body)
+    {
+        $this->jsonRequestHeaders();
+        $this->put($url, is_string($body) ? $body : json_encode($body));
     }
 
     /**
@@ -204,6 +240,68 @@ class PrerequisitesControllerTest extends IntegrationTestCase
         $json = $this->responseJson();
         $this->assertCount(2, $json['data']);
         $this->assertSame(2, $json['meta']['total']);
+    }
+
+    /**
+     * @return void
+     */
+    public function testIndexPaginationBoundaries()
+    {
+        $this->asAdminSession();
+
+        // per_page above the max clamps to 200
+        $this->get('/api/v1/prerequisites?per_page=500');
+        $this->assertResponseCode(200);
+        $json = $this->responseJson();
+        $this->assertSame(200, $json['meta']['per_page']);
+
+        // zero or negative per_page clamps to 1
+        $this->get('/api/v1/prerequisites?per_page=0');
+        $this->assertResponseCode(200);
+        $json = $this->responseJson();
+        $this->assertSame(1, $json['meta']['per_page']);
+
+        $this->get('/api/v1/prerequisites?per_page=-5');
+        $this->assertResponseCode(200);
+        $json = $this->responseJson();
+        $this->assertSame(1, $json['meta']['per_page']);
+
+        // zero or negative page clamps to 1
+        $this->get('/api/v1/prerequisites?page=0');
+        $this->assertResponseCode(200);
+        $json = $this->responseJson();
+        $this->assertSame(1, $json['meta']['page']);
+
+        $this->get('/api/v1/prerequisites?page=-3');
+        $this->assertResponseCode(200);
+        $json = $this->responseJson();
+        $this->assertSame(1, $json['meta']['page']);
+
+        // page beyond total: empty data, meta reflects the request
+        $this->get('/api/v1/prerequisites?page=99&per_page=10');
+        $this->assertResponseCode(200);
+        $json = $this->responseJson();
+        $this->assertSame([], $json['data']);
+        $this->assertSame(99, $json['meta']['page']);
+        $this->assertSame(10, $json['meta']['per_page']);
+        $this->assertSame(2, $json['meta']['total']);
+        $this->assertSame(1, $json['meta']['total_pages']);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateViaPut()
+    {
+        $this->asAdminSession();
+        $this->putJson('/api/v1/prerequisites/2', [
+            'data' => ['attributes' => ['name' => 'Put Renamed Label']],
+        ]);
+
+        $this->assertResponseCode(200);
+        $json = $this->responseJson();
+        $this->assertSame('Put Renamed Label', $json['data']['name']);
+        $this->assertSame('Unreferenced Prerequisite', $json['data']['ad_group']);
     }
 
     /**
@@ -327,6 +425,10 @@ class PrerequisitesControllerTest extends IntegrationTestCase
 
         $json = $this->assertErrorEnvelope(422, 'Validation failed');
         $this->assertSame(
+            'This name is already in use.',
+            $json['errors'][0]['detail']
+        );
+        $this->assertSame(
             '/data/attributes/name',
             $json['errors'][0]['source']['pointer']
         );
@@ -352,6 +454,53 @@ class PrerequisitesControllerTest extends IntegrationTestCase
         ]);
 
         $json = $this->assertErrorEnvelope(422, 'Validation failed');
+        $this->assertSame(
+            'This AD group is already mapped to another prerequisite.',
+            $json['errors'][0]['detail']
+        );
+        $this->assertSame(
+            '/data/attributes/ad_group',
+            $json['errors'][0]['source']['pointer']
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testCreateRejectsCaseInsensitiveDuplicateName()
+    {
+        $this->withToken();
+        $this->postJson('/api/v1/prerequisites', [
+            'name' => 'LOREM IPSUM DOLOR SIT AMET',
+            'ad_group' => 'Kiln Basics',
+        ]);
+
+        $json = $this->assertErrorEnvelope(422, 'Validation failed');
+        $this->assertSame(
+            'This name is already in use.',
+            $json['errors'][0]['detail']
+        );
+        $this->assertSame(
+            '/data/attributes/name',
+            $json['errors'][0]['source']['pointer']
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateRejectsDuplicateAdGroup()
+    {
+        $this->asAdminSession();
+        $this->patchJson('/api/v1/prerequisites/2', [
+            'ad_group' => 'Lorem ipsum dolor sit amet',
+        ]);
+
+        $json = $this->assertErrorEnvelope(422, 'Validation failed');
+        $this->assertSame(
+            'This AD group is already mapped to another prerequisite.',
+            $json['errors'][0]['detail']
+        );
         $this->assertSame(
             '/data/attributes/ad_group',
             $json['errors'][0]['source']['pointer']
@@ -485,7 +634,11 @@ class PrerequisitesControllerTest extends IntegrationTestCase
         $this->delete('/api/v1/prerequisites/1');
 
         $json = $this->assertErrorEnvelope(409, 'Prerequisite in use');
-        $this->assertContains('referenced by', $json['errors'][0]['detail']);
+        $this->assertSame(
+            "Cannot delete prerequisite 'Lorem ipsum dolor sit amet': it is referenced by 2 event(s), " .
+            "e.g. 'Lorem ipsum dolor sit amet', 'Sit amet laser workshop'. Remove the references first.",
+            $json['errors'][0]['detail']
+        );
         $this->assertSame('/data/id', $json['errors'][0]['source']['pointer']);
 
         $prerequisites = TableRegistry::getTableLocator()->get('Prerequisites');
@@ -561,6 +714,20 @@ class PrerequisitesControllerTest extends IntegrationTestCase
     /**
      * @return void
      */
+    public function testMalformedAuthorizationHeadersAreUnauthorized()
+    {
+        foreach (['Bearer ', 'Basic xyz', 'not-a-valid-scheme'] as $header) {
+            // _buildRequest() consumes the configured headers, so set them
+            // fresh for every request.
+            $this->configRequest(['headers' => ['Authorization' => $header]]);
+            $this->get('/api/v1/prerequisites');
+            $this->assertResponseCode(401);
+        }
+    }
+
+    /**
+     * @return void
+     */
     public function testNotAcceptableForNonJson()
     {
         $this->configRequest(['headers' => ['Accept' => 'text/html']]);
@@ -599,6 +766,56 @@ class PrerequisitesControllerTest extends IntegrationTestCase
         $this->assertSame('token:test-admin-token', $entry->user);
         $this->assertSame('Prerequisites', $entry->controller);
         $this->assertSame('add', $entry->action);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateIsAuditLogged()
+    {
+        $this->withToken();
+        $this->patchJson('/api/v1/prerequisites/2', [
+            'data' => ['attributes' => ['name' => 'Logged Rename']],
+        ]);
+        $this->assertResponseCode(200);
+
+        $logs = TableRegistry::getTableLocator()->get('Logs');
+        $entry = $logs->find()
+            ->where(['description LIKE' => 'API: updated prerequisite%'])
+            ->first();
+        $this->assertNotEmpty($entry);
+        $this->assertSame(
+            "API: updated prerequisite 'Logged Rename' (ad_group='Unreferenced Prerequisite')",
+            $entry->description
+        );
+        $this->assertSame('token:test-admin-token', $entry->user);
+        $this->assertSame('Prerequisites', $entry->controller);
+        $this->assertSame('edit', $entry->action);
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteIsAuditLoggedWithSessionPrincipal()
+    {
+        $this->asAdminSession();
+        $this->configRequest(['headers' => ['Accept' => 'application/json']]);
+        $this->delete('/api/v1/prerequisites/2');
+        $this->assertResponseCode(204);
+
+        $logs = TableRegistry::getTableLocator()->get('Logs');
+        $entry = $logs->find()
+            ->where(['description LIKE' => 'API: deleted prerequisite%'])
+            ->first();
+        $this->assertNotEmpty($entry);
+        $this->assertSame(
+            "API: deleted prerequisite 'Unreferenced Prerequisite' (ad_group='Unreferenced Prerequisite')",
+            $entry->description
+        );
+        // session principal: the samaccountname, not a token label
+        $this->assertSame('adminuser', $entry->user);
+        $this->assertSame('Prerequisites', $entry->controller);
+        $this->assertSame('delete', $entry->action);
     }
 
     /**

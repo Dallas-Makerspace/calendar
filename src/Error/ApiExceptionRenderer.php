@@ -3,7 +3,9 @@ namespace App\Error;
 
 use Cake\Error\ExceptionRenderer;
 use Cake\Http\Exception\HttpException;
+use Cake\Http\Exception\MethodNotAllowedException;
 use Cake\Http\Response;
+use Cake\Routing\Exception\MissingRouteException;
 
 /**
  * Renders any exception raised while serving /api/* as the v1 error envelope:
@@ -46,6 +48,25 @@ class ApiExceptionRenderer extends ExceptionRenderer
         if ($exception instanceof ApiException) {
             $code = $exception->getCode();
             $errors = $exception->getApiErrors();
+        } elseif ($exception instanceof MissingRouteException) {
+            // MissingRouteException extends Cake\Core\Exception\Exception (not
+            // HttpException), so without this branch unknown /api/* routes and
+            // unknown extensions (e.g. /api/v1/prerequisites.xml) would 500.
+            $code = 404;
+            $errors = [[
+                'status' => '404',
+                'title' => 'Not Found',
+                'detail' => 'The requested URL was not found on this server.',
+            ]];
+        } elseif ($exception instanceof MethodNotAllowedException) {
+            $code = 405;
+            $errors = [[
+                'status' => '405',
+                'title' => 'Method Not Allowed',
+                'detail' => $exception->getMessage() !== ''
+                    ? $exception->getMessage()
+                    : 'Method Not Allowed',
+            ]];
         } elseif ($exception instanceof HttpException) {
             $code = $exception->getCode();
             $title = isset($this->defaultTitles[$code]) ? $this->defaultTitles[$code] : 'Error';

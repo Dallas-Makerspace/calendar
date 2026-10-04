@@ -87,6 +87,12 @@ class ApiTokensTable extends Table
      */
     public function findValid(Query $query, array $options)
     {
+        if (empty($options['tokenHash'])) {
+            throw new \InvalidArgumentException(
+                'The `tokenHash` option is required to look up a valid API token.'
+            );
+        }
+
         return $query->where([
             'token_hash' => $options['tokenHash'],
             'revoked' => false,

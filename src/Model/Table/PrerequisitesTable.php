@@ -3,7 +3,6 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Prerequisite;
 use App\Service\DirectoryService;
-use App\Service\DirectoryUnavailableException;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -79,12 +78,15 @@ class PrerequisitesTable extends Table
                 if (!$entity->isNew() && !$entity->isDirty('ad_group')) {
                     return true;
                 }
-                try {
-                    $exists = DirectoryService::groupExists((string)$entity->ad_group);
-                } catch (DirectoryUnavailableException $e) {
-                    return 'Active Directory is unreachable; ad_group could not be verified.';
+                if (trim((string)$entity->ad_group) === '') {
+                    // Let validationDefault()'s notEmpty rule report the blank
+                    // value as 422 instead of failing here with an LDAP
+                    // protocol error (e.g. "(cn=)").
+                    return true;
                 }
-                if (!$exists) {
+                // DirectoryUnavailableException propagates: the API catches it
+                // around save() and answers 503 (fail closed).
+                if (!DirectoryService::groupExists((string)$entity->ad_group)) {
                     return sprintf(
                         "ad_group '%s' was not found in Active Directory",
                         $entity->ad_group
