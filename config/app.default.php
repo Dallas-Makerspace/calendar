@@ -168,7 +168,9 @@ return [
     'Error' => [
         'errorLevel' => E_ALL & ~E_DEPRECATED,
         'exceptionRenderer' => 'Cake\Error\ExceptionRenderer',
-        'skipLog' => [],
+        // Requests for URLs that map to no controller (bots probing /wp-content, /Cart.json, ...) still get a
+        // 404 page but are not logged as errors; they drowned the real errors in error.log.
+        'skipLog' => ['Cake\Routing\Exception\MissingControllerException'],
         'log' => true,
         'trace' => true,
     ],

@@ -1,5 +1,8 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    # iOS/Safari and crawlers probe for apple-touch-icon.png, -precomposed, and -WxH variants. Serve one
+    # image for all of them instead of letting each probe fall through to the app (404 + logged error).
+    RewriteRule ^apple-touch-icon(-[0-9]+x[0-9]+)?(-precomposed)?\.png$ img/apple-touch-icon.png [L]
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
